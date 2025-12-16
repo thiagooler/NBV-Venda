@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio NBV - Seleção</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #007bff; /* Azul NBV */
+            --primary-dark: #0056b3;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --text: #333;
+            --bg: #f4f4f9;
+            --card: #ffffff;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; background-color: var(--bg); color: var(--text); padding-bottom: 50px; }
+        header { background-color: #222; color: #fff; padding: 1.5rem; text-align: center; }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+        
+        /* CARDS */
+        .card { background: var(--card); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; margin-bottom: 20px; transition: transform 0.2s; position: relative; overflow: hidden; }
+        .card:hover { transform: translateY(-3px); }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        
+        h2 { margin-top: 0; font-size: 1.4rem; }
+        p { color: #666; font-size: 0.95rem; line-height: 1.5; }
+
+        /* CRÉDITOS / BONIFICAÇÃO */
+        .bonus-banner { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 15px; border-radius: 8px; margin-bottom: 25px; text-align: left; display: flex; align-items: center; gap: 15px; }
+        .bonus-icon { font-size: 2rem; }
+        .bonus-list { margin: 5px 0 0 0; padding-left: 20px; font-size: 0.9rem; }
+
+        /* LISTA DE PREÇOS NO CARD */
+        .price-list { text-align: left; margin: 15px 0; background: #f8f9fa; padding: 10px; border-radius: 8px; font-size: 0.9rem; }
+        .price-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #eee; }
+        .price-row:last-child { border-bottom: none; }
+        .price-val { font-weight: bold; color: var(--primary); }
+
+        /* BOTÕES */
+        .btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; width: 100%; margin-top: 10px; transition: 0.3s; text-decoration: none; display: inline-block; box-sizing: border-box;}
+        .btn-primary { background-color: var(--primary); color: white; }
+        .btn-primary:hover { background-color: var(--primary-dark); }
+        .btn-secondary { background-color: #6c757d; color: white; }
+        .btn-outline { background-color: transparent; border: 2px solid var(--primary); color: var(--primary); margin-top: 5px; font-size: 0.9rem; padding: 8px; }
+        .btn-outline:hover { background-color: #eef7ff; }
+        .btn-success { background-color: var(--success); color: white; }
+        
+        .flex-btns { display: flex; gap: 10px; }
+
+        /* SEÇÕES */
+        .section { display: none; animation: fadeIn 0.4s; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* GALERIA & LIGHTBOX */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 5px; }
+        .gallery-item { position: relative; cursor: pointer; aspect-ratio: 1; overflow: hidden; border-radius: 4px; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+        .gallery-item:hover img { transform: scale(1.1); }
+        
+        #lightbox { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); justify-content: center; align-items: center; }
+        #lightbox img { max-width: 95%; max-height: 90%; border: 2px solid #fff; }
+        .close-btn { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; cursor: pointer; }
+
+        /* WORKSTATION (SELEÇÃO) */
+        .photo-viewer { text-align: center; }
+        .main-photo-wrapper { position: relative; display: inline-block; max-width: 100%; }
+        .main-photo { max-width: 100%; max-height: 60vh; border-radius: 8px; display: block; }
+        .watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0.5; font-weight: bold; font-size: 1.5rem; color: rgba(255,255,255,0.7); transform: rotate(-30deg); text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        
+        .controls-area { background: #fff; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: left; border: 1px solid #eee; }
+        .prod-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+        .stepper button { width: 30px; height: 30px; border: 1px solid #ddd; background: #fff; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .credit-badge { font-size: 0.75rem; background: #d4edda; color: #155724; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
+
+        /* PERSUASÃO */
+        .persuasion-box { background: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 2rem; border-radius: 12px; text-align: center; }
+        .pulse { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% {transform:scale(1);} 50% {transform:scale(1.02);} 100% {transform:scale(1);} }
+
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div style="text-align:center; padding: 50px;">
+        <i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Carregando seu ensaio...
+    </div>
+</div>
+
+<script>
+// [[INJECT_CONFIG_HERE]]
+
+// --- LÓGICA DO CLIENTE ---
+const App = {
+    data: {},
+    state: { 
+        view: 'intro', 
+        idx: 0, 
+        mode: '', // 'fotolivro', 'revelacao', 'arquivo' 
+        sel: [], 
+        lightboxUrl: null,
+        detalheTipo: '' 
+    },
+
+    init() {
+        if(window.NBV_CONFIG) {
+            this.data = window.NBV_CONFIG;
+            // Inicializa seleção para cada foto
+            this.state.sel = this.data.fotos.map(() => ({ inAlbum: false, extras: {} }));
+            this.render();
+        } else {
+            document.getElementById('app').innerHTML = "<h3 style='text-align:center; margin-top:50px'>Erro: Configuração não encontrada.<br>Use o Admin para gerar este arquivo.</h3>";
+        }
+    },
+
+    // --- RENDERIZADOR MASTER ---
+    render() {
+        const app = document.getElementById('app');
+        const view = this.state.view;
+        let html = '';
+
+        // HEADER
+        html += `<header><h1>${this.data.cliente.nome}</h1><p>Área de Seleção do Cliente</p></header>`;
+        html += `<div class="container">`;
+
+        // 1. MENU PRINCIPAL
+        if (view === 'intro') {
+            const cli = this.data.cliente;
+            const temCredito = (cli.entrada > 0) || (cli.creditos && cli.creditos.length > 0);
+            
+            // BANNER DE CRÉDITOS (A PEDIDO)
+            if(temCredito) {
+                html += `
+                <div class="bonus-banner">
+                    <div class="bonus-icon"><i class="fas fa-gift"></i></div>
+                    <div>
+                        <strong>Você já possui bonificações!</strong>
+                        <ul class="bonus-list">
+                            ${cli.entrada > 0 ? `<li>💰 Entrada Paga: <b>${this.fmt(cli.entrada)}</b></li>` : ''}
+                            ${(cli.creditos||[]).map(c => `<li>🎁 ${c.qtd}x ${c.item} (Grátis)</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>`;
+            }
+
+            html += `<div class="menu-grid">`;
+
+            // CARD: ESPIAR
+            html += `
+            <div class="card">
+                <h2>📸 Espiar Fotos</h2>
+                <p>Veja todas as ${this.data.fotos.length} fotos rapidamente.</p>
+                <button class="btn btn-secondary" onclick="App.toggleGallery()">Ver Galeria</button>
+            </div>`;
+
+            // CARD: FOTOLIVRO (DINÂMICO)
+            const opcoesAlbum = this.calcAlbumOptions(this.data.fotos.length);
+            let listaPrecos = "";
+            if(opcoesAlbum.length > 0) {
+                listaPrecos = `<div class="price-list">`;
+                opcoesAlbum.forEach(op => {
+                    listaPrecos += `
+                    <div class="price-row">
+                        <span>${op.nome}</span>
+                        <span class="price-val">${this.fmt(op.total)}</span>
+                    </div>`;
+                });
+                listaPrecos += `<div style="text-align:center; margin-top:5px; font-size:0.8rem; color:#666">Parcelamento em até 12x</div></div>`;
+            }
+
+            html += `
+            <div class="card" style="border: 2px solid var(--primary);">
+                <div style="position:absolute; top:0; right:0; background:var(--primary); color:white; padding:3px 10px; font-size:0.8rem; border-bottom-left-radius:8px;">PREMIUM</div>
+                <h2>📚 Fotolivro</h2>
+                <p>Opções para suas ${this.data.fotos.length} fotos:</p>
+                ${listaPrecos}
+                <button class="btn btn-primary" onclick="App.setMode('fotolivro')">Montar Fotolivro</button>
+                <button class="btn btn-outline" onclick="App.verDetalhes('book')">Ver Detalhes</button>
+            </div>`;
+
+            // CARD: REVELAÇÃO
+            html += `
+            <div class="card">
+                <h2>🖼️ Revelação</h2>
+                <p>Imprima suas memórias em papel profissional.</p>
+                <div style="margin-top:auto">
+                    <button class="btn btn-primary" onclick="App.setMode('revelacao')">Selecionar Fotos</button>
+                    <button class="btn btn-outline" onclick="App.verDetalhes('print')">Ver Papel</button>
+                </div>
+            </div>`;
+
+            // CARD: ARQUIVO (PERSUASÃO)
+            html += `
+            <div class="card">
+                <h2>💾 Arquivos</h2>
+                <p>Download em alta resolução.</p>
+                <button class="btn btn-primary" onclick="App.irPersuasao()">Quero Arquivos</button>
+                <button class="btn btn-outline" onclick="App.verDetalhes('digital')">Como recebo?</button>
+            </div>`;
+
+            html += `</div>`; // fecha grid
+        }
+
+        // 2. GALERIA (ESPIAR)
+        else if (view === 'gallery') {
+            html += `
+            <button class="btn btn-secondary" style="width:auto; margin-bottom:15px" onclick="App.goBack()">← Voltar</button>
+            <h2>Galeria Completa</h2>
+            <div class="gallery-grid">
+                ${this.data.fotos.map(url => `
+                    <div class="gallery-item" onclick="App.openLightbox('${url}')">
+                        <img src="${url}">
+                    </div>
+                `).join('')}
+            </div>`;
+        }
+
+        // 3. PERSUASÃO (ANTI-ARQUIVO)
+        else if (view === 'persuasao') {
+            html += `
+            <div class="persuasion-box">
+                <h2 style="color:#d97706">⚠️ Espere um pouco, ${this.data.cliente.nome}!</h2>
+                <p>Arquivos digitais se perdem em HDs ou na nuvem. Você tem certeza que não quer ter essas memórias em mãos?</p>
+                <ul style="text-align:left; margin:20px 0; color:#555">
+                    <li>✅ <strong>Durabilidade:</strong> Papel fotográfico dura gerações.</li>
+                    <li>✅ <strong>Cores Reais:</strong> Telas descalibradas mentem a cor.</li>
+                    <li>✅ <strong>Decoração:</strong> Sua casa merece essas fotos expostas.</li>
+                </ul>
+                <button class="btn btn-primary pulse" style="font-size:1.2rem; padding:15px" onclick="App.setMode('revelacao')">
+                    ✨ Quero Fazer Revelação (Melhor Escolha)
+                </button>
+                <div style="margin-top:20px">
+                    <button class="btn btn-secondary" style="width:auto; background:#ddd; color:#555" onclick="App.checkoutDigital()">
+                        Continuar somente com Arquivos
+                    </button>
+                </div>
+            </div>
+            <button class="btn btn-secondary" onclick="App.goBack()" style="width:auto; margin-top:20px">Cancelar</button>
+            `;
+        }
+
+        // 4. DETALHES (TEXTOS)
+        else if (view === 'detalhes') {
+            const d = this.data.apresentacao[this.state.detalheTipo];
+            html += `
+            <button class="btn btn-secondary" style="width:auto; margin-bottom:15px" onclick="App.goBack()">← Voltar</button>
+            <div class="card">
+                <img src="${d.img}" style="width:100%; height:200px; object-fit:cover; border-radius:8px">
+                <h3>Detalhes</h3>
+                <p style="font-size:1.1rem">${d.text}</p>
+                <button class="btn btn-primary" onclick="App.acaoDetalhe()">Continuar para Seleção</button>
+            </div>`;
+        }
+
+        // 5. WORKSTATION (SELEÇÃO)
+        else if (view === 'workstation') {
+            const i = this.state.idx;
+            const total = this.data.fotos.length;
+            const foto = this.data.fotos[i];
+            const sel = this.state.sel[i];
+            
+            // Marca d'água SVG
+            const svg = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg width='300' height='150' xmlns='http://www.w3.org/2000/svg'><text x='50%' y='50%' transform='rotate(-20 150 75)' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='20' fill='#000' fill-opacity='${this.data.assets.opacity}'>${this.data.assets.watermarkText}</text></svg>`);
+
+            html += `
+            <button class="btn btn-secondary" style="width:auto; margin-bottom:10px; padding:5px 15px; font-size:0.9rem" onclick="App.goBack()">✖ Sair</button>
+            
+            <div class="card photo-viewer">
+                <h3 style="color:var(--primary)">${this.state.mode === 'fotolivro' ? 'Montando Fotolivro' : 'Selecionando Revelação'}</h3>
+                <div class="main-photo-wrapper">
+                    <img src="${foto}" class="main-photo" oncontextmenu="return false">
+                    <div class="watermark-overlay" style="background-image:url('${svg}')"></div>
+                </div>
+                <p style="font-size:0.9rem; color:#999; margin-top:5px">Foto ${i+1} de ${total}</p>
+
+                <div class="controls-area">
+                    ${this.state.mode === 'fotolivro' ? `
+                    <div class="prod-row" onclick="App.toggleAlbum()" style="cursor:pointer; padding:10px; background:${sel.inAlbum?'#e8f5e9':'#fff'}; border-radius:6px">
+                        <span>📚 <b>Incluir no Álbum</b></span>
+                        <i class="fas ${sel.inAlbum?'fa-check-circle':'fa-circle'}" style="font-size:24px; color:${sel.inAlbum?`var(--success)`:'#ccc'}"></i>
+                    </div>` : ''}
+
+                    ${this.renderProductsList(sel)}
+                </div>
+
+                <div class="flex-btns">
+                    ${i > 0 ? `<button class="btn btn-secondary" onclick="App.nav(-1)">Anterior</button>` : `<div style="flex:1"></div>`}
+                    
+                    ${i < total - 1 ? 
+                        `<button class="btn btn-primary" onclick="App.nav(1)">Próxima</button>` : 
+                        `<button class="btn btn-success" onclick="App.checkout()">Finalizar Pedido ✓</button>`
+                    }
+                </div>
+            </div>`;
+        }
+
+        // 6. CHECKOUT
+        else if (view === 'checkout') {
+            const resumo = this.calcTotal();
+            html += `
+            <div class="card">
+                <h2 style="color:var(--success)">Pedido Pronto!</h2>
+                <div style="background:#f8f9fa; padding:15px; border-radius:8px; text-align:left; border-left:4px solid var(--success); white-space:pre-wrap; font-family:monospace; font-size:0.9rem">${resumo.txt}</div>
+                
+                <hr style="margin:20px 0; border-color:#eee">
+                
+                <label style="display:block; text-align:left; font-weight:bold">🚚 Entrega:</label>
+                <select id="frete" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; margin-top:5px" onchange="App.setFrete(this.value)">
+                    <option value="sede">Retirar na Sede (${this.data.logistica.enderecoSede})</option>
+                    <option value="transp">Transportadora (+ ${this.fmt(this.data.logistica.taxaEnvio)})</option>
+                    <option value="gratis">Frete Grátis (${this.data.logistica.cidadesGratis.join(', ')})</option>
+                </select>
+                ${this.state.frete !== 'sede' ? `<input type="text" id="endereco" placeholder="Digite seu Endereço" style="width:100%; padding:10px; margin-top:10px; border-radius:6px; border:1px solid #ddd">` : ''}
+
+                <label style="display:block; text-align:left; font-weight:bold; margin-top:15px">💳 Pagamento:</label>
+                <select id="pag" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; margin-top:5px" onchange="App.setPag(this.value)">
+                    <option value="pix">Pix (${this.data.financeiro.descontoPix}% Off)</option>
+                    <option value="cartao">Cartão de Crédito</option>
+                </select>
+
+                <div style="margin-top:20px; font-size:1.3rem; font-weight:bold; color:var(--primary)">
+                    Total Final: ${this.fmt(resumo.total)}
+                </div>
+
+                <button class="btn btn-success" style="margin-top:20px" onclick="App.zap()">
+                    <i class="fab fa-whatsapp"></i> Enviar Pedido no WhatsApp
+                </button>
+                <button class="btn btn-secondary" onclick="App.goBack()" style="margin-top:10px">Voltar e Editar</button>
+            </div>`;
+        }
+
+        html += `</div>`; // fecha container
+        app.innerHTML = html;
+
+        if (this.state.lightboxUrl) this.renderLightbox();
+    },
+
+    // --- FUNÇÕES AUXILIARES ---
+
+    renderProductsList(sel) {
+        let html = '';
+        // Filtros básicos
+        const prints = this.data.produtosAvulsos.filter(p=>p.nome.includes('Foto')||p.nome.includes('Revel'));
+        const frames = this.data.produtosAvulsos.filter(p=>p.nome.includes('Moldura')||p.nome.includes('Porta'));
+        const dig = this.data.produtosAvulsos.find(p=>p.nome.includes('Digital'));
+
+        // Lista Revelações
+        prints.forEach(p => {
+            html += this.stepItem(p, sel.extras[p.nome]||0);
+            // Se selecionou foto, oferece moldura
+            if((sel.extras[p.nome]||0) > 0) {
+                const dim = p.nome.match(/\d+x\d+/);
+                if(dim) {
+                    const fr = frames.find(f=>f.nome.includes(dim[0]));
+                    if(fr) html += `<div style="margin-left:20px; background:#fafafa; padding:5px; border-left:3px solid #ddd; font-size:0.9rem">Adicionar ${fr.nome}?${this.stepItem(fr, sel.extras[fr.nome]||0)}</div>`;
+                }
+            }
+        });
+
+        // Digital (Só mostra se não estiver no modo fotolivro, pq fotolivro geralmente ja ganha)
+        if(dig && this.state.mode !== 'fotolivro') {
+            const hasPrint = Object.keys(sel.extras).some(k=>k.includes('Foto')||k.includes('Revel'));
+            if(hasPrint) {
+                // Brinde
+                if(sel.extras[dig.nome]) delete sel.extras[dig.nome]; // Remove cobrança
+                html += `<div class="prod-row" style="background:#e8f5e9; color:#155724; padding:10px; border-radius:6px; font-size:0.9rem"><span>💾 Arquivo Digital</span> <b>BRINDE INCLUSO!</b></div>`;
+            } else {
+                html += this.stepItem(dig, sel.extras[dig.nome]||0);
+            }
+        }
+        return html;
+    },
+
+    stepItem(p, qtd) {
+        // Verifica se tem crédito para este item
+        const cred = (this.data.cliente.creditos||[]).find(c=>c.item === p.nome);
+        const temCredito = cred && qtd <= cred.qtd;
+        
+        return `
+        <div class="prod-row">
+            <div>
+                <div>${p.nome} ${temCredito ? '<span class="credit-badge">Crédito</span>' : ''}</div>
+                <div style="font-size:0.8rem; color:#666">${this.fmt(p.preco)}</div>
+            </div>
+            <div class="stepper" style="display:flex; gap:10px; align-items:center">
+                <button onclick="App.add('${p.nome}', -1)">-</button>
+                <span>${qtd}</span>
+                <button onclick="App.add('${p.nome}', 1)" style="background:var(--primary); color:white; border:none">+</button>
+            </div>
+        </div>`;
+    },
+
+    // --- CÁLCULOS FINANCEIROS ---
+    calcAlbumOptions(qtd) {
+        const ts = [...new Set(this.data.tabelaFotolivros.map(t=>t.size))];
+        const res = [];
+        ts.forEach(tam => {
+            const fpp = this.data.regrasDiagramacao[tam] || 4;
+            const pags = Math.ceil(qtd/fpp);
+            const mtc = this.data.tabelaFotolivros.filter(t=>t.size===tam).sort((a,b)=>a.pages-b.pages).find(t=>t.pages>=pags);
+            if(mtc) {
+                const tot = (mtc.priceBox + this.data.financeiro.custoFixoDiagramacao) * this.data.financeiro.markup;
+                res.push({ nome: `Fotolivro ${tam} (${mtc.pages} págs)`, total: tot, parcela: (tot*1.2)/12 });
+            }
+        });
+        return res;
+    },
+
+    calcTotal() {
+        let t = 0, txt = "";
+        
+        // 1. Fotolivro
+        if(this.state.mode === 'fotolivro') {
+            const q = this.state.sel.filter(s=>s.inAlbum).length;
+            if(q>0) {
+                const op = this.calcAlbumOptions(q)[0];
+                if(op) { t += op.total; txt += `📚 ${op.nome}: ${q} fotos (${this.fmt(op.total)})\n`; }
+            }
+        } 
+        // 2. Arquivo Completo
+        else if(this.state.mode === 'arquivo_completo') {
+            const qtd = this.data.fotos.length;
+            const pd = this.data.produtosAvulsos.find(p=>p.nome.includes('Digital'));
+            if(pd) { t += qtd * pd.preco; txt += `💾 Pacote Digital: ${qtd} fotos (${this.fmt(t)})\n`; }
+        }
+
+        // 3. Avulsos com Crédito Inteligente
+        let av = "";
+        const creditosUsados = {}; 
+
+        this.state.sel.forEach((s,i) => {
+            Object.keys(s.extras).forEach(k => {
+                // Pula digital se tiver revelação (regra do brinde)
+                if(k.includes('Digital') && Object.keys(s.extras).some(kk=>kk.includes('Foto'))) return;
+
+                const p = this.data.produtosAvulsos.find(x=>x.nome===k);
+                if(p) {
+                    let qtdCobrar = s.extras[k];
+                    // Abate Crédito
+                    const cred = (this.data.cliente.creditos||[]).find(c=>c.item===k);
+                    let info = "";
+                    if(cred) {
+                        const usados = creditosUsados[k] || 0;
+                        const disp = cred.qtd - usados;
+                        if(disp > 0) {
+                            const abate = Math.min(qtdCobrar, disp);
+                            qtdCobrar -= abate;
+                            creditosUsados[k] = usados + abate;
+                            info = " (Crédito)";
+                        }
+                    }
+                    
+                    const sub = p.preco * qtdCobrar;
+                    t += sub;
+                    av += `Foto ${i+1}: ${s.extras[k]}x ${k}${info} (${this.fmt(sub)})\n`;
+                }
+            });
+        });
+        if(av) txt += `🖼️ Avulsos:\n${av}`;
+
+        // 4. Frete e Entrada
+        if(this.state.frete === 'transp') {
+            t += this.data.logistica.taxaEnvio;
+            txt += `🚚 Frete: ${this.fmt(this.data.logistica.taxaEnvio)}\n`;
+        }
+        if(this.data.cliente.entrada > 0) {
+            t -= this.data.cliente.entrada;
+            txt += `💰 Entrada Paga: -${this.fmt(this.data.cliente.entrada)}\n`;
+        }
+
+        if(t < 0) t = 0;
+        return { total: t, txt: txt };
+    },
+
+    // --- AÇÕES ---
+    goBack() { 
+        if(this.state.view === 'checkout' || this.state.view === 'gallery' || this.state.view === 'workstation') {
+            if(confirm("Voltar ao menu inicial?")) {
+                this.state.view = 'intro';
+                this.state.sel.forEach(s => { s.inAlbum=false; s.extras={}; }); // Limpa seleção
+                this.render();
+            }
+        } else {
+            this.state.view = 'intro'; this.render();
+        }
+    },
+    
+    toggleGallery() { this.state.view = 'gallery'; this.render(); },
+    
+    openLightbox(url) { 
+        this.state.lightboxUrl = url; 
+        // Se estiver na galeria, renderiza só o lightbox por cima
+        const lb = document.getElementById('lightbox');
+        if(lb) {
+            lb.style.display = 'flex';
+            lb.querySelector('img').src = url;
+        } else {
+            this.render(); 
+        }
+    },
+    closeLightbox() { 
+        this.state.lightboxUrl = null; 
+        const lb = document.getElementById('lightbox');
+        if(lb) lb.style.display = 'none';
+    },
+
+    setMode(m) { this.state.mode = m; this.state.view = 'workstation'; this.state.idx=0; this.render(); },
+    irPersuasao() { this.state.view = 'persuasao'; this.render(); },
+    checkoutDigital() { this.state.mode = 'arquivo_completo'; this.state.view = 'checkout'; this.render(); },
+    
+    verDetalhes(tipo) { this.state.detalheTipo = tipo; this.state.view = 'detalhes'; this.render(); },
+    acaoDetalhe() {
+        const map = { 'book': 'fotolivro', 'print': 'revelacao' };
+        if(map[this.state.detalheTipo]) this.setMode(map[this.state.detalheTipo]);
+        else this.goBack();
+    },
+
+    nav(d) { this.state.idx += d; this.render(); },
+    
+    toggleAlbum() { this.state.sel[this.state.idx].inAlbum = !this.state.sel[this.state.idx].inAlbum; this.render(); },
+    
+    add(name, delta) {
+        const curr = this.state.sel[this.state.idx].extras[name] || 0;
+        const novo = Math.max(0, curr + delta);
+        if(novo === 0) delete this.state.sel[this.state.idx].extras[name];
+        else this.state.sel[this.state.idx].extras[name] = novo;
+        this.render();
+    },
+
+    checkout() {
+        if(this.calcTotal().total === 0 && this.state.mode !== 'arquivo_completo' && this.data.cliente.entrada <= 0) {
+            alert("Selecione pelo menos uma foto ou item!");
+            return;
+        }
+        this.state.view = 'checkout'; this.render();
+    },
+
+    setFrete(v) { this.state.frete = v; this.render(); },
+    setPag(v) { this.state.pag = v; this.render(); },
+
+    fmt(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); },
+
+    zap() {
+        const res = this.calcTotal();
+        let msg = `*PEDIDO - ${this.data.cliente.nome}*\n----------------\n${res.txt}\n----------------\n*TOTAL: ${this.fmt(res.total)}*\nPagamento: ${this.state.pag}`;
+        const end = document.getElementById('endereco');
+        if(end) msg += `\nEntrega: ${end.value}`;
+        else msg += `\nEntrega: ${this.state.frete}`;
+        
+        window.open(`https://wa.me/${this.data.financeiro.whatsapp}?text=${encodeURIComponent(msg)}`);
+    }
+};
+
+App.init();
+</script>
+</body>
+</html>
