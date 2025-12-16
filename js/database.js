@@ -36,7 +36,7 @@ window.NBV_DB = {
         custoFixoDiagramacao: 30.00
     },
 
-    // Textos de Apresentação (Necessário para o Admin carregar os campos)
+    // Textos de Apresentação (Evita erro de undefined no Admin)
     apresentacao: {
         book: { 
             text: "O Fotolivro Premium possui abertura 180º, capa dura fotográfica e papel de alta gramatura que não amarela.", 
@@ -52,7 +52,7 @@ window.NBV_DB = {
         }
     },
 
-    // Produtos Avulsos
+    // Produtos Avulsos (Atualizado)
     produtosAvulsos: [
         { nome: "Foto 10x15", preco: 10.00, icone: "fas fa-image" },
         { nome: "Foto 15x20", preco: 20.00, icone: "fas fa-image" },
@@ -67,8 +67,9 @@ window.NBV_DB = {
         { nome: "Arquivo Digital", preco: 8.00, icone: "fas fa-cloud-download-alt" }
     ],
 
-    // Tabela de Custo de Fotolivros
+    // Tabela de Custo de Fotolivros (Atualizado)
     tabelaFotolivros: [
+        // 30x40
         { size: '30x40', pages: 20, price: 592, priceBox: 754 },
         { size: '30x40', pages: 30, price: 750, priceBox: 912 },
         { size: '30x40', pages: 40, price: 879, priceBox: 1070 },
@@ -76,12 +77,14 @@ window.NBV_DB = {
         { size: '30x40', pages: 60, price: 1195, priceBox: 1386 },
         { size: '30x40', pages: 80, price: 1511, priceBox: 1702 },
         { size: '30x40', pages: 100, price: 1827, priceBox: 2018 },
+        // 20x30
         { size: '20x30', pages: 20, price: 317, priceBox: 443 },
         { size: '20x30', pages: 30, price: 406, priceBox: 532 },
         { size: '20x30', pages: 50, price: 584, priceBox: 710 },
         { size: '20x30', pages: 60, price: 673, priceBox: 799 },
         { size: '20x30', pages: 80, price: 851, priceBox: 977 },
         { size: '20x30', pages: 100, price: 1029, priceBox: 1155 },
+        // 15x20
         { size: '15x20', pages: 20, price: 214, priceBox: 356 },
         { size: '15x20', pages: 30, price: 269, priceBox: 382 },
         { size: '15x20', pages: 40, price: 324, priceBox: 437 },
