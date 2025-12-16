@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Pedido Studio NBV</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* TEMA E ESTILOS DO CLIENTE */
+:root{ --bg:#f8f9fa; --card:#ffffff; --text:#1f2937; --primary:#007bff; --success:#28a745; --border:#dee2e6; --warning:#ffc107; }
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);margin:0;padding-bottom:100px}
+.container{max-width:800px;margin:0 auto;padding:20px}
+.hidden{display:none !important}
+.card{background:var(--card);padding:20px;border-radius:12px;margin-bottom:15px;border:1px solid var(--border);box-shadow:0 4px 6px rgba(0,0,0,0.05);position:relative}
+h2{margin-top:0;text-align:center;font-size:1.6rem}
+h3{margin:0 0 10px 0;font-size:1.2rem;font-weight:700}
+.btn{background:var(--primary);color:#fff;border:none;padding:14px;width:100%;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;transition:0.2s;text-decoration:none}
+.btn:hover{filter:brightness(0.9)}
+.btn-success{background:var(--success)}
+.btn-secondary{background:#6c757d}
+.btn-outline{background:transparent;border:2px solid var(--primary);color:var(--primary)}
+.btn-link{background:none;color:#6b7280;border:none;padding:10px;font-size:0.9rem;text-decoration:underline;cursor:pointer;width:100%}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.photo-container{position:relative;background:#eee;min-height:300px;display:flex;align-items:center;justify-content:center;border-radius:8px;overflow:hidden;margin-bottom:20px}
+.photo-container img{width:100%;pointer-events:none;display:block}
+.watermark-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background-repeat:repeat;background-position:center;pointer-events:none;z-index:10}
+.prod-item{padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.stepper{display:flex;gap:5px;align-items:center}
+.stepper button{background:#e9ecef;border:none;width:32px;height:32px;border-radius:6px;font-weight:bold;cursor:pointer}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-box{background:white;padding:20px;border-radius:12px;max-width:500px;width:100%;max-height:80vh;display:flex;flex-direction:column}
+.modal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:5px;overflow-y:auto}
+.thumb-box{position:relative;aspect-ratio:1;overflow:hidden;border-radius:4px;cursor:pointer}
+.thumb-box img{width:100%;height:100%;object-fit:cover}
+.lightbox-img{max-width:95%;max-height:90%;border:2px solid white}
+.price-highlight{font-size:1.3rem;color:var(--primary);font-weight:bold;margin:10px 0}
+@keyframes pulse { 0% {transform:scale(1)} 50% {transform:scale(1.02)} 100% {transform:scale(1)} }
+.pulse-btn { animation: pulse 2s infinite; }
+</style>
+</head>
+<body>
+<div id="app"><div style="text-align:center;padding:50px"><i class="fas fa-spinner fa-spin"></i> Carregando...</div></div>
+
+<script>
+// [[INJECT_CONFIG_HERE]]
+
+const App = {
+    data: {},
+    state: { view: 'intro', idx: 0, mode: '', sel: [], pag: 'pix', frete: 'sede', modalOpen: false, lightboxUrl: null },
+
+    init() {
+        // Tenta ler a config injetada
+        if(window.NBV_CONFIG) {
+            this.data = window.NBV_CONFIG;
+            this.state.sel = this.data.fotos.map(url => ({ inAlbum: false, extras: {} }));
+            this.render();
+        } else {
+            document.getElementById('app').innerHTML = "Erro: Configuração não encontrada.";
+        }
+    },
+
+    render() {
+        const app = document.getElementById('app');
+        const view = this.state.view;
+        let html = '';
+
+        // TELA 1: INTRO
+        if(view === 'intro') {
+            html = `<div class="container">
+                <h2>Olá, ${this.data.cliente.nome}!</h2>
+                <div class="card" style="text-align:center">
+                    <p>Temos <strong>${this.data.fotos.length} fotos</strong> prontas.</p>
+                    <button class="btn btn-outline" onclick="App.toggleModalFotos()"><i class="fas fa-th"></i> Espiar Fotos</button>
+                </div>
+                <div class="card">
+                    <p style="text-align:center;font-weight:600">Como deseja seguir?</p>
+                    <button class="btn btn-primary" onclick="App.irParaModo()">Iniciar Pedido ➔</button>
+                </div>
+            </div>`;
+        }
+        // TELA 2: MODO (MENU)
+        else if(view === 'modo') {
+            const opcoes = this.calcAlbum(this.data.fotos.length);
+            const precoAlbum = opcoes.length > 0 ? this.fmt(opcoes[0].total) : "Sob Consulta";
+            const parcAlbum = opcoes.length > 0 ? "ou 12x de " + this.fmt(opcoes[0].parcela) : "";
+
+            html = `<div class="container">
+                <h2>Como deseja produzir?</h2>
+                
+                <div class="card" style="border:2px solid var(--primary)">
+                    <div style="background:var(--primary);color:white;position:absolute;top:0;right:0;padding:5px 10px;border-radius:0 10px 0 10px;font-size:12px">RECOMENDADO</div>
+                    <h3>📚 Fotolivro Premium</h3>
+                    <p>Capa dura e diagramação profissional.</p>
+                    <div class="price-highlight">${precoAlbum}</div>
+                    <small>${parcAlbum}</small>
+                    <div class="grid-2">
+                        <button class="btn btn-primary" onclick="App.setMode('album')">Montar</button>
+                        <button class="btn btn-outline" onclick="App.verDet('book')">Detalhes</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>🖼️ Fazer Revelação</h3>
+                    <p>Fotos avulsas em papel profissional.</p>
+                    <div class="grid-2">
+                        <button class="btn btn-primary" onclick="App.setMode('avulso')">Revelar</button>
+                        <button class="btn btn-outline" onclick="App.verDet('print')">Detalhes</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>💾 Somente Arquivo</h3>
+                    <p>Download das fotos.</p>
+                    <div class="grid-2">
+                        <button class="btn btn-primary" onclick="App.irPersuasao()">Arquivos</button>
+                        <button class="btn btn-outline" onclick="App.verDet('digital')">Detalhes</button>
+                    </div>
+                </div>
+                
+                <div style="text-align:center;margin-top:20px"><button class="btn-link" onclick="App.toggleModalFotos()">📸 Espiar Novamente</button></div>
+            </div>`;
+        }
+        // TELA 3: PERSUASÃO
+        else if(view === 'persuasao') {
+            html = `<div class="container">
+                <button class="btn-secondary" onclick="App.irParaModo()" style="width:auto;margin-bottom:15px">← Voltar</button>
+                <div class="card" style="border:2px solid var(--warning);background:#fffdf5">
+                    <h2 style="color:#d97706">⚠️ Espere um pouco!</h2>
+                    <p>Arquivos digitais se perdem. Papel dura gerações.</p>
+                    <ul>
+                        <li>✅ <strong>Durabilidade:</strong> Papel profissional.</li>
+                        <li>✅ <strong>Cores Reais:</strong> Telas enganam.</li>
+                        <li>✅ <strong>Ganhe o Digital:</strong> Ao revelar, o arquivo é brinde!</li>
+                    </ul>
+                    <button class="btn btn-primary pulse-btn" onclick="App.setMode('avulso')">✨ Quero Revelar (Melhor Opção)</button>
+                    <div style="margin-top:30px;text-align:center">
+                        <button class="btn btn-secondary" style="width:auto;background:#e0e0e0;color:#555" onclick="App.checkoutDig()">Continuar com Arquivos</button>
+                    </div>
+                </div>
+            </div>`;
+        }
+        // TELA 4: DETALHES
+        else if(view === 'detalhes') {
+            const d = this.data.apresentacao[this.state.detTipo];
+            html = `<div class="container">
+                <button class="btn-secondary" onclick="App.irParaModo()" style="width:auto;margin-bottom:15px">← Voltar</button>
+                <div class="card">
+                    <img src="${d.img}" style="height:200px;object-fit:cover;margin-bottom:15px;width:100%">
+                    <h3>Detalhes</h3>
+                    <p>${d.text}</p>
+                    <button class="btn btn-primary" onclick="App.acaoDet()">Continuar</button>
+                </div>
+            </div>`;
+        }
+        // TELA 5: WORKSTATION (SELEÇÃO)
+        else if(view === 'workstation') {
+            const i = this.state.idx;
+            const f = this.data.fotos[i];
+            const sel = this.state.sel[i];
+            
+            // Marca d'água
+            const svg = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg width='300' height='150' xmlns='http://www.w3.org/2000/svg'><text x='50%' y='50%' transform='rotate(-20 150 75)' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='20' fill='#000' fill-opacity='${this.data.assets.opacity}'>${this.data.assets.watermarkText}</text></svg>`);
+            
+            html = `<div class="container">
+                <button class="btn-secondary" onclick="App.irParaModo()" style="width:auto;margin-bottom:10px;padding:5px 10px;font-size:0.8rem">✖ Sair</button>
+                
+                <div class="photo-container">
+                    <img src="${f}" oncontextmenu="return false">
+                    <div class="watermark-overlay" style="background-image:url('${svg}')"></div>
+                </div>
+                
+                ${this.state.mode==='album' ? `<div class="card" onclick="App.togAlb()" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;border:2px solid ${sel.inAlbum?'var(--success)':'#eee'}"><div><strong>📚 No Álbum</strong></div><i class="fas ${sel.inAlbum?'fa-check-circle':'fa-circle'}" style="font-size:28px;color:${sel.inAlbum?'var(--success)':'#ccc'}"></i></div>` : ''}
+                
+                <div class="card">
+                    <h3 style="font-size:1rem">Revelar esta foto:</h3>
+                    ${this.renderProds(sel)}
+                </div>
+                
+                <div class="grid-2">
+                    <button class="btn btn-secondary" onclick="App.nav(-1)" ${i===0?'disabled style="opacity:0.5"':''}>❮ Anterior</button>
+                    ${i < this.data.fotos.length-1 ? `<button class="btn btn-primary" onclick="App.nav(1)">Próxima ❯</button>` : `<button class="btn btn-success" onclick="App.checkout()">Finalizar ✓</button>`}
+                </div>
+                <div style="text-align:center;margin-top:10px;color:#999">${i+1} de ${this.data.fotos.length}</div>
+            </div>`;
+        }
+        // TELA 6: CHECKOUT
+        else if(view === 'checkout') {
+            const res = this.calcTotal();
+            html = `<div class="container">
+                <h2>Resumo do Pedido</h2>
+                <div class="card" style="font-family:monospace;white-space:pre-wrap;background:#f8f9fa;font-size:13px;border-left:4px solid var(--success)">${res.txt}</div>
+                
+                <div class="card">
+                    <h3>🚚 Entrega</h3>
+                    <select id="frete" onchange="App.setFrete(this.value)">
+                        <option value="sede">Retirar na Sede</option>
+                        <option value="transp">Transportadora (+ ${this.fmt(this.data.logistica.taxaEnvio)})</option>
+                        <option value="gratis">Frete Grátis (${this.data.logistica.cidadesGratis.join(', ')})</option>
+                    </select>
+                    ${this.state.frete!=='sede'?'<input type="text" id="end" placeholder="Digite seu Endereço / Local">':''}
+                </div>
+                
+                <div class="card">
+                    <h3>💳 Pagamento</h3>
+                    <div style="display:flex;justify-content:space-between;font-size:1.4rem;font-weight:bold;color:var(--success);margin-bottom:15px"><span>Total:</span><span>${this.fmt(res.total)}</span></div>
+                    <select id="pag" onchange="App.setPag(this.value)">
+                        <option value="pix">Pix (${this.data.financeiro.descontoPix}% Off)</option>
+                        <option value="cartao">Cartão de Crédito</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-success" onclick="App.zap()"><i class="fab fa-whatsapp"></i> Enviar Pedido</button>
+                <button class="btn btn-outline" onclick="App.irParaModo()" style="margin-top:15px">Voltar</button>
+            </div>`;
+        }
+
+        app.innerHTML = html;
+        if(this.state.modalOpen) this.renderModal();
+        if(this.state.lightboxUrl) this.renderLightbox();
+    },
+
+    // --- FUNÇÕES AUXILIARES DE RENDER ---
+    renderProds(sel) {
+        let h = '';
+        const prints = this.data.produtosAvulsos.filter(p=>p.nome.includes('Foto')||p.nome.includes('Revel'));
+        const frames = this.data.produtosAvulsos.filter(p=>p.nome.includes('Moldura')||p.nome.includes('Porta'));
+        const dig = this.data.produtosAvulsos.find(p=>p.nome.includes('Digital'));
+        
+        prints.forEach(p => {
+            h += this.stepItem(p, sel.extras[p.nome]||0);
+            if((sel.extras[p.nome]||0) > 0) {
+                const dim = p.nome.match(/\d+x\d+/);
+                if(dim) {
+                    const fr = frames.find(f=>f.nome.includes(dim[0]));
+                    if(fr) h += `<div style="margin-left:20px;background:#fafafa;padding:5px;border-left:2px solid #ccc"><small>Moldura?</small>${this.stepItem(fr, sel.extras[fr.nome]||0)}</div>`;
+                }
+            }
+        });
+        if(dig) {
+            const hasPrint = Object.keys(sel.extras).some(k=>k.includes('Foto')||k.includes('Revel'));
+            if(hasPrint) {
+                 if(sel.extras[dig.nome]) delete sel.extras[dig.nome];
+                 h += `<div class="prod-item" style="opacity:0.7;background:#e8f5e9"><div style="font-size:14px">Arquivo Digital <span style="background:green;color:white;font-size:10px;padding:2px">BRINDE</span></div><i class="fas fa-check" style="color:green"></i></div>`;
+            } else {
+                 h += this.stepItem(dig, sel.extras[dig.nome]||0);
+            }
+        }
+        return h;
+    },
+    stepItem(p, q) {
+        return `<div class="prod-item"><div><div style="font-size:14px">${p.nome}</div><div style="font-size:12px;color:#666">${this.fmt(p.preco)}</div></div>
+        <div class="stepper"><button onclick="App.add('${p.nome}',-1)">-</button><span>${q}</span><button onclick="App.add('${p.nome}',1)" style="background:var(--primary);color:white">+</button></div></div>`;
+    },
+    
+    // --- LIGHTBOX & MODAL ---
+    toggleModalFotos() { this.state.modalOpen = !this.state.modalOpen; this.render(); },
+    renderModal() {
+        const svg = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg width='150' height='150' xmlns='http://www.w3.org/2000/svg'><text x='50%' y='50%' transform='rotate(-45 75 75)' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='16' fill='#000' fill-opacity='0.3'>NBV</text></svg>`);
+        const imgs = this.data.fotos.map(u => `<div class="thumb-box" onclick="App.openLb('${u}')"><img src="${u}"><div class="watermark-overlay" style="background-image:url('${svg}')"></div></div>`).join('');
+        document.body.insertAdjacentHTML('beforeend', `<div class="modal-overlay" onclick="if(event.target===this) App.toggleModalFotos()"><div class="modal-box"><h3>Galeria</h3><div class="modal-grid">${imgs}</div><button class="btn btn-outline" style="margin-top:10px" onclick="App.toggleModalFotos()">Fechar</button></div></div>`);
+    },
+    openLb(u) { this.state.lightboxUrl = u; this.render(); },
+    renderLightbox() {
+        document.body.insertAdjacentHTML('beforeend', `<div class="modal-overlay" style="z-index:2000" onclick="App.closeLb()"><img src="${this.state.lightboxUrl}" class="lightbox-img"><button style="position:absolute;top:20px;right:20px;background:none;border:none;color:white;font-size:40px;cursor:pointer" onclick="App.closeLb()">&times;</button></div>`);
+    },
+    closeLb() { this.state.lightboxUrl = null; this.render(); },
+    
+    // --- LÓGICA DE NAVEGAÇÃO ---
+    irParaModo() { this.state.view = 'modo'; this.render(); },
+    setMode(m) { this.state.mode = m; this.state.view = 'workstation'; this.state.idx=0; this.render(); },
+    irPersuasao() { this.state.view = 'persuasao'; this.render(); },
+    checkoutDig() { this.state.mode = 'arq_full'; this.state.view = 'checkout'; this.render(); },
+    verDet(t) { this.state.detTipo = t; this.state.view = 'detalhes'; this.render(); },
+    acaoDet() { 
+        if(this.state.detTipo==='book') this.setMode('album'); 
+        else if(this.state.detTipo==='print') this.setMode('avulso');
+        else this.irParaModo();
+    },
+    nav(d) { this.state.idx += d; this.render(); },
+    togAlb() { this.state.sel[this.state.idx].inAlbum = !this.state.sel[this.state.idx].inAlbum; this.render(); },
+    add(n, d) { 
+        let v = (this.state.sel[this.state.idx].extras[n]||0) + d;
+        if(v<=0) delete this.state.sel[this.state.idx].extras[n];
+        else this.state.sel[this.state.idx].extras[n] = v;
+        this.render();
+    },
+    checkout() { 
+        if(this.calcTotal().total===0 && this.state.mode!=='arq_full') return alert("Selecione algo!");
+        this.state.view='checkout'; this.render(); 
+    },
+    setFrete(v) { this.state.frete = v; this.render(); },
+    setPag(v) { this.state.pag = v; },
+
+    // --- CÁLCULOS (COM CRÉDITO) ---
+    calcAlbum(qtd) {
+        const ts = [...new Set(this.data.tabelaFotolivros.map(t=>t.size))];
+        const res = [];
+        ts.forEach(tam => {
+            const fpp = this.data.regrasDiagramacao[tam] || 4;
+            const pags = Math.ceil(qtd/fpp);
+            const mtc = this.data.tabelaFotolivros.filter(t=>t.size===tam).sort((a,b)=>a.pages-b.pages).find(t=>t.pages>=pags);
+            if(mtc) {
+                const tot = (mtc.price + this.data.financeiro.custoFixoDiagramacao) * this.data.financeiro.markup;
+                res.push({ nome: `Fotolivro ${tam}`, total: tot, parcela: (tot*1.2)/12 });
+            }
+        });
+        return res;
+    },
+    calcTotal() {
+        let t = 0, txt = "";
+        
+        if(this.state.mode==='album') {
+            const q = this.state.sel.filter(s=>s.inAlbum).length;
+            if(q>0) {
+                const op = this.calcAlbum(q)[0];
+                if(op) { t += op.total; txt += `📚 ${op.nome}: ${q} fotos (${this.fmt(op.total)})\n`; }
+            }
+        } else if(this.state.mode==='arq_full') {
+            const qtd = this.data.fotos.length;
+            const pd = this.data.produtosAvulsos.find(p=>p.nome.includes('Digital'));
+            if(pd) { t += qtd*pd.preco; txt += `💾 Pacote Digital: ${qtd} fotos (${this.fmt(t)})\n`; }
+        }
+        
+        let av = "";
+        const creditosUsados = {}; 
+
+        this.state.sel.forEach((s,i) => {
+            Object.keys(s.extras).forEach(k => {
+                if(k.includes('Digital') && Object.keys(s.extras).some(kk=>kk.includes('Foto'))) return;
+                
+                const p = this.data.produtosAvulsos.find(x=>x.nome===k);
+                if(p) { 
+                    let qtdParaCobrar = s.extras[k];
+                    const credito = (this.data.cliente.creditos || []).find(c => c.item === k);
+                    let infoCred = "";
+                    
+                    if(credito) {
+                        const usados = creditosUsados[k] || 0;
+                        const disponiveis = credito.qtd - usados;
+                        
+                        if(disponiveis > 0) {
+                            const abatidos = Math.min(qtdParaCobrar, disponiveis);
+                            qtdParaCobrar -= abatidos;
+                            creditosUsados[k] = usados + abatidos;
+                            infoCred = ` (Incluso)`; 
+                        }
+                    }
+
+                    const st = p.preco * qtdParaCobrar;
+                    t += st; 
+                    av += `Foto ${i+1}: ${s.extras[k]}x ${k}${infoCred} (${this.fmt(st)})\n`; 
+                }
+            });
+        });
+        if(av) txt += `🖼️ Avulsos:\n${av}`;
+        
+        if(this.state.frete==='transp') { t += this.data.logistica.taxaEnvio; txt += `🚚 Frete: ${this.fmt(this.data.logistica.taxaEnvio)}\n`; }
+        if(this.data.cliente.entrada > 0) { t -= this.data.cliente.entrada; txt += `💰 Entrada: -${this.fmt(this.data.cliente.entrada)}\n`; }
+        if(t<0) t=0;
+        return { total: t, txt: txt };
+    },
+    fmt(v) { return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); },
+    zap() {
+        const res = this.calcTotal();
+        let msg = `*PEDIDO - ${this.data.cliente.nome}*\n----------------\n${res.txt}\n----------------\n*TOTAL: ${this.fmt(res.total)}*\nPagamento: ${this.state.pag}`;
+        if(this.state.frete!=='sede') msg += `\nEntrega: ${document.getElementById('end')?document.getElementById('end').value:'A combinar'}`;
+        window.open(`https://wa.me/${this.data.financeiro.whatsapp}?text=${encodeURIComponent(msg)}`);
+    }
+};
+App.init();
+</script>
+</body>
+</html>
