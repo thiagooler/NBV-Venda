@@ -1,296 +1,211 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Galeria Studio NBV</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-    :root { --primary: #0066cc; --primary-dark: #004c99; --bg: #f4f6f8; --card: #fff; --text: #1f2937; --success: #10b981; --warning: #f59e0b; }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 80px; }
-    .hidden { display: none !important; }
-    .fade-in { animation: fadeIn 0.4s ease-out; }
-    @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-    .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn:active { transform: scale(0.98); }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-secondary { background: #e2e8f0; color: #333; }
-    .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
-    .btn-success { background: var(--success); color: white; }
-    .header { background: #111; color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-    .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
-    .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-    .card { background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; margin-bottom: 20px; }
-    .card img { max-width: 100%; border-radius: 8px; margin-bottom: 10px; height: 150px; object-fit: cover; }
-    .photo-viewer { text-align: center; }
-    .img-wrapper { position: relative; width: 100%; min-height: 200px; background: #eee; border-radius: 8px; overflow: hidden; margin-bottom: 15px; }
-    .img-wrapper img { width: 100%; height: auto; display: block; }
-    .prod-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
-    .stepper { display: flex; align-items: center; gap: 10px; }
-    .stepper button { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ccc; background: white; font-weight: bold; }
-    .status-dock { position: fixed; bottom: 0; left: 0; width: 100%; background: #1e293b; color: white; padding: 15px; z-index: 900; border-top: 3px solid var(--success); box-shadow: 0 -4px 20px rgba(0,0,0,0.2); }
-    .status-info { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 5px; color: #cbd5e1; }
-    .status-total { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 800; color: #fff; margin-top: 5px; border-top: 1px solid #334155; padding-top: 5px; }
-    .badge-free { background: var(--success); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-left: 5px; }
-    .credit-tag { background: #e0f2fe; color: #0284c7; padding: 8px; border-radius: 6px; font-size: 0.85rem; display: block; margin-bottom: 15px; font-weight: 600; border: 1px solid #bae6fd; text-align: left; }
-    .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; align-items:center; justify-content:center; }
-    .modal-full { width: 95%; height: 95%; max-width: 1200px; background: black; display:flex; flex-direction:column; }
-    .close-modal { position: absolute; top: 10px; right: 15px; font-size: 30px; cursor: pointer; color:#fff; z-index:1001 }
-    .checkout-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-bottom: 15px; }
-    .checkout-table td { padding: 8px 0; border-bottom: 1px solid #eee; }
-    .row-discount { color: var(--success); font-weight: 600; } .row-entry { color: #dc2626; font-weight: 600; }
-    .form-label { display: block; text-align: left; font-weight: 600; margin: 15px 0 5px; color: #333; }
-    .form-input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: #fff; }
-    .alert-box { background: #fff3cd; color: #856404; padding: 10px; border-radius: 6px; margin: 10px 0; font-size: 0.9rem; border: 1px solid #ffeeba; text-align: left; }
-    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 5px; }
-</style>
+    <meta charset="UTF-8">
+    <title>NBV Admin - V20</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="database.js"></script>
+    <style>
+        :root { --primary: #0066cc; --bg: #f3f4f6; --sidebar: #fff; --text: #1f2937; --border: #e5e7eb; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        .nav-btn { width: 100%; text-align: left; padding: 12px; margin-bottom: 5px; cursor: pointer; border: none; background: none; color: #666; font-weight: 600; display: flex; align-items: center; gap: 10px; border-radius: 6px; }
+        .nav-btn:hover, .nav-btn.active { background: #eff6ff; color: var(--primary); }
+        .nav-btn.active { font-weight: 700; border-right: 3px solid var(--primary); }
+        .main-content { flex: 1; padding: 30px; overflow-y: auto; }
+        .section { display: none; animation: fadeIn 0.3s; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.85rem; color:#555; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 0.9rem; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; transition:0.2s }
+        .btn:hover { opacity: 0.9; }
+        .btn-primary { background: var(--primary); }
+        .btn-success { background: #10b981; }
+        .btn-dark { background: #1f2937; }
+        .btn-remove { background: #fee2e2; color: #dc2626; border: none; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; font-weight:bold; }
+        .btn-add { background: #ecfdf5; color: #10b981; border: 1px dashed #10b981; }
+        .status-bar { padding:15px; border-radius:8px; margin-bottom:20px; font-weight:bold; display:none; }
+        .status-success { background:#dcfce7; color:#166534; }
+        .status-error { background:#fee2e2; color:#991b1b; }
+        .status-loading { background:#e0f2fe; color:#075985; }
+        .gh-config { background: #f1f5f9; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; font-size: 0.85rem; }
+        .gh-config input { padding: 6px; margin-bottom: 5px; border:1px solid #cbd5e1 }
+        .row { display: flex; gap: 15px; } .col { flex: 1; }
+        .list-item, .table-row { background: #fff; padding: 10px; border: 1px solid #eee; border-radius: 6px; margin-bottom: 5px; display:flex; align-items:center; gap:10px; }
+    </style>
 </head>
 <body>
 
-<div id="app"></div>
-
-<script>
-const App = {
-    data: {},
-    state: { view: 'init', mode: '', photoIdx: 0, cart: {} }, // cart is used for both selection and simple approval (status/comment)
-
-    init() {
-        if(!window.NBV_CONFIG) return document.body.innerHTML = "<h2 style='text-align:center;padding:50px'>Erro: Configuração não encontrada.</h2>";
-        this.data = window.NBV_CONFIG;
+    <div class="sidebar">
+        <h2 style="margin:0 0 20px; color:#333"><i class="fas fa-camera"></i> Studio<span style="color:var(--primary)">NBV</span></h2>
         
-        // Roteamento para Aprovação Simples ou Venda Completa
-        if (this.data.fluxo.pedirEdicao) {
-            this.state.view = 'editing_choice'; // Venda Completa (Começa na Edição)
-        } else {
-            this.state.view = 'approval_only'; // Aprovação Simples (Vai direto para o carrossel)
-        }
-        this.render();
-    },
+        <div class="gh-config">
+            <label><i class="fab fa-github"></i> GitHub</label>
+            <input type="password" id="ghToken" placeholder="Token">
+            <input type="text" id="ghUser" placeholder="Usuário">
+            <input type="text" id="ghRepo" placeholder="Repositório">
+            <input type="text" id="ghBranch" placeholder="Branch (main)" value="main">
+            <button class="btn btn-dark" style="padding:5px; font-size:0.8rem" onclick="salvarCredenciaisLocal()">Salvar</button>
+        </div>
 
-    render() {
-        const app = document.getElementById('app');
-        if (this.state.view === 'editing_choice') app.innerHTML = this.viewEditing();
-        else if (this.state.view === 'home') app.innerHTML = this.viewHome();
-        else if (this.state.view === 'selection') app.innerHTML = this.viewSelection();
-        else if (this.state.view === 'persuasion') app.innerHTML = this.viewPersuasion();
-        else if (this.state.view === 'checkout') app.innerHTML = this.viewCheckout();
-        else if (this.state.view === 'approval_only') app.innerHTML = this.viewApprovalOnly(); // Nova View de Aprovação
-        
-        if(!this.isUpdating) window.scrollTo(0,0);
-        this.isUpdating = false;
-    },
+        <nav>
+            <button class="nav-btn active" onclick="showTab('tab-cliente')"><i class="fas fa-user-plus"></i> Novo Cliente</button>
+            <button class="nav-btn" onclick="showTab('tab-fotolivros')"><i class="fas fa-book"></i> Tabela Fotolivros</button>
+            <button class="nav-btn" onclick="showTab('tab-produtos')"><i class="fas fa-images"></i> Produtos Avulsos</button>
+            <button class="nav-btn" onclick="showTab('tab-textos')"><i class="fas fa-paragraph"></i> Apresentação</button>
+            <button class="nav-btn" onclick="showTab('tab-config')"><i class="fas fa-cogs"></i> Configs Gerais</button>
+        </nav>
 
-    // --- 1. VIEWS DE INTRO / ROTEAMENTO (Mantidas) ---
-    viewEditing() {
-        return `<div class="header">Studio<span>NBV</span></div><div class="container fade-in"><div class="card"><h2>Escolha a Edição</h2><p style="color:#666">Selecione qual opção você deseja:</p><button class="btn btn-outline" onclick="App.chooseEdit(true)" style="border-color:var(--primary);color:var(--primary)">✨ <b>Com Edição Artística</b><br><small>Tratamento completo. Prazo 30 dias.</small></button><button class="btn btn-outline" onclick="App.chooseEdit(false)" style="border-color:var(--success);color:var(--success)">⚡ <b>Produção Rápida</b><br><small>Fotos originais. Prazo 10 dias.</small></button></div></div>`;
-    },
-    chooseEdit(want) {
-        if(want) window.location.href = `https://wa.me/${this.data.financeiro.whatsapp}?text=Olá, gostaria de produzir com Edição Artística (Opção 1).`;
-        else { this.state.view = 'home'; this.render(); }
-    },
+        <div style="margin-top:auto">
+            <button class="btn btn-primary" onclick="salvarDatabaseGlobal()"><i class="fas fa-cloud-upload-alt"></i> SALVAR DB GLOBAL</button>
+        </div>
+    </div>
 
-    viewHome() {
-        const total = this.data.fotos.length; const minBook = this.data.fluxo.minimoFotosLivro || 20; const info = this.data.apresentacao; const entry = this.data.cliente.entrada || 0;
-        const creds = this.data.cliente.creditos || []; const printCredit = creds.find(c=>c.item.includes('Foto')) ? `${creds.find(c=>c.item.includes('Foto')).qtd} fotos inclusas` : 'Nenhuma foto inclusa';
-        const entryText = entry > 0 ? `<br>💰 Entrada paga: ${this.formatMoney(entry)}` : ''; const detailsText = `${printCredit}${entryText}`;
+    <div class="main-content">
+        <div id="status-display" class="status-bar"></div>
 
-        let bookCard = ''; 
-        if(total>=minBook) {
-            const op = this.calcBookOptions(total)[0];
-            const bookCredit = this.data.cliente.incluirAlbum ? `✅ Contrato: Álbum Incluso<br>💰 Entrada paga: ${this.formatMoney(entry)}` : '';
-            bookCard = `<div class="card" style="border:2px solid var(--primary)"><img src="${info.fotolivro.img}"><h2>📚 Fotolivro</h2><p>${info.fotolivro.texto}</p>${bookCredit ? `<div class="credit-tag">${bookCredit}</div>` : ''}<div style="margin:10px 0;font-size:0.9rem">A partir de <b>${this.formatMoney(op.total)}</b></div><button class="btn btn-primary" onclick="App.startSelection('fotolivro')">Montar Fotolivro</button></div>`;
-        }
-
-        return `<div class="header">Studio<span>NBV</span></div><div class="container fade-in"><h2 style="text-align:center;margin-bottom:10px">Olá, ${this.data.cliente.nome}!</h2><p style="text-align:center;color:#666;margin-bottom:30px">Selecione qual opção você deseja:</p><div class="menu-grid"><div class="card"><h2>📸 Espiar Fotos</h2><p>Veja todas as ${total} fotos.</p><button class="btn btn-secondary" onclick="App.openGallery()">Ver Galeria</button></div>${bookCard}<div class="card"><img src="${info.revelacao.img}"><h2>🖼️ Revelação</h2><p>${info.revelacao.texto}</p><div class="credit-tag"><b>Seus Créditos:</b><br>${detailsText}</div><button class="btn btn-primary" onclick="App.startSelection('revelacao')">Selecionar Fotos</button></div><div class="card"><img src="${info.digital.img}"><h2>💾 Arquivo Digital</h2><p>${info.digital.texto}</p><button class="btn btn-outline" onclick="App.goToPersuasion()">Comprar Arquivos</button></div></div></div>${this.renderGallery()}${this.renderLightbox()}`;
-    },
-
-    // --- 3. VIEW: APROVAÇÃO SIMPLES (NÃO VENDA) ---
-    viewApprovalOnly() {
-        const idx = this.state.photoIdx;
-        const total = this.data.fotos.length;
-        const url = this.data.fotos[idx];
-        const currentData = this.state.cart[idx] || { status: 'pendente', comment: '' };
-        const status = currentData.status || 'pendente';
-        
-        // Determina a cor do status
-        const statusColor = status === 'approved' ? 'var(--success)' : status === 'commented' ? 'var(--warning)' : 'var(--text-light)';
-        const statusText = status === 'approved' ? 'APROVADA' : status === 'commented' ? 'COMENTADA' : 'PENDENTE';
-        
-        return `
-        <div class="header" style="display:flex;justify-content:space-between"><button onclick="App.goBack()" style="background:none;border:none;color:white;font-size:1.2rem"><i class="fas fa-arrow-left"></i></button><span>APROVAÇÃO: Foto ${idx+1} de ${total}</span><span style="width:30px"></span></div>
-        <div class="container fade-in" style="padding-bottom:50px">
-            <div class="photo-viewer card">
-                <div class="img-wrapper" onclick="App.openLightbox('${url}')" style="cursor:pointer"><img src="${url}"></div>
+        <div id="tab-cliente" class="section active">
+            <h2>Gerar Link do Cliente</h2>
+            <div style="background:white; padding:20px; border-radius:8px; border:1px solid #eee">
+                <div class="row">
+                    <div class="col"><label>Nome do Cliente (Pasta)</label><input type="text" id="cliNome" placeholder="Ex: Casamento_Ana"></div>
+                    <div class="col"><label>Fluxo</label><select id="fluxoModo"><option value="venda">💰 Venda Completa</option><option value="aprovacao">✅ Apenas Aprovação</option></select></div>
+                </div>
+                <label>Links das Fotos</label><textarea id="cliFotos" rows="6"></textarea>
                 
-                <div style="margin-top:15px">
-                    <div style="text-align:center;margin-bottom:10px">Status Atual: <span style="font-weight:bold;color:${statusColor}">${statusText}</span></div>
-                    
-                    <div style="display:flex;gap:10px">
-                        <button class="btn btn-success" style="width:50%" onclick="App.setApprovalStatus('approved')"><i class="fas fa-check"></i> Aprovar</button>
-                        <button class="btn btn-secondary" style="width:50%" onclick="document.getElementById('area-comment').classList.toggle('hidden'); App.checkCommentAreaStatus()">Comentar</button>
+                <div style="background:#f8fafc; padding:20px; border-radius:8px; margin-top:20px; border:1px solid #e2e8f0">
+                    <h4 style="margin:0 0 15px; color:#0f172a">Financeiro do Cliente</h4>
+                    <div class="row">
+                        <div class="col"><label>Entrada (R$)</label><input type="number" id="cliEntrada" value="0.00"></div>
+                        <div class="col"><label>Contrato?</label><select id="cliTemAlbum" onchange="toggleContrato()"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
                     </div>
+                    <div id="area-contrato" style="display:none; margin-top:15px; background:#eff6ff; padding:15px; border-radius:6px">
+                        <div class="row">
+                            <div class="col"><label>Tamanho</label><select id="ctrTam"><option value="15x20">15x20</option><option value="20x30">20x30</option><option value="30x40">30x40</option></select></div>
+                            <div class="col"><label>Qtd Fotos</label><input type="number" id="ctrQtd" value="20"></div>
+                            <div class="col"><label>Valor Total (R$)</label><input type="number" id="ctrValor" value="0.00"></div>
+                        </div>
+                    </div>
+                    <label style="margin-top:15px">Brindes / Créditos</label>
+                    <div id="creditos-list"></div>
+                    <button class="btn btn-add" style="margin-top:5px; padding:5px; font-size:0.8rem" onclick="addCreditoRow()">+ Adicionar</button>
                 </div>
-
-                <div id="area-comment" class="card ${status !== 'commented' ? 'hidden' : ''}" style="text-align:left;margin-top:15px;padding:15px">
-                    <label style="font-weight:600">Seu Comentário:</label>
-                    <textarea id="photo-comment" style="width:100%;min-height:80px" oninput="App.saveComment(this.value)">${currentData.comment}</textarea>
-                    <small>Se você deixar um comentário, o status será alterado para "Comentada".</small>
-                </div>
-
-                <div style="display:flex;gap:10px;margin-top:30px">
-                    <button class="btn btn-secondary" onclick="App.nav(-1)" ${idx===0?'disabled':''}>Anterior</button>
-                    ${idx<total-1 ? `<button class="btn btn-primary" onclick="App.nav(1)">Próxima Foto</button>` : `<button class="btn btn-success" onclick="App.sendApprovalReport()">Finalizar e Enviar Relatório</button>`}
-                </div>
+                <button class="btn btn-success" style="margin-top:20px" onclick="publicarCliente()">GERAR SITE</button>
             </div>
         </div>
-        ${this.renderLightbox()}`;
-    },
 
-    checkCommentAreaStatus() {
-        const area = document.getElementById('area-comment');
-        const comment = document.getElementById('photo-comment');
-        if (area.classList.contains('hidden')) {
-            // Se o usuário fecha a área de comentário, e não tem texto, volta para pendente
-            if (comment.value.trim() === '') {
-                this.setApprovalStatus('pendente');
-            }
-        } else {
-            // Se abre, e não tem texto, muda para commented para o usuário saber que deve digitar
-            if (comment.value.trim() === '') {
-                 // Nao muda o status aqui, muda no saveComment
-            }
-        }
-    },
-    setApprovalStatus(newStatus) {
-        const idx = this.state.photoIdx;
-        const comment = document.getElementById('photo-comment')?.value || '';
-        if (newStatus === 'approved') {
-            this.state.cart[idx] = { status: 'approved', comment: '' };
-        } else if (newStatus === 'pendente') {
-             this.state.cart[idx] = { status: 'pendente', comment: '' };
-        }
-        this.render();
-    },
-    saveComment(text) {
-        const idx = this.state.photoIdx;
-        this.state.cart[idx] = { status: text.trim() ? 'commented' : 'pendente', comment: text.trim() };
-        // Não precisa renderizar, apenas salvar o estado
-    },
-    sendApprovalReport() {
-        let msg = `*RELATÓRIO DE APROVAÇÃO - ${this.data.cliente.nome}*\n-----------------------------------\n`;
-        let approvedCount = 0; let commentedCount = 0; let pendingCount = 0;
-        this.data.fotos.forEach((url, idx) => {
-            const data = this.state.cart[idx] || { status: 'pendente', comment: '' };
-            const filename = url.substring(url.lastIndexOf('/') + 1);
-            if (data.status === 'approved') { msg += `✅ Aprovada: ${filename}\n`; approvedCount++; } 
-            else if (data.status === 'commented') { msg += `💬 Comentário na Foto ${filename}: ${data.comment}\n`; commentedCount++; } 
-            else { pendingCount++; }
-        });
-        msg += `\n*RESUMO:*\nAprovadas: ${approvedCount}\nComentadas: ${commentedCount}\nPendentes/Rejeitadas: ${pendingCount}\n\nEntre em contato para prosseguir com a produção.`;
-        window.open(`https://wa.me/${this.data.financeiro.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
-    },
+        <div id="tab-fotolivros" class="section">
+            <h2>Tabela Fotolivros</h2>
+            <div style="background:white; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #eee">
+                <div class="row">
+                    <div class="col"><label>Markup</label><input type="number" id="confMarkup" step="0.1"></div>
+                    <div class="col"><label>Custo Fixo</label><input type="number" id="confCustoFixo"></div>
+                    <div class="col"><label>Mínimo Fotos</label><input type="number" id="confMinFotos"></div>
+                </div>
+            </div>
+            <div id="fotolivro-table"></div>
+            <button class="btn btn-add" onclick="addBookRow()">+ Linha</button>
+            <h4 style="margin-top:20px">Regras (Fotos/Pág)</h4>
+            <div id="regras-container" style="display:flex; gap:10px; flex-wrap:wrap"></div>
+        </div>
 
-    // --- 4. VIEW: SELEÇÃO DE VENDA ---
-    viewSelection() {
-        const idx=this.state.photoIdx; const total=this.data.fotos.length; const status=this.calcStatusSelection();
-        return `<div class="header"><button onclick="App.goBack()" style="float:left;background:none;border:none;color:white"><i class="fas fa-arrow-left"></i></button>Foto ${idx+1}/${total}</div><div class="container fade-in" style="padding-bottom:120px"><div class="photo-viewer card"><div class="img-wrapper"><img src="${this.data.fotos[idx]}"></div><div style="text-align:left"><h3 style="font-size:1rem;margin-bottom:10px">Adicionar ao pedido:</h3>${this.renderProdList(idx)}</div><div style="display:flex;gap:10px;margin-top:20px"><button class="btn btn-secondary" onclick="App.nav(-1)" ${idx===0?'disabled':''}>Anterior</button>${idx<total-1?`<button class="btn btn-primary" onclick="App.nav(1)">Próxima</button>`:`<button class="btn btn-success" onclick="App.finishSelection()">Finalizar</button>`}</div><div class="status-dock"><div class="status-info"><span>🎁 Créditos:</span><span>${status.creditsDetail}</span></div><div class="status-info"><span>💰 Entrada Paga:</span><span>Usando ${this.formatMoney(status.usedEntry)} (Resta ${this.formatMoney(status.remainingEntry)})</span></div><div class="status-total"><span>Total Pedido:</span><span>${this.formatMoney(status.toPay)}</span></div></div></div></div>`;
-    },
+        <div id="tab-produtos" class="section">
+            <h2>Produtos Avulsos</h2>
+            <div id="produtos-list"></div>
+            <button class="btn btn-add" onclick="addProdRow()">+ Produto</button>
+        </div>
 
-    renderProdList(idx) {
-        const items=this.state.cart[idx]||{}; const hasPrint=Object.keys(items).some(k=>k.includes('Foto')&&items[k]>0); let html='';
-        this.data.produtosAvulsos.filter(p=>p.nome.includes('Foto')).forEach(p=>{
-            html+=this.renderStepper(p, items[p.nome]||0, idx);
-            if(items[p.nome]>0){ const size=p.nome.replace('Foto ',''); const fr=this.data.produtosAvulsos.find(f=>f.nome.includes('Porta')&&f.nome.includes(size)); if(fr) html+=`<div style="margin-left:20px;border-left:2px solid #eee;padding-left:10px;background:#fafafa">${this.renderStepper(fr, items[fr.nome]||0, idx, true)}</div>`; }
-        });
-        const dig=this.data.produtosAvulsos.find(p=>p.nome.includes('Arquivo'));
-        if(dig) html+=hasPrint?`<div class="prod-item" style="background:#dcfce7;border-radius:6px;padding:10px"><div><b>Arquivo Digital</b> <span class="badge-free">BRINDE!</span></div><div style="color:var(--success)"><i class="fas fa-check"></i> Incluso</div></div>`:this.renderStepper(dig,items[dig.nome]||0,idx);
-        return html;
-    },
-    renderStepper(p,q,idx,isF=false) { return `<div class="prod-item"><div><div style="font-weight:600">${isF?'↪ ':''}${p.nome}</div><div style="font-size:0.8rem;color:#666">${this.formatMoney(p.preco)}</div></div><div class="stepper"><button onclick="App.updateCart(${idx},'${p.nome}',-1)">-</button><span>${q}</span><button onclick="App.updateCart(${idx},'${p.nome}',1)">+</button></div></div>`; },
+        <div id="tab-textos" class="section">
+            <h2>Apresentação (Modais)</h2>
+            <div style="background:white; padding:20px; border-radius:8px; border:1px solid #eee">
+                <h3 style="color:var(--primary)">📚 Fotolivro</h3>
+                <input type="text" id="txtBookTitle" placeholder="Título"><textarea id="txtBookDesc" rows="2" placeholder="Descrição"></textarea><label>URL Imagem</label><input type="text" id="imgBook">
+                <h3 style="color:var(--primary); margin-top:20px">🖼️ Revelação</h3>
+                <input type="text" id="txtPrintTitle" placeholder="Título"><textarea id="txtPrintDesc" rows="2" placeholder="Descrição"></textarea><label>URL Imagem</label><input type="text" id="imgPrint">
+                <h3 style="color:var(--primary); margin-top:20px">💾 Arquivo Digital</h3>
+                <input type="text" id="txtDigTitle" placeholder="Título"><textarea id="txtDigDesc" rows="2" placeholder="Descrição"></textarea><label>URL Imagem</label><input type="text" id="imgDig">
+            </div>
+        </div>
 
-    // --- 5. VIEW: CHECKOUT ---
-    viewCheckout() {
-        const res=this.calcFinalCheckout(); const hasHeavy = res.lines.some(l=>l.nome.includes('Fotolivro')||l.nome.includes('40x60')||l.nome.includes('30x40')); const cidades=this.data.logistica.cidadesGratis;
-        let rows=''; res.lines.forEach(l=>{rows+=`<tr><td>${l.qtd}x ${l.nome}</td><td>${this.formatMoney(l.total)}</td></tr>`}); if(res.discount>0) rows+=`<tr class="row-discount"><td>Créditos Utilizados</td><td>- ${this.formatMoney(res.discount)}</td></tr>`; if(res.usedEntry>0) rows+=`<tr class="row-entry"><td>Entrada Paga</td><td>- ${this.formatMoney(res.usedEntry)}</td></tr>`;
-        const delOpts = `<option value="">-- Selecione --</option>`+`<option value="Retirada">Retirar na Sede</option>`+`<option value="Gratis">Entrega Grátis</option>`+`<option value="Transportadora">Transportadora (+ ${this.formatMoney(this.data.logistica.taxaEnvio)})</option>`;
-        let payOpts = `<option value="Pix">Pix (5% Desconto)</option><option value="Cartao">Cartão de Crédito</option><option value="Boleto">Boleto</option>`;
+        <div id="tab-config" class="section">
+            <h2>Configs Gerais</h2>
+            <div style="background:white; padding:20px; border-radius:8px; border:1px solid #eee">
+                <div class="row"><div class="col"><label>WhatsApp</label><input type="text" id="confWhats"></div><div class="col"><label>Pix %</label><input type="number" id="confPix"></div></div>
+                <label>Frete Fixo</label><input type="number" id="confFreteValor">
+                <label>Cidades Grátis</label><input type="text" id="confFreteCidades">
+                <label>Endereço Sede</label><input type="text" id="confSede">
+                <label>Juros (CSV)</label><input type="text" id="confJuros">
+            </div>
+        </div>
+    </div>
 
-        return `<div class="header">Resumo</div><div class="container fade-in"><div class="card"><h2>Resumo do Pedido</h2><table class="checkout-table"><tbody>${rows}</tbody></table><div class="checkout-total">Total Base: ${this.formatMoney(res.finalTotal+res.discount)}</div><hr style="margin:20px 0;border-top:1px dashed #eee"><label class="form-label">📍 Entrega</label><select id="selDelType" class="form-input" onchange="App.uiDel(this.value, ${hasHeavy})">${delOpts}</select><div id="areaCity" class="hidden"><label class="form-label">Selecione sua Cidade:</label><select id="selCity" class="form-input">${cidades.map(c=>`<option value="${c}">${c}</option>`).join('')}</select><div class="alert-box"><b>Nota:</b> Entrega é no perímetro urbano. Para interior, indique um local na cidade:<input type="text" id="delAddr" class="form-input" placeholder="Ex: Loja X, Casa de Amigo..." style="margin-top:5px"></div></div><div id="msgRet" class="alert-box hidden"></div><label class="form-label">💳 Pagamento</label><select id="selPay" class="form-input" onchange="App.uiPay(this.value, ${res.finalTotal})">${payOpts}</select><div id="areaCard" class="hidden"></div><div id="areaPix" class="hidden alert-box" style="background:#dcfce7;border-color:#bbf7d0;color:#166534"></div><div id="areaBol" class="hidden" style="background:#f0f9ff;padding:10px;border-radius:8px"><label>Nome</label><input type="text" id="bolName" class="form-input"><label>CPF</label><input type="text" id="bolCpf" class="form-input"><label>Vencimento</label><input type="date" id="bolDate" class="form-input"><label>Parcelas</label><select id="bolParc" class="form-input"><option value="1">1x</option><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option><option value="5">5x</option><option value="6">6x</option></select><div style="font-size:0.8rem;margin-top:5px;color:#dc2626">⚠️ Entrega após quitação da última parcela.</div></div><button class="btn btn-whatsapp" style="background:#25D366;color:white;margin-top:20px" onclick="App.sendZap()"><i class="fab fa-whatsapp"></i> Finalizar Pedido</button></div></div>`;
-    },
-    uiDel(val, heavy) {
-        const d=document.getElementById('areaCity'); const m=document.getElementById('msgRet'); const p=document.getElementById('selPay');
-        [d,m].forEach(e=>e.classList.add('hidden')); 
-        const opts=p.options; const optRet=Array.from(opts).find(o=>o.value==='Retirada');
-        if(optRet) p.remove(optRet.index); 
+<script>
+    window.onload = () => { carregarCredenciaisLocal(); if(window.NBV_DB) carregarDadosNaTela(window.NBV_DB); };
+    function showTab(id) { document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).classList.add('active'); event.currentTarget.classList.add('active'); }
+    function toggleContrato() { document.getElementById('area-contrato').style.display = document.getElementById('cliTemAlbum').value === 'sim' ? 'block' : 'none'; }
+    function showStatus(msg, type='loading') { const el=document.getElementById('status-display'); el.className='status-bar status-'+type; el.innerHTML=msg; el.style.display='block'; setTimeout(()=>el.style.display='none',8000); }
 
-        if(val==='Gratis') d.classList.remove('hidden');
-        else if(val==='Retirada') { m.classList.remove('hidden'); if(heavy) m.innerHTML="⚠️ Pedido contém itens pesados/personalizados. Necessário sinal de 50% para produção."; 
-        else { m.innerHTML="✅ Produção Imediata. Pode pagar ao retirar."; const newOpt=new Option('Pagar na Retirada','Retirada'); p.add(newOpt); } }
-        else if(val==='Transportadora') m.classList.remove('hidden'); m.innerHTML="Taxa fixa de envio aplicada.";
-    },
-    uiPay(val, total) {
-        const c=document.getElementById('areaCard'); const p=document.getElementById('areaPix'); const b=document.getElementById('areaBol');
-        [c,p,b].forEach(e=>e.classList.add('hidden'));
+    function carregarDadosNaTela(db) {
+        document.getElementById('confMarkup').value = db.financeiro.markup; document.getElementById('confCustoFixo').value = db.financeiro.custoFixoDiagramacao; document.getElementById('confMinFotos').value = db.fluxo.minimoFotosLivro; document.getElementById('confWhats').value = db.financeiro.whatsapp; document.getElementById('confPix').value = db.financeiro.descontoPix; document.getElementById('confJuros').value = db.financeiro.tabelaJuros.join(', ');
+        document.getElementById('confFreteValor').value = db.logistica.taxaEnvio; document.getElementById('confFreteCidades').value = db.logistica.cidadesGratis.join(', '); document.getElementById('confSede').value = db.logistica.enderecoSede;
+        
+        const apr = db.apresentacao || {};
+        if(apr.fotolivro) { document.getElementById('txtBookTitle').value=apr.fotolivro.titulo; document.getElementById('txtBookDesc').value=apr.fotolivro.texto; document.getElementById('imgBook').value=apr.fotolivro.img; }
+        if(apr.revelacao) { document.getElementById('txtPrintTitle').value=apr.revelacao.titulo; document.getElementById('txtPrintDesc').value=apr.revelacao.texto; document.getElementById('imgPrint').value=apr.revelacao.img; }
+        if(apr.digital) { document.getElementById('txtDigTitle').value=apr.digital.titulo; document.getElementById('txtDigDesc').value=apr.digital.texto; document.getElementById('imgDig').value=apr.digital.img; }
 
-        if(val==='Pix') { const d=total*0.05; p.innerHTML=`Desconto Pix (5%): - ${this.formatMoney(d)}<br><b>A Pagar: ${this.formatMoney(total-d)}</b>`; p.classList.remove('hidden'); }
-        else if(val==='Cartao') {
-            const maxFree=this.data.financeiro.parcelasSemJuros; const rates=this.data.financeiro.tabelaJuros; let html='<label>Parcelas:</label><select id="selInstallment" class="form-input">';
-            for(let i=1;i<=12;i++){ let f=total; let lbl='Sem juros'; if(i>maxFree){ const rate=rates[i]||0; f=total*(1+rate/100); lbl='(c/ juros)';} html+=`<option value="${i}">${i}x de ${this.formatMoney(f/i)} ${lbl} - Total: ${this.formatMoney(f)}</option>`; }
-            c.innerHTML=html+'</select>'; c.classList.remove('hidden');
-        } else if(val==='Boleto') b.classList.remove('hidden');
-    },
+        renderBooks(db.tabelaFotolivros); renderProds(db.produtosAvulsos); renderRegras(db.regrasDiagramacao);
+    }
 
-    // --- CÁLCULOS & UTILS ---
-    calcStatusSelection() {
-        let gross=0,disc=0; const credList=this.data.cliente.creditos||[]; const totCred=credList.reduce((a,c)=>c.item.includes('Foto')?a+c.qtd:a,0); let credUsed=0; let itemCount=0;
-        Object.values(this.state.cart).forEach(items=>{
-            const hasPrint=Object.keys(items).some(k=>k.includes('Foto')&&items[k]>0);
-            Object.keys(items).forEach(prod=>{
-                let q=items[prod],p=this.data.produtosAvulsos.find(x=>x.nome===prod)?.preco||0; itemCount+=q;
-                if(prod.includes('Foto')){if(credUsed<totCred){const free=Math.min(q,totCred-credUsed); credUsed+=free; q-=free;}}
-                if(prod.includes('Arquivo')&&hasPrint)p=0; gross+=q*p;
-            });
-        });
-        const ent=this.data.cliente.entrada||0; const netAfterCredits=gross; const usedEntry=Math.min(netAfterCredits,ent); const remainingEntry=ent-usedEntry; const toPay=netAfterCredits-usedEntry;
-        const totalItemsValue = Object.values(this.state.cart).reduce((acc, items) => acc + Object.keys(items).reduce((s, k) => s + items[k] * (this.data.produtosAvulsos.find(p => p.nome === k)?.preco || 0), 0), 0);
-        return {qtdItens:itemCount,total:totalItemsValue,creditsDetail:`${credUsed}/${totCred} fotos`,usedEntry:usedEntry,remainingEntry:remainingEntry,toPay:toPay};
-    },
-    calcFinalCheckout() {
-        const s=this.calcStatusSelection(); const summary={}; Object.keys(this.state.cart).forEach(idx=>{const items=this.state.cart[idx]; Object.keys(items).forEach(prod=>{const qtd=items[prod],price=this.data.produtosAvulsos.find(x=>x.nome===prod)?.preco||0; if(!summary[prod])summary[prod]={qtd:0,total:0}; summary[prod].qtd+=qtd; summary[prod].total+=qtd*price;});});
-        const lines=Object.keys(summary).map(k=>({nome:k,qtd:summary[k].qtd,total:summary[k].total}));
-        return {lines,discount:s.total-(s.toPay+s.usedEntry),usedEntry:s.usedEntry,finalTotal:s.toPay};
-    },
+    function renderBooks(list) { const el=document.getElementById('fotolivro-table'); el.innerHTML=''; list.forEach(i=>addBookRow(i)); }
+    function addBookRow(i={}) { document.getElementById('fotolivro-table').insertAdjacentHTML('beforeend', `<div class="table-row book-row"><select class="bk-size" style="width:100px"><option ${i.size=='15x20'?'selected':''}>15x20</option><option ${i.size=='20x30'?'selected':''}>20x30</option><option ${i.size=='30x40'?'selected':''}>30x40</option></select><input type="number" class="bk-pages" value="${i.pages||''}" placeholder="Págs" style="width:80px"><input type="number" class="bk-price" value="${i.price||''}" placeholder="Base"><input type="number" class="bk-box" value="${i.priceBox||''}" placeholder="C/ Caixa"><button class="btn-remove" onclick="this.parentElement.remove()">X</button></div>`); }
+    function renderProds(list) { const el=document.getElementById('produtos-list'); el.innerHTML=''; list.forEach(i=>addProdRow(i)); }
+    function addProdRow(i={}) { document.getElementById('produtos-list').insertAdjacentHTML('beforeend', `<div class="list-item prod-row"><input type="text" class="pd-name" value="${i.nome||''}" placeholder="Nome" style="flex:2"><input type="number" class="pd-price" value="${i.preco||''}" placeholder="R$" style="flex:1"><input type="text" class="pd-icon" value="${i.icone||'fas fa-image'}" placeholder="Icon" style="flex:1"><button class="btn-remove" onclick="this.parentElement.remove()">X</button></div>`); }
+    function renderRegras(r) { const el=document.getElementById('regras-container'); el.innerHTML=''; for(let k in r) el.innerHTML+=`<div><label>${k}</label><input type="number" class="regra-item" data-key="${k}" value="${r[k]}" style="width:60px"></div>`; }
+    function addCreditoRow() { let opts='<option value="">--</option>'; document.querySelectorAll('.prod-row .pd-name').forEach(i=>{if(i.value)opts+=`<option value="${i.value}">${i.value}</option>`}); document.getElementById('creditos-list').insertAdjacentHTML('beforeend', `<div class="list-item cred-row"><select class="cr-item" style="flex:2">${opts}</select><input type="number" class="cr-qtd" value="1" style="width:80px"><button class="btn-remove" onclick="this.parentElement.remove()">X</button></div>`); }
 
-    sendZap() {
-        const del=document.getElementById('selDelType').value; const pay=document.getElementById('selPay').value;
-        if(!del||!pay)return alert("Selecione Entrega e Pagamento");
+    function montarObjetoDB() {
+        const livros=[]; document.querySelectorAll('.book-row').forEach(r=>livros.push({size:r.querySelector('.bk-size').value, pages:parseInt(r.querySelector('.bk-pages').value), price:parseFloat(r.querySelector('.bk-price').value), priceBox:parseFloat(r.querySelector('.bk-box').value)}));
+        const prods=[]; document.querySelectorAll('.prod-row').forEach(r=>prods.push({nome:r.querySelector('.pd-name').value, preco:parseFloat(r.querySelector('.pd-price').value), icone:r.querySelector('.pd-icon').value}));
+        const regras={}; document.querySelectorAll('.regra-item').forEach(r=>regras[r.dataset.key]=parseInt(r.value));
+        return {
+            assets:{watermarkText:'', opacity:0.1},
+            fluxo:{pedirEdicao:true, pedirAprovacao:true, minimoFotosLivro:parseInt(document.getElementById('confMinFotos').value)},
+            logistica:{taxaEnvio:parseFloat(document.getElementById('confFreteValor').value), cidadesGratis:document.getElementById('confFreteCidades').value.split(',').map(s=>s.trim()), enderecoSede:document.getElementById('confSede').value},
+            financeiro:{descontoPix:parseFloat(document.getElementById('confPix').value), parcelasSemJuros:4, parcelasBoleto:6, tabelaJuros:document.getElementById('confJuros').value.split(',').map(Number), whatsapp:document.getElementById('confWhats').value, markup:parseFloat(document.getElementById('confMarkup').value), custoFixoDiagramacao:parseFloat(document.getElementById('confCustoFixo').value)},
+            apresentacao:{fotolivro:{titulo:document.getElementById('txtBookTitle').value, texto:document.getElementById('txtBookDesc').value, img:document.getElementById('imgBook').value}, revelacao:{titulo:document.getElementById('txtPrintTitle').value, texto:document.getElementById('txtPrintDesc').value, img:document.getElementById('imgPrint').value}, digital:{titulo:document.getElementById('txtDigTitle').value, texto:document.getElementById('txtDigDesc').value, img:document.getElementById('imgDig').value}},
+            produtosAvulsos:prods, tabelaFotolivros:livros, regrasDiagramacao:regras
+        };
+    }
 
-        const groups={}; Object.keys(this.state.cart).forEach(idx=>{const f=this.data.fotos[idx].substring(this.data.fotos[idx].lastIndexOf('/')+1); Object.keys(this.state.cart[idx]).forEach(p=>{if(!groups[p])groups[p]=[]; groups[p].push(f);});});
-        const fin=this.calcFinalCheckout(); let msg=`*PEDIDO ${this.data.cliente.nome}*\n\n💰 *ITENS:*\n`;
-        Object.keys(groups).forEach(p=>{ msg+=`\n📦 *${p} (${groups[p].length})*\nFiles: ${groups[p].join(', ')}`; });
+    function getGh() { return {token:document.getElementById('ghToken').value, user:document.getElementById('ghUser').value, repo:document.getElementById('ghRepo').value, branch:document.getElementById('ghBranch').value}; }
+    function salvarCredenciaisLocal() { const c=getGh(); localStorage.setItem('nbv_gh_token',c.token); localStorage.setItem('nbv_gh_user',c.user); localStorage.setItem('nbv_gh_repo',c.repo); localStorage.setItem('nbv_gh_branch',c.branch); alert("Salvo!"); }
+    function carregarCredenciaisLocal() { if(localStorage.getItem('nbv_gh_token')) document.getElementById('ghToken').value=localStorage.getItem('nbv_gh_token'); if(localStorage.getItem('nbv_gh_user')) document.getElementById('ghUser').value=localStorage.getItem('nbv_gh_user'); if(localStorage.getItem('nbv_gh_repo')) document.getElementById('ghRepo').value=localStorage.getItem('nbv_gh_repo'); if(localStorage.getItem('nbv_gh_branch')) document.getElementById('ghBranch').value=localStorage.getItem('nbv_gh_branch'); }
 
-        msg+=`\n\n*VALORES:*\nTotal Produtos: ${this.formatMoney(fin.finalTotal+fin.usedEntry+fin.discount)}`;
-        if(fin.discount>0)msg+=`\n(-) Brindes/Desc: ${this.formatMoney(fin.discount)}`;
-        if(fin.usedEntry>0)msg+=`\n(-) Entrada Paga: ${this.formatMoney(fin.usedEntry)}`;
-        msg+=`\n*TOTAL FINAL: ${this.formatMoney(fin.finalTotal)}*`;
+    async function upload(creds, path, content, msg) {
+        const url=`https://api.github.com/repos/${creds.user}/${creds.repo}/contents/${path}`; let sha=null;
+        try{const r=await fetch(url+`?ref=${creds.branch}`,{headers:{Authorization:`token ${creds.token}`}}); if(r.ok)sha=(await r.json()).sha;}catch(e){}
+        const res=await fetch(url,{method:'PUT',headers:{Authorization:`token ${creds.token}`,'Content-Type':'application/json'},body:JSON.stringify({message:msg,content:btoa(unescape(encodeURIComponent(content))),branch:creds.branch,sha:sha})});
+        if(!res.ok)throw new Error((await res.json()).message); return `https://${creds.user}.github.io/${creds.repo}/${path}`;
+    }
 
-        msg+=`\n\n📍 Entrega: ${del}\n💳 Pagamento: ${pay}`;
+    async function salvarDatabaseGlobal() {
+        const creds=getGh(); if(!creds.token)return alert("Configure GitHub"); showStatus("Salvando...", "loading");
+        try{ const db=montarObjetoDB(); await upload(creds,'database.js',`window.NBV_DB = ${JSON.stringify(db,null,4)};`,"Update DB"); window.NBV_DB=db; showStatus("Salvo com sucesso!", "success"); }catch(e){showStatus("Erro: "+e.message,"error");}
+    }
 
-        window.open(`https://wa.me/${this.data.financeiro.whatsapp}?text=${encodeURIComponent(msg)}`,'_blank');
-    },
-
-    nav(d) { this.state.photoIdx+=d; this.isUpdating=true; this.render(); },
-    goBack() { this.state.view=this.data.fluxo.pedirEdicao?'editing_choice':'home'; this.render(); },
-    openGallery() { document.getElementById('modal-gal').classList.remove('hidden'); },
-    openLightbox(url) { document.getElementById('lb-img').src=url; document.getElementById('lb').classList.remove('hidden'); },
-    renderGallery() { return `<div id="modal-gal" class="modal-overlay hidden" style="z-index:900"><div class="modal-content modal-full"><div style="display:flex;justify-content:space-between;padding:10px"><h3>Galeria</h3><span class="close-modal" onclick="document.getElementById('modal-gal').classList.add('hidden')">&times;</span></div><div class="gallery-grid">${this.data.fotos.map(u=>`<div class="gallery-item" onclick="App.openLightbox('${u}')"><img src="${u}"></div>`).join('')}</div><button class="btn btn-primary" style="margin-top:10px" onclick="document.getElementById('modal-gal').classList.add('hidden')">Fechar Galeria</button></div></div>`; },
-    renderLightbox() { return `<div id="lb" class="modal-overlay hidden" onclick="this.classList.add('hidden')"><img id="lb-img" class="lightbox-img"></div>`; },
-
-    calcBookOptions(qtd) { const m=this.data.financeiro.markup; const f=this.data.financeiro.custoFixoDiagramacao; const j=this.data.financeiro.tabelaJuros[11]||21; const opts=[]; ['15x20','20x30','30x40'].forEach(sz=>{ const rule=this.data.regrasDiagramacao[sz]||4; const pgs=Math.ceil(qtd/rule); const match=this.data.tabelaFotolivros.find(t=>t.size===sz&&t.pages>=pgs); if(match){const tot=(match.priceBox+f)*m; opts.push({total:tot,parcela:((tot*(1+j/100))/12)}); }}); return opts; },
-    formatMoney(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
-};
-window.onload = () => App.init();
+    async function publicarCliente() {
+        const creds=getGh(); const nome=document.getElementById('cliNome').value.trim(); if(!creds.token||!nome)return alert("Preencha dados"); showStatus("Gerando...", "loading");
+        try{
+            const db=montarObjetoDB(); const credsList=[]; document.querySelectorAll('.cred-row').forEach(r=>{credsList.push({item:r.querySelector('.cr-item').value, qtd:parseInt(r.querySelector('.cr-qtd').value)})});
+            const config={...db, cliente:{nome:nome, entrada:parseFloat(document.getElementById('cliEntrada').value)||0, incluirAlbum:document.getElementById('cliTemAlbum').value==='sim', contrato:{tamanho:document.getElementById('ctrTam').value, qtdFotos:parseInt(document.getElementById('ctrQtd').value)||20, valorTotal:parseFloat(document.getElementById('ctrValor').value)||0}, creditos:credsList}, fotos:document.getElementById('cliFotos').value.split('\n').filter(s=>s.length>5), fluxo:{...db.fluxo, pedirEdicao:document.getElementById('fluxoModo').value==='venda'}};
+            const req=await fetch('modelo.html'); let html=await req.text(); html=html.replace('',`<script>window.NBV_CONFIG = ${JSON.stringify(config,null,2)};<\/script>`);
+            const url=await upload(creds,`clientes/${nome}/index.html`,html,`Site: ${nome}`); showStatus(`Sucesso! <a href="${url}" target="_blank">${url}</a>`, "success");
+        }catch(e){showStatus("Erro: "+e.message,"error");}
+    }
 </script>
 </body>
 </html>
