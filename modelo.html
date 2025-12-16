@@ -53,17 +53,20 @@
 <script>
 const App = {
     data: {},
-    state: { view: 'init', mode: '', photoIdx: 0, cart: {} }, // cart is used for both selection and simple approval (status/comment)
+    state: { view: 'init', mode: '', photoIdx: 0, cart: {} }, 
 
     init() {
         if(!window.NBV_CONFIG) return document.body.innerHTML = "<h2 style='text-align:center;padding:50px'>Erro: Configuração não encontrada.</h2>";
         this.data = window.NBV_CONFIG;
         
-        // Roteamento para Aprovação Simples ou Venda Completa
+        // 1. Renderizar Modais (Fix para o erro de lightbox/galeria)
+        document.body.insertAdjacentHTML('beforeend', this.renderModals());
+        
+        // 2. Roteamento para Aprovação Simples ou Venda Completa
         if (this.data.fluxo.pedirEdicao) {
-            this.state.view = 'editing_choice'; // Venda Completa (Começa na Edição)
+            this.state.view = 'editing_choice';
         } else {
-            this.state.view = 'approval_only'; // Aprovação Simples (Vai direto para o carrossel)
+            this.state.view = 'approval_only';
         }
         this.render();
     },
@@ -75,13 +78,13 @@ const App = {
         else if (this.state.view === 'selection') app.innerHTML = this.viewSelection();
         else if (this.state.view === 'persuasion') app.innerHTML = this.viewPersuasion();
         else if (this.state.view === 'checkout') app.innerHTML = this.viewCheckout();
-        else if (this.state.view === 'approval_only') app.innerHTML = this.viewApprovalOnly(); // Nova View de Aprovação
+        else if (this.state.view === 'approval_only') app.innerHTML = this.viewApprovalOnly();
         
         if(!this.isUpdating) window.scrollTo(0,0);
         this.isUpdating = false;
     },
 
-    // --- 1. VIEWS DE INTRO / ROTEAMENTO (Mantidas) ---
+    // --- 1. VIEWS DE INTRO / ROTEAMENTO ---
     viewEditing() {
         return `<div class="header">Studio<span>NBV</span></div><div class="container fade-in"><div class="card"><h2>Escolha a Edição</h2><p style="color:#666">Selecione qual opção você deseja:</p><button class="btn btn-outline" onclick="App.chooseEdit(true)" style="border-color:var(--primary);color:var(--primary)">✨ <b>Com Edição Artística</b><br><small>Tratamento completo. Prazo 30 dias.</small></button><button class="btn btn-outline" onclick="App.chooseEdit(false)" style="border-color:var(--success);color:var(--success)">⚡ <b>Produção Rápida</b><br><small>Fotos originais. Prazo 10 dias.</small></button></div></div>`;
     },
@@ -102,7 +105,7 @@ const App = {
             bookCard = `<div class="card" style="border:2px solid var(--primary)"><img src="${info.fotolivro.img}"><h2>📚 Fotolivro</h2><p>${info.fotolivro.texto}</p>${bookCredit ? `<div class="credit-tag">${bookCredit}</div>` : ''}<div style="margin:10px 0;font-size:0.9rem">A partir de <b>${this.formatMoney(op.total)}</b></div><button class="btn btn-primary" onclick="App.startSelection('fotolivro')">Montar Fotolivro</button></div>`;
         }
 
-        return `<div class="header">Studio<span>NBV</span></div><div class="container fade-in"><h2 style="text-align:center;margin-bottom:10px">Olá, ${this.data.cliente.nome}!</h2><p style="text-align:center;color:#666;margin-bottom:30px">Selecione qual opção você deseja:</p><div class="menu-grid"><div class="card"><h2>📸 Espiar Fotos</h2><p>Veja todas as ${total} fotos.</p><button class="btn btn-secondary" onclick="App.openGallery()">Ver Galeria</button></div>${bookCard}<div class="card"><img src="${info.revelacao.img}"><h2>🖼️ Revelação</h2><p>${info.revelacao.texto}</p><div class="credit-tag"><b>Seus Créditos:</b><br>${detailsText}</div><button class="btn btn-primary" onclick="App.startSelection('revelacao')">Selecionar Fotos</button></div><div class="card"><img src="${info.digital.img}"><h2>💾 Arquivo Digital</h2><p>${info.digital.texto}</p><button class="btn btn-outline" onclick="App.goToPersuasion()">Comprar Arquivos</button></div></div></div>${this.renderGallery()}${this.renderLightbox()}`;
+        return `<div class="header">Studio<span>NBV</span></div><div class="container fade-in"><h2 style="text-align:center;margin-bottom:10px">Olá, ${this.data.cliente.nome}!</h2><p style="text-align:center;color:#666;margin-bottom:30px">Selecione qual opção você deseja:</p><div class="menu-grid"><div class="card"><h2>📸 Espiar Fotos</h2><p>Veja todas as ${total} fotos.</p><button class="btn btn-secondary" onclick="App.openGallery()">Ver Galeria</button></div>${bookCard}<div class="card"><img src="${info.revelacao.img}"><h2>🖼️ Revelação</h2><p>${info.revelacao.texto}</p><div class="credit-tag"><b>Seus Créditos:</b><br>${detailsText}</div><button class="btn btn-primary" onclick="App.startSelection('revelacao')">Selecionar Fotos</button></div><div class="card"><img src="${info.digital.img}"><h2>💾 Arquivo Digital</h2><p>${info.digital.texto}</p><button class="btn btn-outline" onclick="App.goToPersuasion()">Comprar Arquivos</button></div></div></div>`;
     },
 
     // --- 3. VIEW: APROVAÇÃO SIMPLES (NÃO VENDA) ---
@@ -113,7 +116,6 @@ const App = {
         const currentData = this.state.cart[idx] || { status: 'pendente', comment: '' };
         const status = currentData.status || 'pendente';
         
-        // Determina a cor do status
         const statusColor = status === 'approved' ? 'var(--success)' : status === 'commented' ? 'var(--warning)' : 'var(--text-light)';
         const statusText = status === 'approved' ? 'APROVADA' : status === 'commented' ? 'COMENTADA' : 'PENDENTE';
         
@@ -144,22 +146,14 @@ const App = {
                 </div>
             </div>
         </div>
-        ${this.renderLightbox()}`;
+        ${this.renderLightbox()}`; // Chamada corrigida
     },
 
     checkCommentAreaStatus() {
         const area = document.getElementById('area-comment');
         const comment = document.getElementById('photo-comment');
-        if (area.classList.contains('hidden')) {
-            // Se o usuário fecha a área de comentário, e não tem texto, volta para pendente
-            if (comment.value.trim() === '') {
-                this.setApprovalStatus('pendente');
-            }
-        } else {
-            // Se abre, e não tem texto, muda para commented para o usuário saber que deve digitar
-            if (comment.value.trim() === '') {
-                 // Nao muda o status aqui, muda no saveComment
-            }
+        if (area.classList.contains('hidden') && comment.value.trim() === '') {
+            this.setApprovalStatus('pendente');
         }
     },
     setApprovalStatus(newStatus) {
@@ -216,8 +210,10 @@ const App = {
         const delOpts = `<option value="">-- Selecione --</option>`+`<option value="Retirada">Retirar na Sede</option>`+`<option value="Gratis">Entrega Grátis</option>`+`<option value="Transportadora">Transportadora (+ ${this.formatMoney(this.data.logistica.taxaEnvio)})</option>`;
         let payOpts = `<option value="Pix">Pix (5% Desconto)</option><option value="Cartao">Cartão de Crédito</option><option value="Boleto">Boleto</option>`;
 
-        return `<div class="header">Resumo</div><div class="container fade-in"><div class="card"><h2>Resumo do Pedido</h2><table class="checkout-table"><tbody>${rows}</tbody></table><div class="checkout-total">Total Base: ${this.formatMoney(res.finalTotal+res.discount)}</div><hr style="margin:20px 0;border-top:1px dashed #eee"><label class="form-label">📍 Entrega</label><select id="selDelType" class="form-input" onchange="App.uiDel(this.value, ${hasHeavy})">${delOpts}</select><div id="areaCity" class="hidden"><label class="form-label">Selecione sua Cidade:</label><select id="selCity" class="form-input">${cidades.map(c=>`<option value="${c}">${c}</option>`).join('')}</select><div class="alert-box"><b>Nota:</b> Entrega é no perímetro urbano. Para interior, indique um local na cidade:<input type="text" id="delAddr" class="form-input" placeholder="Ex: Loja X, Casa de Amigo..." style="margin-top:5px"></div></div><div id="msgRet" class="alert-box hidden"></div><label class="form-label">💳 Pagamento</label><select id="selPay" class="form-input" onchange="App.uiPay(this.value, ${res.finalTotal})">${payOpts}</select><div id="areaCard" class="hidden"></div><div id="areaPix" class="hidden alert-box" style="background:#dcfce7;border-color:#bbf7d0;color:#166534"></div><div id="areaBol" class="hidden" style="background:#f0f9ff;padding:10px;border-radius:8px"><label>Nome</label><input type="text" id="bolName" class="form-input"><label>CPF</label><input type="text" id="bolCpf" class="form-input"><label>Vencimento</label><input type="date" id="bolDate" class="form-input"><label>Parcelas</label><select id="bolParc" class="form-input"><option value="1">1x</option><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option><option value="5">5x</option><option value="6">6x</option></select><div style="font-size:0.8rem;margin-top:5px;color:#dc2626">⚠️ Entrega após quitação da última parcela.</div></div><button class="btn btn-whatsapp" style="background:#25D366;color:white;margin-top:20px" onclick="App.sendZap()"><i class="fab fa-whatsapp"></i> Finalizar Pedido</button></div></div>`;
+        return `<div class="header">Resumo</div><div class="container fade-in"><div class="card"><h2>Resumo do Pedido</h2><table class="checkout-table"><tbody>${rows}</tbody></table><div class="checkout-total">Total Base: ${this.formatMoney(res.finalTotal+res.discount)}</div><hr style="margin:20px 0;border-top:1px dashed #eee"><label class="form-label">📍 Entrega</label><select id="selDelType" class="form-input" onchange="App.uiDel(this.value, ${hasHeavy})">${delOpts}</select><div id="areaCity" class="hidden"><label class="form-label">Selecione sua Cidade:</label><select id="selCity" class="form-input">${cidades.map(c=>`<option value="${c}">${c}</option>`).join('')}</select><div class="alert-box"><b>Nota:</b> Entrega é no perímetro urbano. Para interior, indique um local na cidade:<input type="text" id="delAddr" class="form-input" placeholder="Ex: Loja X, Casa de Amigo..." style="margin-top:5px"></div></div><div id="msgRet" class="alert-box hidden"></div><label class="form-label">💳 Pagamento</label><select id="selPay" class="form-input" onchange="App.uiPay(this.value, ${res.finalTotal})">${payOpts}</select><div id="areaCard" class="hidden"></div><div id="areaPix" class="hidden alert-box" style="background:#dcfce7;border-color:#bbf7d0;color:#166534"></div><div id="areaBol" class="hidden" style="background:#f0f9ff;padding:10px;border-radius:8px"><label>Nome</label><input type="text" id="bolName" class="form-input"><label>CPF</label><input type="text" id="bolCpf" class="form-input"><label>Vencimento</label><input type="date" id="bolDate" class="form-input"><label>Parcelas</label><select id="bolParc" class="form-input"><option value="1">1x</option><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option><option value="5">5x</option><option value="6">6x</option></select><div style="font-size:0.8rem;margin-top:5px;color:#dc2626">⚠️ Entrega após quitação da última parcela.</div></div><button class="btn btn-whatsapp" style="background:#25D366;color:white;margin-top:20px" onclick="App.sendZap()"><i class="fas fa-whatsapp"></i> Finalizar Pedido</button></div></div>`;
     },
+
+    // --- UTILS & LOGIC ---
     uiDel(val, heavy) {
         const d=document.getElementById('areaCity'); const m=document.getElementById('msgRet'); const p=document.getElementById('selPay');
         [d,m].forEach(e=>e.classList.add('hidden')); 
@@ -241,7 +237,7 @@ const App = {
         } else if(val==='Boleto') b.classList.remove('hidden');
     },
 
-    // --- CÁLCULOS & UTILS ---
+    // --- CÁLCULOS ---
     calcStatusSelection() {
         let gross=0,disc=0; const credList=this.data.cliente.creditos||[]; const totCred=credList.reduce((a,c)=>c.item.includes('Foto')?a+c.qtd:a,0); let credUsed=0; let itemCount=0;
         Object.values(this.state.cart).forEach(items=>{
@@ -286,6 +282,7 @@ const App = {
     openLightbox(url) { document.getElementById('lb-img').src=url; document.getElementById('lb').classList.remove('hidden'); },
     renderGallery() { return `<div id="modal-gal" class="modal-overlay hidden" style="z-index:900"><div class="modal-content modal-full"><div style="display:flex;justify-content:space-between;padding:10px"><h3>Galeria</h3><span class="close-modal" onclick="document.getElementById('modal-gal').classList.add('hidden')">&times;</span></div><div class="gallery-grid">${this.data.fotos.map(u=>`<div class="gallery-item" onclick="App.openLightbox('${u}')"><img src="${u}"></div>`).join('')}</div><button class="btn btn-primary" style="margin-top:10px" onclick="document.getElementById('modal-gal').classList.add('hidden')">Fechar Galeria</button></div></div>`; },
     renderLightbox() { return `<div id="lb" class="modal-overlay hidden" onclick="this.classList.add('hidden')"><img id="lb-img" class="lightbox-img"></div>`; },
+    renderModals() { return this.renderGallery() + this.renderLightbox(); }, // Novo método auxiliar
 
     calcBookOptions(qtd) { const m=this.data.financeiro.markup; const f=this.data.financeiro.custoFixoDiagramacao; const j=this.data.financeiro.tabelaJuros[11]||21; const opts=[]; ['15x20','20x30','30x40'].forEach(sz=>{ const rule=this.data.regrasDiagramacao[sz]||4; const pgs=Math.ceil(qtd/rule); const match=this.data.tabelaFotolivros.find(t=>t.size===sz&&t.pages>=pgs); if(match){const tot=(match.priceBox+f)*m; opts.push({total:tot,parcela:((tot*(1+j/100))/12)}); }}); return opts; },
     formatMoney(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
