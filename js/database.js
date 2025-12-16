@@ -36,7 +36,7 @@ window.NBV_DB = {
         custoFixoDiagramacao: 30.00
     },
 
-    // Textos de Apresentação (Evita erro de undefined no Admin)
+    // Textos de Apresentação (Necessário para o Admin carregar os campos)
     apresentacao: {
         book: { 
             text: "O Fotolivro Premium possui abertura 180º, capa dura fotográfica e papel de alta gramatura que não amarela.", 
@@ -52,7 +52,7 @@ window.NBV_DB = {
         }
     },
 
-    // Produtos Avulsos (Atualizado)
+    // Produtos Avulsos (Preços Atualizados V7.0)
     produtosAvulsos: [
         { nome: "Foto 10x15", preco: 10.00, icone: "fas fa-image" },
         { nome: "Foto 15x20", preco: 20.00, icone: "fas fa-image" },
@@ -67,7 +67,7 @@ window.NBV_DB = {
         { nome: "Arquivo Digital", preco: 8.00, icone: "fas fa-cloud-download-alt" }
     ],
 
-    // Tabela de Custo de Fotolivros (Atualizado)
+    // Tabela de Custo de Fotolivros (V7.0 com PriceBox)
     tabelaFotolivros: [
         // 30x40
         { size: '30x40', pages: 20, price: 592, priceBox: 754 },
