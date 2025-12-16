@@ -30,29 +30,40 @@
     .card img { max-width: 100%; border-radius: 8px; margin-bottom: 10px; height: 150px; object-fit: cover; }
     
     /* SELEÇÃO */
-    .photo-viewer { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; }
+    .photo-viewer { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; margin-bottom: 20px; }
     .img-wrapper { position: relative; display: inline-block; width: 100%; min-height: 200px; background: #eee; border-radius: 8px; overflow: hidden; }
     .img-wrapper img { width: 100%; height: auto; display: block; pointer-events: none; }
     .wm-overlay { position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; background-repeat: repeat; opacity: 0.6; }
     
-    .prod-list { text-align: left; margin-top: 15px; }
     .prod-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
-    .prod-item:last-child { border-bottom: none; }
     .stepper { display: flex; align-items: center; gap: 10px; }
     .stepper button { width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ccc; background: white; font-weight: bold; cursor: pointer; }
     
+    /* Barra de Status (Carrinho) */
+    .status-dock { background: #1e293b; color: white; padding: 15px; border-radius: 8px; margin-top: 15px; font-size: 0.9rem; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .status-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+    .status-row.highlight { color: #4ade80; font-weight: bold; border-top: 1px solid #334155; padding-top: 5px; margin-top: 5px; }
+
     /* Special Badges */
     .badge-free { background: var(--success); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-left: 5px; }
-    
+    .credit-tag { background: #e0f2fe; color: #0284c7; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; display: inline-block; margin-bottom: 10px; font-weight: 600; border: 1px solid #bae6fd; }
+
     /* MODAIS */
     .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
     .modal-content { background: white; padding: 25px; border-radius: 12px; max-width: 500px; width: 100%; text-align: center; position: relative; max-height: 90vh; overflow-y: auto; }
     .close-modal { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; }
     
+    /* CHECKOUT TABLE */
+    .checkout-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 0.9rem; }
+    .checkout-table th { text-align: left; padding: 8px; border-bottom: 2px solid #eee; color: #666; }
+    .checkout-table td { padding: 8px; border-bottom: 1px solid #eee; }
+    .checkout-total { font-size: 1.2rem; font-weight: 800; color: var(--primary); text-align: right; padding-top: 10px; }
+    .row-discount { color: var(--success); }
+    .row-entry { color: #dc2626; }
+
     /* INTRO BUTTONS */
     .intro-opt { background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; cursor: pointer; border: 2px solid transparent; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     .intro-opt:hover { border-color: var(--primary); transform: translateY(-2px); }
-    .intro-opt h3 { margin: 0 0 5px; color: var(--primary); }
 </style>
 </head>
 <body>
@@ -64,22 +75,13 @@
 <script>
 const App = {
     data: {},
-    state: { 
-        view: 'init', // init, home, selection, persuasion, checkout
-        mode: '', 
-        photoIdx: 0,
-        // Armazena seleção por foto: { 0: { 'Foto 10x15': 1, 'Digital': 0 }, ... }
-        cart: {} 
-    },
+    state: { view: 'init', mode: '', photoIdx: 0, cart: {} },
 
     init() {
         if(!window.NBV_CONFIG) return document.getElementById('app').innerHTML = "Erro Config";
         this.data = window.NBV_CONFIG;
-        
-        // Se fluxo pede edição, começa na tela de escolha
         if(this.data.fluxo.pedirEdicao) this.state.view = 'editing_choice';
         else this.state.view = 'home';
-        
         this.render();
     },
 
@@ -90,67 +92,58 @@ const App = {
         else if (this.state.view === 'selection') app.innerHTML = this.viewSelection();
         else if (this.state.view === 'persuasion') app.innerHTML = this.viewPersuasion();
         else if (this.state.view === 'checkout') app.innerHTML = this.viewCheckout();
-        
         window.scrollTo({top:0, behavior:'smooth'});
     },
 
-    // --- VIEW 1: ESCOLHA DE EDIÇÃO ---
+    // --- 1. INTRO (Edição) ---
     viewEditingChoice() {
         return `
         <div class="header"><div class="logo">Studio<span>NBV</span></div></div>
         <div class="container fade-in">
             <h2 style="text-align:center">Antes de começar...</h2>
-            <p style="text-align:center; color:#666">Escolha como deseja suas fotos:</p>
-
+            <p style="text-align:center; color:#666">Precisamos saber sobre a edição:</p>
             <div class="intro-opt" onclick="App.chooseEditing(true)">
-                <h3>✨ Opção 1: Com Edição Artística</h3>
-                <p>Tratamento de pele, cores e luz.<br><strong>Prazo: 30 dias</strong></p>
+                <h3>✨ Opção 1: Com Edição</h3>
+                <p>Tratamento artístico completo.<br><strong>Prazo: 30 dias</strong></p>
                 <div style="color:var(--primary); font-weight:bold; margin-top:5px">Quero com Edição ➔</div>
             </div>
-
             <div class="intro-opt" onclick="App.chooseEditing(false)">
                 <h3>⚡ Opção 2: Produção Rápida</h3>
-                <p>Fotos originais (sem tratamento extra).<br><strong>Prazo: 10 dias</strong></p>
-                <div style="color:var(--success); font-weight:bold; margin-top:5px">Sem Edição (Mais Rápido) ➔</div>
+                <p>Fotos originais (sem tratamento).<br><strong>Prazo: 10 dias</strong></p>
+                <div style="color:var(--success); font-weight:bold; margin-top:5px">Sem Edição ➔</div>
             </div>
         </div>`;
     },
-
-    chooseEditing(wantEditing) {
-        if(wantEditing) {
-            const msg = "Olá! Gostaria de prosseguir com a Opção 1 (Com Edição Artística). Como funciona?";
-            window.location.href = `https://wa.me/${this.data.financeiro.whatsapp}?text=${encodeURIComponent(msg)}`;
-        } else {
-            this.state.view = 'home';
-            this.render();
-        }
+    chooseEditing(want) {
+        if(want) window.location.href = `https://wa.me/${this.data.financeiro.whatsapp}?text=Ola, gostaria de solicitar a Opcao 1 (Com Edicao).`;
+        else { this.state.view = 'home'; this.render(); }
     },
 
-    // --- VIEW 2: DASHBOARD (HOME) ---
+    // --- 2. HOME (Dashboard) ---
     viewHome() {
         const totalFotos = this.data.fotos.length;
         const minBook = this.data.fluxo.minimoFotosLivro || 20;
-        const showBook = totalFotos >= minBook;
         const info = this.data.apresentacao;
+        const creds = this.data.cliente.creditos || [];
 
-        // Gera HTML dos cards de Fotolivro (se houver)
+        // Check de Créditos
+        const bookCredit = this.data.cliente.incluirAlbum ? `Incluso no Pacote` : '';
+        const printCredit = creds.find(c=>c.item.includes('Foto')) ? `${creds.find(c=>c.item.includes('Foto')).qtd} fotos inclusas` : '';
+
+        // Card Fotolivro
         let bookHtml = '';
-        if(showBook) {
-            const opcoesBook = this.calcBookOptions(totalFotos);
-            const itemsBook = opcoesBook.map(op => `
-                <div style="background:#f0f9ff; padding:10px; margin-bottom:5px; border-radius:6px; font-size:0.9rem; text-align:left">
-                    <strong>${op.nome}</strong><br>
-                    <span style="color:var(--primary); font-size:1.1rem; font-weight:bold">${this.formatMoney(op.total)}</span>
-                    <br><span style="color:#666; font-size:0.8rem">ou 12x de ${this.formatMoney(op.parcela)} (c/ taxa)</span>
-                </div>
-            `).join('');
-
+        if(totalFotos >= minBook) {
+            const op = this.calcBookOptions(totalFotos)[0]; // menor opção
             bookHtml = `
             <div class="card" style="border:2px solid var(--primary)">
                 <img src="${info.fotolivro.img}">
-                <h2>📚 Fotolivro Premium</h2>
+                <h2>📚 Fotolivro</h2>
                 <p>${info.fotolivro.texto}</p>
-                <div style="margin:15px 0">${itemsBook}</div>
+                ${bookCredit ? `<div class="credit-tag"><i class="fas fa-star"></i> ${bookCredit}</div>` : ''}
+                <div style="margin:10px 0; font-size:0.9rem">
+                    A partir de <b>${this.formatMoney(op.total)}</b><br>
+                    <span style="color:#666">ou 12x ${this.formatMoney(op.parcela)}</span>
+                </div>
                 <button class="btn btn-primary" onclick="App.startSelection('fotolivro')">Montar Fotolivro</button>
             </div>`;
         }
@@ -158,7 +151,8 @@ const App = {
         return `
         <div class="header"><div class="logo">Studio<span>NBV</span></div></div>
         <div class="container fade-in">
-            <h2 style="text-align:center; margin-bottom:20px">Olá, ${this.data.cliente.nome}!</h2>
+            <h2 style="text-align:center; margin-bottom:10px">Olá, ${this.data.cliente.nome}!</h2>
+            <p style="text-align:center; color:#666; margin-bottom:30px">Selecione qual opção você deseja produzir suas fotos:</p>
             
             <div class="menu-grid">
                 <div class="card">
@@ -166,16 +160,14 @@ const App = {
                     <p>Veja todas as ${totalFotos} fotos do ensaio.</p>
                     <button class="btn btn-secondary" onclick="App.openGalleryModal()">Ver Galeria</button>
                 </div>
-
                 ${bookHtml}
-
                 <div class="card">
                     <img src="${info.revelacao.img}">
-                    <h2>🖼️ Fazer Revelação</h2>
+                    <h2>🖼️ Revelação</h2>
                     <p>${info.revelacao.texto}</p>
+                    ${printCredit ? `<div class="credit-tag"><i class="fas fa-gift"></i> ${printCredit}</div>` : ''}
                     <button class="btn btn-primary" onclick="App.startSelection('revelacao')">Selecionar Fotos</button>
                 </div>
-
                 <div class="card">
                     <img src="${info.digital.img}">
                     <h2>💾 Arquivo Digital</h2>
@@ -187,66 +179,20 @@ const App = {
         ${this.renderGalleryModal()}`;
     },
 
-    // --- VIEW 3: SELEÇÃO (PRODUTOS INTELIGENTES) ---
+    // --- 3. SELEÇÃO ---
     viewSelection() {
         const idx = this.state.photoIdx;
         const total = this.data.fotos.length;
         const currentUrl = this.data.fotos[idx];
-        const items = this.state.cart[idx] || {};
-        
-        // Verifica se tem alguma revelação (papel) nesta foto
-        const hasPrint = Object.keys(items).some(k => k.includes('Foto') && items[k] > 0);
-        
-        // Lista de produtos filtrada
-        let productsHtml = '';
-        
-        // 1. Produtos de Impressão
-        const prints = this.data.produtosAvulsos.filter(p => p.nome.includes('Foto'));
-        prints.forEach(p => {
-            const qtd = items[p.nome] || 0;
-            productsHtml += this.renderStepper(p, qtd, idx);
-            
-            // Lógica de Porta Retrato (Só aparece se tiver a foto selecionada)
-            // Ex: Se Foto 15x20 > 0, mostra Porta Retrato 15x20
-            if(qtd > 0) {
-                // Tenta achar o porta retrato correspondente
-                const size = p.nome.replace('Foto ', ''); // '15x20'
-                const frame = this.data.produtosAvulsos.find(fr => fr.nome.includes('Porta retrato') && fr.nome.includes(size));
-                if(frame) {
-                    const qtdFrame = items[frame.nome] || 0;
-                    productsHtml += `
-                    <div style="margin-left:20px; border-left:2px solid #ccc; padding-left:10px; background:#f9f9f9">
-                        ${this.renderStepper(frame, qtdFrame, idx, true)}
-                    </div>`;
-                }
-            }
-        });
-
-        // 2. Arquivo Digital (Lógica de Brinde)
-        const digital = this.data.produtosAvulsos.find(p => p.nome.includes('Arquivo'));
-        if(digital) {
-            if(hasPrint) {
-                // Mostra como brinde
-                productsHtml += `
-                <div class="prod-item" style="background:#dcfce7">
-                    <div><b>Arquivo Digital</b> <span class="badge-free">BRINDE!</span></div>
-                    <div style="color:var(--success)"><i class="fas fa-check"></i> Incluso</div>
-                </div>`;
-                // Garante que não está cobrando
-                if(items[digital.nome]) delete items[digital.nome];
-            } else {
-                // Mostra pagante
-                const qtdDig = items[digital.nome] || 0;
-                productsHtml += this.renderStepper(digital, qtdDig, idx);
-            }
-        }
-
         const svg = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg width='200' height='100' xmlns='http://www.w3.org/2000/svg'><text x='50%' y='50%' transform='rotate(-20 100 50)' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='20' fill='%23000' fill-opacity='${this.data.assets.opacity}'>${this.data.assets.watermarkText}</text></svg>`)}`;
+        
+        // Status Bar Calculation
+        const status = this.calcStatusSelection();
 
         return `
         <div class="header">
             <button onclick="App.goBack()" style="float:left; background:none; border:none; color:white"><i class="fas fa-arrow-left"></i></button>
-            Seleção (${idx + 1}/${total})
+            Foto ${idx + 1} de ${total}
         </div>
         <div class="container fade-in">
             <div class="photo-viewer">
@@ -255,9 +201,9 @@ const App = {
                     <div class="wm-overlay" style="background-image:url('${svg}')"></div>
                 </div>
                 
-                <div class="prod-list">
-                    <h3 style="font-size:1rem; margin-bottom:10px">O que deseja desta foto?</h3>
-                    ${productsHtml}
+                <div style="text-align:left; margin-top:15px">
+                    <h3 style="font-size:1rem; margin-bottom:10px">Adicionar ao pedido:</h3>
+                    ${this.renderProductList(idx)}
                 </div>
 
                 <div class="nav-buttons">
@@ -267,208 +213,264 @@ const App = {
                         : `<button class="btn btn-success" onclick="App.finishSelection()">Finalizar Pedido</button>`
                     }
                 </div>
+
+                <div class="status-dock">
+                    <div class="status-row"><span>🛒 Itens no carrinho:</span> <span>${status.qtdItens}</span></div>
+                    <div class="status-row"><span>🎁 Créditos usados:</span> <span>${status.creditosUsados}</span></div>
+                    <div class="status-row highlight"><span>💰 Total Parcial:</span> <span>${this.formatMoney(status.total)}</span></div>
+                </div>
             </div>
         </div>`;
     },
 
-    renderStepper(prod, qtd, idx, isFrame=false) {
+    renderProductList(idx) {
+        const items = this.state.cart[idx] || {};
+        const hasPrint = Object.keys(items).some(k => k.includes('Foto') && items[k] > 0);
+        let html = '';
+
+        // Revelações
+        this.data.produtosAvulsos.filter(p => p.nome.includes('Foto')).forEach(p => {
+            html += this.renderStepper(p, items[p.nome] || 0, idx);
+            // Porta Retrato Condicional
+            if(items[p.nome] > 0) {
+                const size = p.nome.replace('Foto ', '');
+                const frame = this.data.produtosAvulsos.find(fr => fr.nome.includes('Porta') && fr.nome.includes(size));
+                if(frame) html += `<div style="margin-left:20px; border-left:2px solid #eee; padding-left:10px">${this.renderStepper(frame, items[frame.nome]||0, idx, true)}</div>`;
+            }
+        });
+
+        // Digital
+        const digital = this.data.produtosAvulsos.find(p => p.nome.includes('Arquivo'));
+        if(digital) {
+            if(hasPrint) {
+                html += `<div class="prod-item" style="background:#dcfce7; border-radius:6px; margin-top:5px">
+                    <div><b>Arquivo Digital</b> <span class="badge-free">BRINDE!</span></div>
+                    <div style="color:var(--success)"><i class="fas fa-check"></i> Incluso</div>
+                </div>`;
+                if(items[digital.nome]) delete items[digital.nome]; // Remove cobrança
+            } else {
+                html += this.renderStepper(digital, items[digital.nome] || 0, idx);
+            }
+        }
+        return html;
+    },
+
+    renderStepper(p, qtd, idx, isFrame=false) {
         return `
         <div class="prod-item">
             <div>
-                <div style="font-weight:600; font-size:0.9rem">${isFrame ? '↪ ' : ''}${prod.nome}</div>
-                <div style="font-size:0.8rem; color:#666">${this.formatMoney(prod.preco)}</div>
+                <div style="font-weight:600; font-size:0.9rem">${isFrame?'↪ ':''}${p.nome}</div>
+                <div style="font-size:0.8rem; color:#666">${this.formatMoney(p.preco)}</div>
             </div>
             <div class="stepper">
-                <button onclick="App.updateCart(${idx}, '${prod.nome}', -1)">-</button>
+                <button onclick="App.updateCart(${idx}, '${p.nome}', -1)">-</button>
                 <span>${qtd}</span>
-                <button onclick="App.updateCart(${idx}, '${prod.nome}', 1)">+</button>
+                <button onclick="App.updateCart(${idx}, '${p.nome}', 1)">+</button>
             </div>
         </div>`;
     },
 
+    calcStatusSelection() {
+        let qtdItens = 0;
+        let total = 0;
+        let creditsUsed = 0;
+        const creditList = this.data.cliente.creditos || [];
+
+        // Simplificação: conta créditos genéricos de "Foto"
+        const totalCredits = creditList.reduce((acc, c) => c.item.includes('Foto') ? acc + c.qtd : acc, 0);
+
+        Object.values(this.state.cart).forEach(items => {
+            const hasPrint = Object.keys(items).some(k => k.includes('Foto') && items[k]>0);
+            Object.keys(items).forEach(prod => {
+                let q = items[prod];
+                let p = this.data.produtosAvulsos.find(x=>x.nome===prod)?.preco || 0;
+                
+                qtdItens += q;
+                
+                // Lógica de Crédito
+                if(prod.includes('Foto')) {
+                    if(creditsUsed < totalCredits) {
+                        const free = Math.min(q, totalCredits - creditsUsed);
+                        creditsUsed += free;
+                        q -= free; // Paga só o excedente
+                    }
+                }
+                
+                // Lógica de Brinde Digital
+                if(prod.includes('Arquivo') && hasPrint) p = 0;
+
+                total += q * p;
+            });
+        });
+
+        // Abate entrada se tiver
+        const entrada = this.data.cliente.entrada || 0;
+        if(!this.data.cliente.incluirAlbum) total = Math.max(0, total - entrada);
+
+        return { 
+            qtdItens, 
+            total, 
+            creditosUsados: `${creditsUsed}/${totalCredits > 0 ? totalCredits : 0}` 
+        };
+    },
+
+    // --- 4. PERSUASÃO ---
     viewPersuasion() {
         return `
         <div class="container fade-in" style="margin-top:40px">
             <div class="persuasion-box" style="background:#fffbeb; border:2px solid #f59e0b; padding:25px; border-radius:12px; text-align:center">
-                <h2 style="color:#b45309">⚠️ Espere um pouco!</h2>
-                <p>Arquivos digitais se perdem. Fotos impressas duram gerações.</p>
+                <h2 style="color:#b45309">⚠️ Tem certeza?</h2>
+                <p style="font-size:1.1rem; line-height:1.6; margin:20px 0">
+                    As fotos em arquivo possuem o valor de <b>R$ 8,00</b>.<br>
+                    Enquanto que na foto revelada 10x15 o valor é de apenas <b>R$ 10,00</b> e você 
+                    <span style="background:#dcfce7; padding:2px 5px; border-radius:4px; font-weight:bold">GANHA</span> a foto em arquivo de brinde.
+                </p>
                 <button class="btn btn-primary" style="margin-bottom:15px; animation: pulse 2s infinite" onclick="App.startSelection('revelacao')">
-                    ✨ Quero Revelar (Recomendado)
+                    ✨ Quero Revelar + Arquivo Grátis
                 </button>
                 <button class="btn btn-secondary" onclick="App.finishDigitalFull()">
-                    Continuar somente com Arquivos
+                    Continuar somente com Arquivos (Pagar R$ 8,00/un)
                 </button>
             </div>
             <style>@keyframes pulse { 0% {transform:scale(1);} 50% {transform:scale(1.03);} 100% {transform:scale(1);} }</style>
         </div>`;
     },
 
+    // --- 5. CHECKOUT (Resumo) ---
     viewCheckout() {
-        const res = this.calcTotal();
+        const res = this.calcFinalCheckout();
+        
+        let rows = '';
+        res.lines.forEach(line => {
+            rows += `<tr>
+                <td>${line.qtd}x ${line.nome}</td>
+                <td>${this.formatMoney(line.unit)}</td>
+                <td>${this.formatMoney(line.total)}</td>
+            </tr>`;
+        });
+
+        // Linhas de Desconto/Entrada
+        if(res.discount > 0) {
+            rows += `<tr class="row-discount"><td colspan="2">Créditos/Brindes Aplicados</td><td>- ${this.formatMoney(res.discount)}</td></tr>`;
+        }
+        if(res.entry > 0) {
+            rows += `<tr class="row-entry"><td colspan="2">Entrada Paga (Abatimento)</td><td>- ${this.formatMoney(res.entry)}</td></tr>`;
+        }
+
         return `
-        <div class="header">Resumo</div>
+        <div class="header">Resumo do Pedido</div>
         <div class="container fade-in">
             <div class="card">
                 <h2 style="color:var(--success)">Pedido Pronto!</h2>
-                <div class="summary-box">${res.texto}</div>
-                <h3 style="text-align:right; color:var(--primary)">Total: ${this.formatMoney(res.total)}</h3>
-                <button class="btn btn-success" onclick="App.sendWhatsapp('${encodeURIComponent(res.texto)}', ${res.total})">
-                    <i class="fab fa-whatsapp"></i> Enviar no WhatsApp
+                
+                <table class="checkout-table">
+                    <thead><tr><th>Item</th><th>Unit.</th><th>Total</th></tr></thead>
+                    <tbody>${rows}</tbody>
+                </table>
+                
+                <div class="checkout-total">Total a Pagar: ${this.formatMoney(res.finalTotal)}</div>
+                
+                <button class="btn btn-whatsapp" style="background:#25D366; color:white; margin-top:20px" onclick="App.sendWhatsapp('${encodeURIComponent(res.msgText)}', ${res.finalTotal})">
+                    <i class="fab fa-whatsapp"></i> Finalizar no WhatsApp
                 </button>
             </div>
         </div>`;
     },
 
-    renderGalleryModal() {
-        const svg = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg width='150' height='150' xmlns='http://www.w3.org/2000/svg'><text x='50%' y='50%' transform='rotate(-45 75 75)' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='16' fill='%23fff' fill-opacity='0.4'>NBV PROVA</text></svg>`)}`;
-        return `
-        <div id="modal-gallery" class="modal-overlay hidden" onclick="if(event.target===this) document.getElementById('modal-gallery').classList.add('hidden')">
-            <div class="modal-content" style="max-width:800px">
-                <span class="close-modal" onclick="document.getElementById('modal-gallery').classList.add('hidden')">&times;</span>
-                <h3>Galeria Completa</h3>
-                <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); gap:5px; max-height:60vh; overflow-y:auto">
-                    ${this.data.fotos.map(url => `
-                        <div style="position:relative; aspect-ratio:1">
-                            <img src="${url}" style="width:100%; height:100%; object-fit:cover">
-                            <div style="position:absolute; top:0; left:0; width:100%; height:100%; background-image:url('${svg}')"></div>
-                        </div>`).join('')}
-                </div>
-            </div>
-        </div>`;
-    },
-
-    // --- LOGIC ---
-
-    startSelection(mode) {
-        this.state.mode = mode;
-        this.state.photoIdx = 0;
-        this.state.view = 'selection';
+    calcFinalCheckout() {
+        // Recalcula tudo para gerar a tabela limpa
+        const summary = {}; // { 'Foto 10x15': { qtd: 5, total: 50, free: 0 } }
+        let grossTotal = 0;
+        let discountTotal = 0;
         
-        // Se for fotolivro, pré-seleciona a opção básica (lógica simplificada para UX)
-        // Para revelação, começa zerado.
-        this.render();
-    },
-
-    goToPersuasion() { this.state.view = 'persuasion'; this.render(); },
-    
-    finishDigitalFull() {
-        // Adiciona "Arquivo Digital" em todas as fotos
-        this.data.fotos.forEach((_, i) => this.updateCart(i, 'Arquivo Digital', 1));
-        this.finishSelection();
-    },
-
-    updateCart(idx, prodName, delta) {
-        if(!this.state.cart[idx]) this.state.cart[idx] = {};
-        const curr = this.state.cart[idx][prodName] || 0;
-        const newVal = Math.max(0, curr + delta);
-        if(newVal === 0) delete this.state.cart[idx][prodName];
-        else this.state.cart[idx][prodName] = newVal;
-        this.render(); // Re-renderiza para atualizar UI (ex: porta retrato aparecer)
-    },
-
-    nav(d) {
-        this.state.photoIdx += d;
-        this.render();
-    },
-
-    finishSelection() {
-        this.state.view = 'checkout';
-        this.render();
-    },
-
-    goBack() { this.state.view = 'home'; this.render(); },
-    openGalleryModal() { document.getElementById('modal-gallery').classList.remove('hidden'); },
-
-    // Cálculos
-    calcBookOptions(totalFotos) {
-        const markup = this.data.financeiro.markup;
-        const fixo = this.data.financeiro.custoFixoDiagramacao;
-        const jurosTotal = this.data.financeiro.tabelaJuros[11] || 21; // Index 11 = 12x (se array comecar em 0 e tiver 12 posicoes, 12x é index 11. Se tiver 0 a 12, é 12)
-        // O array de juros tem 13 posições (0 a 12), então 12x é index 12?
-        // Vamos checar o DB: tabelaJuros tem indices 0 a 11 (12 itens)? Ou 0 a 12?
-        // DB: [0, 4.59 ... 21.00] -> tem 12 elementos? Não, contei visualmente. Vamos assumir o ultimo valor.
-        const taxa = this.data.financeiro.tabelaJuros[this.data.financeiro.tabelaJuros.length - 1]; 
-
-        // Agrupa por tamanho
-        const tamanhos = ['15x20', '20x30', '30x40'];
-        const options = [];
-
-        tamanhos.forEach(tam => {
-            const rule = this.data.regrasDiagramacao[tam];
-            const pagsNecessarias = Math.ceil(totalFotos / rule);
-            // Busca o livro que cabe
-            const match = this.data.tabelaFotolivros.find(t => t.size === tam && t.pages >= pagsNecessarias);
-            if(match) {
-                const totalVista = (match.priceBox + fixo) * markup;
-                const totalPrazo = totalVista * (1 + (taxa/100));
-                options.push({
-                    nome: `Fotolivro ${tam} (${match.pages} págs)`,
-                    total: totalVista,
-                    parcela: totalPrazo / 12
-                });
-            }
-        });
-        return options;
-    },
-
-    calcTotal() {
-        let total = 0;
-        let txt = "";
-        
-        // Soma itens do carrinho
-        // Estrutura: { 0: { 'Item': 1 }, 1: { 'Item': 2 } }
-        const resumoItens = {}; // Para agrupar no texto final
-        
-        Object.keys(this.state.cart).forEach(photoIdx => {
-            const items = this.state.cart[photoIdx];
-            // Verifica brinde
+        // 1. Agrupa Itens
+        Object.keys(this.state.cart).forEach(idx => {
+            const items = this.state.cart[idx];
             const hasPrint = Object.keys(items).some(k => k.includes('Foto') && items[k]>0);
             
-            Object.keys(items).forEach(prodName => {
-                const qtd = items[prodName];
-                let price = this.data.produtosAvulsos.find(p=>p.nome === prodName)?.preco || 0;
+            Object.keys(items).forEach(prod => {
+                const qtd = items[prod];
+                const price = this.data.produtosAvulsos.find(x=>x.nome===prod)?.preco || 0;
                 
-                // Lógica Brinde
-                if(prodName.includes('Arquivo') && hasPrint) price = 0;
-                
-                const sub = qtd * price;
-                total += sub;
-                
-                // Agrupamento para texto
-                if(!resumoItens[prodName]) resumoItens[prodName] = 0;
-                resumoItens[prodName] += qtd;
+                if(!summary[prod]) summary[prod] = { qtd:0, total:0, unit: price };
+                summary[prod].qtd += qtd;
+                summary[prod].total += qtd * price;
+                grossTotal += qtd * price;
+
+                // Lógica Brinde Digital
+                if(prod.includes('Arquivo') && hasPrint) {
+                    discountTotal += qtd * price; // Desconta o valor cheio
+                }
             });
         });
-        
-        // Se for fotolivro selecionado (lógica simplificada: se não tem itens avulsos e mode é fotolivro)
-        // Nota: O fluxo atual mistura tudo no cart. Se o usuario veio pelo botão "Montar Fotolivro", 
-        // idealmente deveria ter adicionado o fotolivro no cart.
-        // Como a UX de "StartSelection('fotolivro')" leva pra seleção foto a foto, assumimos que ele quer selecionar AS FOTOS pro livro.
-        // Na V13, se o modo for Fotolivro, vamos cobrar o livro base + extras.
-        if(this.state.mode === 'fotolivro') {
-            const bookOpt = this.calcBookOptions(this.data.fotos.length)[0]; // Pega a primeira opção (menor)
-            if(bookOpt) {
-                total += bookOpt.total;
-                txt += `📚 ${bookOpt.nome}: ${this.formatMoney(bookOpt.total)}\n`;
+
+        // 2. Aplica Créditos do Cliente
+        const credits = this.data.cliente.creditos || [];
+        credits.forEach(c => {
+            if(summary[c.item]) {
+                const used = Math.min(summary[c.item].qtd, c.qtd);
+                discountTotal += used * summary[c.item].unit;
+            } else if(c.item.includes('Foto')) {
+                // Crédito genérico de foto aplica na 10x15
+                // Simplificação para V16
             }
-        }
-
-        // Gera texto dos avulsos
-        Object.keys(resumoItens).forEach(k => {
-            txt += `🖼️ ${resumoItens[k]}x ${k}\n`;
         });
-        
-        return { total, texto: txt };
+
+        // 3. Aplica Entrada
+        const entry = this.data.cliente.entrada || 0;
+        const netTotal = Math.max(0, grossTotal - discountTotal - entry);
+
+        // Gera array para tabela
+        const lines = Object.keys(summary).map(k => ({
+            nome: k, qtd: summary[k].qtd, unit: summary[k].unit, total: summary[k].total
+        }));
+
+        // Texto Zap
+        let msg = `*RESUMO PEDIDO*\n`;
+        lines.forEach(l => msg += `${l.qtd}x ${l.nome}: ${this.formatMoney(l.total)}\n`);
+        if(discountTotal>0) msg += `Descontos/Brindes: -${this.formatMoney(discountTotal)}\n`;
+        if(entry>0) msg += `Entrada Paga: -${this.formatMoney(entry)}\n`;
+        msg += `*TOTAL FINAL: ${this.formatMoney(netTotal)}*`;
+
+        return { lines, discount: discountTotal, entry, finalTotal: netTotal, msgText: msg };
     },
 
-    sendWhatsapp(msg, tot) {
-        let final = `*PEDIDO ${this.data.cliente.nome}*\n\n${decodeURIComponent(msg)}\n*TOTAL: ${this.formatMoney(tot)}*`;
-        window.open(`https://wa.me/${this.data.financeiro.whatsapp}?text=${encodeURIComponent(final)}`, '_blank');
+    // --- UTILS ---
+    startSelection(mode) { this.state.mode = mode; this.state.photoIdx = 0; this.state.view = 'selection'; this.render(); },
+    goToPersuasion() { this.state.view = 'persuasion'; this.render(); },
+    finishDigitalFull() { this.data.fotos.forEach((_, i) => this.updateCart(i, 'Arquivo Digital', 1)); this.finishSelection(); },
+    updateCart(idx, prod, d) { 
+        if(!this.state.cart[idx]) this.state.cart[idx]={}; 
+        const v = Math.max(0, (this.state.cart[idx][prod]||0)+d);
+        if(v===0) delete this.state.cart[idx][prod]; else this.state.cart[idx][prod]=v;
+        this.render(); 
     },
-
+    nav(d) { this.state.photoIdx+=d; this.render(); },
+    finishSelection() { this.state.view = 'checkout'; this.render(); },
+    goBack() { this.state.view = 'home'; this.render(); },
+    openGalleryModal() { document.getElementById('modal-gallery').classList.remove('hidden'); },
+    renderGalleryModal() {
+        const svg = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg width='150' height='150' xmlns='http://www.w3.org/2000/svg'><text x='50%' y='50%' transform='rotate(-45 75 75)' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='16' fill='%23fff' fill-opacity='0.4'>NBV PROVA</text></svg>`)}`;
+        return `<div id="modal-gallery" class="modal-overlay hidden" onclick="if(event.target===this) document.getElementById('modal-gallery').classList.add('hidden')"><div class="modal-content" style="max-width:800px; height:80vh"><span class="close-modal" onclick="document.getElementById('modal-gallery').classList.add('hidden')">&times;</span><h3>Galeria</h3><div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); gap:5px">${this.data.fotos.map(u=>`<div style="aspect-ratio:1; position:relative"><img src="${u}" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;top:0;left:0;width:100%;height:100%;background-image:url('${svg}')"></div></div>`).join('')}</div></div></div>`;
+    },
+    calcBookOptions(qtd) {
+        const m = this.data.financeiro.markup; const f = this.data.financeiro.custoFixoDiagramacao;
+        const juros = this.data.financeiro.tabelaJuros[11] || 21; // 12x
+        const opts = [];
+        ['15x20','20x30','30x40'].forEach(sz => {
+            const rule = this.data.regrasDiagramacao[sz] || 4;
+            const pgs = Math.ceil(qtd/rule);
+            const match = this.data.tabelaFotolivros.find(t=>t.size===sz && t.pages>=pgs);
+            if(match) {
+                const tot = (match.priceBox + f) * m;
+                opts.push({ nome: `Fotolivro ${sz} (${match.pages} págs)`, total: tot, parcela: (tot*(1+juros/100))/12 });
+            }
+        });
+        return opts;
+    },
+    sendWhatsapp(msg, tot) { window.open(`https://wa.me/${this.data.financeiro.whatsapp}?text=${encodeURIComponent(decodeURIComponent(msg))}`, '_blank'); },
     formatMoney(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
 };
-
 window.onload = () => App.init();
 </script>
 </body>
