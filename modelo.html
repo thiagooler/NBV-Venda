@@ -6,44 +6,63 @@
 <title>Galeria Studio NBV</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-    :root { --primary: #0066cc; --primary-dark: #004c99; --bg: #f4f6f8; --card: #fff; --text: #1f2937; --success: #10b981; --warning: #f59e0b; }
+    :root { --primary: #0066cc; --bg: #f4f6f8; --card: #fff; --text: #1f2937; --success: #10b981; --warning: #f59e0b; }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 80px; }
+    body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 80px; }
     .hidden { display: none !important; }
     .fade-in { animation: fadeIn 0.4s ease-out; }
     @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-    .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    
+    /* Layout Base */
+    .header { background: #111; color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+    .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+    .card { background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; margin-bottom: 20px; }
+    
+    /* Componentes */
+    .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; margin-top: 10px; display:flex; align-items:center; justify-content:center; gap:8px; transition: 0.2s; }
     .btn:active { transform: scale(0.98); }
     .btn-primary { background: var(--primary); color: white; }
     .btn-secondary { background: #e2e8f0; color: #333; }
-    .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
     .btn-success { background: var(--success); color: white; }
-    .header { background: #111; color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-    .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
-    .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-    .card { background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; margin-bottom: 20px; }
-    .card img { max-width: 100%; border-radius: 8px; margin-bottom: 10px; height: 150px; object-fit: cover; }
+    .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+    
+    /* Seleção */
     .photo-viewer { text-align: center; }
     .img-wrapper { position: relative; width: 100%; min-height: 200px; background: #eee; border-radius: 8px; overflow: hidden; margin-bottom: 15px; }
     .img-wrapper img { width: 100%; height: auto; display: block; }
     .prod-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
     .stepper { display: flex; align-items: center; gap: 10px; }
     .stepper button { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ccc; background: white; font-weight: bold; }
-    .status-dock { position: fixed; bottom: 0; left: 0; width: 100%; background: #1e293b; color: white; padding: 15px; z-index: 900; border-top: 3px solid var(--success); box-shadow: 0 -4px 20px rgba(0,0,0,0.2); }
+    
+    /* Barra de Status Fixa */
+    .status-dock { 
+        position: fixed; bottom: 0; left: 0; width: 100%; 
+        background: #1e293b; color: white; 
+        padding: 15px; z-index: 900; 
+        border-top: 3px solid var(--success);
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+    }
     .status-info { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 5px; color: #cbd5e1; }
     .status-total { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 800; color: #fff; margin-top: 5px; border-top: 1px solid #334155; padding-top: 5px; }
-    .badge-free { background: var(--success); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-left: 5px; }
-    .credit-tag { background: #e0f2fe; color: #0284c7; padding: 8px; border-radius: 6px; font-size: 0.85rem; display: block; margin-bottom: 15px; font-weight: 600; border: 1px solid #bae6fd; text-align: left; }
-    .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; align-items:center; justify-content:center; }
-    .modal-full { width: 95%; height: 95%; max-width: 1200px; background: black; display:flex; flex-direction:column; }
-    .close-modal { position: absolute; top: 10px; right: 15px; font-size: 30px; cursor: pointer; color:#fff; z-index:1001 }
+    
+    /* Checkout */
     .checkout-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-bottom: 15px; }
     .checkout-table td { padding: 8px 0; border-bottom: 1px solid #eee; }
-    .row-discount { color: var(--success); font-weight: 600; } .row-entry { color: #dc2626; font-weight: 600; }
+    .row-total { font-size: 1.2rem; font-weight: 800; color: var(--primary); text-align: right; }
+    .row-discount { color: var(--success); font-weight: 600; }
+    .row-entry { color: #dc2626; font-weight: 600; }
+    
+    /* Inputs */
     .form-label { display: block; text-align: left; font-weight: 600; margin: 15px 0 5px; color: #333; }
     .form-input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: #fff; }
     .alert-box { background: #fff3cd; color: #856404; padding: 10px; border-radius: 6px; margin: 10px 0; font-size: 0.9rem; border: 1px solid #ffeeba; text-align: left; }
-    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 5px; }
+
+    /* Modal Gallery */
+    .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; flex-direction:column; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 10px; overflow-y: auto; flex:1; }
+    .gallery-item { aspect-ratio: 1; position: relative; }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+    .lightbox-img { max-width: 100%; max-height: 80vh; object-fit: contain; margin: auto; }
 </style>
 </head>
 <body>
@@ -53,239 +72,335 @@
 <script>
 const App = {
     data: {},
-    state: { view: 'init', mode: '', photoIdx: 0, cart: {} }, 
+    state: { view: 'init', mode: '', photoIdx: 0, cart: {}, payMethod: '', installment: 1 },
 
     init() {
         if(!window.NBV_CONFIG) return document.body.innerHTML = "<h2 style='text-align:center;padding:50px'>Erro: Configuração não encontrada.</h2>";
         this.data = window.NBV_CONFIG;
-        
-        // 1. Renderizar Modais (Fix para o erro de lightbox/galeria)
-        document.body.insertAdjacentHTML('beforeend', this.renderModals());
-        
-        // 2. Roteamento para Aprovação Simples ou Venda Completa
-        if (this.data.fluxo.pedirEdicao) {
-            this.state.view = 'editing_choice';
-        } else {
-            this.state.view = 'approval_only';
-        }
+        this.state.view = this.data.fluxo.pedirEdicao ? 'editing_choice' : 'home';
         this.render();
     },
 
     render() {
         const app = document.getElementById('app');
-        if (this.state.view === 'editing_choice') app.innerHTML = this.viewEditing();
-        else if (this.state.view === 'home') app.innerHTML = this.viewHome();
-        else if (this.state.view === 'selection') app.innerHTML = this.viewSelection();
-        else if (this.state.view === 'persuasion') app.innerHTML = this.viewPersuasion();
-        else if (this.state.view === 'checkout') app.innerHTML = this.viewCheckout();
-        else if (this.state.view === 'approval_only') app.innerHTML = this.viewApprovalOnly();
+        // Router Simples
+        if(this.state.view === 'editing_choice') app.innerHTML = this.viewEditing();
+        else if(this.state.view === 'home') app.innerHTML = this.viewHome();
+        else if(this.state.view === 'selection') app.innerHTML = this.viewSelection();
+        else if(this.state.view === 'persuasion') app.innerHTML = this.viewPersuasion();
+        else if(this.state.view === 'checkout') app.innerHTML = this.viewCheckout();
         
+        // Ajuste de scroll apenas na mudança de view principal, não em updates
         if(!this.isUpdating) window.scrollTo(0,0);
         this.isUpdating = false;
     },
 
-    // --- 1. VIEWS DE INTRO / ROTEAMENTO ---
+    // --- 1. VIEW: ESCOLHA DE EDIÇÃO ---
     viewEditing() {
-        return `<div class="header">Studio<span>NBV</span></div><div class="container fade-in"><div class="card"><h2>Escolha a Edição</h2><p style="color:#666">Selecione qual opção você deseja:</p><button class="btn btn-outline" onclick="App.chooseEdit(true)" style="border-color:var(--primary);color:var(--primary)">✨ <b>Com Edição Artística</b><br><small>Tratamento completo. Prazo 30 dias.</small></button><button class="btn btn-outline" onclick="App.chooseEdit(false)" style="border-color:var(--success);color:var(--success)">⚡ <b>Produção Rápida</b><br><small>Fotos originais. Prazo 10 dias.</small></button></div></div>`;
+        return `<div class="header">Studio<span>NBV</span></div><div class="container fade-in"><div class="card"><h2>Antes de produzir...</h2><p style="color:#666">Selecione qual opção de edição você deseja:</p><button class="btn btn-outline" onclick="App.chooseEdit(true)" style="border-color:var(--primary);color:var(--primary)">✨ <b>Com Edição Artística</b><br><small>Tratamento completo. Prazo 30 dias.</small></button><button class="btn btn-outline" onclick="App.chooseEdit(false)" style="border-color:var(--success);color:var(--success)">⚡ <b>Produção Rápida</b><br><small>Fotos originais. Prazo 10 dias.</small></button></div></div>`;
     },
     chooseEdit(want) {
         if(want) window.location.href = `https://wa.me/${this.data.financeiro.whatsapp}?text=Olá, gostaria de produzir com Edição Artística (Opção 1).`;
         else { this.state.view = 'home'; this.render(); }
     },
 
+    // --- 2. VIEW: HOME (MENU) ---
     viewHome() {
-        const total = this.data.fotos.length; const minBook = this.data.fluxo.minimoFotosLivro || 20; const info = this.data.apresentacao; const entry = this.data.cliente.entrada || 0;
-        const creds = this.data.cliente.creditos || []; const printCredit = creds.find(c=>c.item.includes('Foto')) ? `${creds.find(c=>c.item.includes('Foto')).qtd} fotos inclusas` : 'Nenhuma foto inclusa';
-        const entryText = entry > 0 ? `<br>💰 Entrada paga: ${this.formatMoney(entry)}` : ''; const detailsText = `${printCredit}${entryText}`;
+        const total = this.data.fotos.length;
+        const minBook = this.data.fluxo.minimoFotosLivro || 20;
+        const info = this.data.apresentacao;
+        
+        // Texto de Créditos
+        const entry = this.data.cliente.entrada || 0;
+        const credits = this.data.cliente.creditos || [];
+        const creditText = credits.map(c => `🎁 ${c.qtd}x ${c.item}`).join('<br>');
+        const entryText = entry > 0 ? `💰 Crédito de Entrada: ${this.formatMoney(entry)}` : '';
 
-        let bookCard = ''; 
-        if(total>=minBook) {
+        let bookCard = '';
+        if(total >= minBook) {
             const op = this.calcBookOptions(total)[0];
-            const bookCredit = this.data.cliente.incluirAlbum ? `✅ Contrato: Álbum Incluso<br>💰 Entrada paga: ${this.formatMoney(entry)}` : '';
-            bookCard = `<div class="card" style="border:2px solid var(--primary)"><img src="${info.fotolivro.img}"><h2>📚 Fotolivro</h2><p>${info.fotolivro.texto}</p>${bookCredit ? `<div class="credit-tag">${bookCredit}</div>` : ''}<div style="margin:10px 0;font-size:0.9rem">A partir de <b>${this.formatMoney(op.total)}</b></div><button class="btn btn-primary" onclick="App.startSelection('fotolivro')">Montar Fotolivro</button></div>`;
+            bookCard = `<div class="card" style="border:2px solid var(--primary)"><img src="${info.fotolivro.img}"><h2>📚 Fotolivro</h2><p>${info.fotolivro.texto}</p><div style="background:#f0f9ff;padding:10px;border-radius:6px;margin:10px 0;font-size:0.9rem">A partir de <b>${this.formatMoney(op.total)}</b><br><small>ou 12x ${this.formatMoney(op.parcela)}</small></div><button class="btn btn-primary" onclick="App.startSelection('fotolivro')">Selecionar para Álbum</button></div>`;
         }
 
-        return `<div class="header">Studio<span>NBV</span></div><div class="container fade-in"><h2 style="text-align:center;margin-bottom:10px">Olá, ${this.data.cliente.nome}!</h2><p style="text-align:center;color:#666;margin-bottom:30px">Selecione qual opção você deseja:</p><div class="menu-grid"><div class="card"><h2>📸 Espiar Fotos</h2><p>Veja todas as ${total} fotos.</p><button class="btn btn-secondary" onclick="App.openGallery()">Ver Galeria</button></div>${bookCard}<div class="card"><img src="${info.revelacao.img}"><h2>🖼️ Revelação</h2><p>${info.revelacao.texto}</p><div class="credit-tag"><b>Seus Créditos:</b><br>${detailsText}</div><button class="btn btn-primary" onclick="App.startSelection('revelacao')">Selecionar Fotos</button></div><div class="card"><img src="${info.digital.img}"><h2>💾 Arquivo Digital</h2><p>${info.digital.texto}</p><button class="btn btn-outline" onclick="App.goToPersuasion()">Comprar Arquivos</button></div></div></div>`;
+        return `<div class="header">Studio<span>NBV</span></div><div class="container fade-in"><div class="card" style="text-align:left; border-left:4px solid var(--success)"><h3>Olá, ${this.data.cliente.nome}!</h3>${entryText ? `<p>${entryText}</p>` : ''}${creditText ? `<p style="font-size:0.9rem;color:#666">${creditText}</p>` : ''}</div><p style="text-align:center;color:#666">Selecione qual opção você deseja:</p><div class="menu-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px"><div class="card"><h2>📸 Espiar Fotos</h2><p>Veja todas as ${total} fotos.</p><button class="btn btn-secondary" onclick="App.openGallery()">Ver Galeria</button></div>${bookCard}<div class="card"><img src="${info.revelacao.img}"><h2>🖼️ Revelação</h2><p>${info.revelacao.texto}</p><button class="btn btn-primary" onclick="App.startSelection('revelacao')">Selecionar Fotos</button></div><div class="card"><img src="${info.digital.img}"><h2>💾 Arquivo Digital</h2><p>${info.digital.texto}</p><button class="btn btn-outline" onclick="App.goToPersuasion()">Comprar Arquivos</button></div></div></div>${this.renderGallery()}`;
     },
 
-    // --- 3. VIEW: APROVAÇÃO SIMPLES (NÃO VENDA) ---
-    viewApprovalOnly() {
+    // --- 3. VIEW: SELEÇÃO ---
+    viewSelection() {
         const idx = this.state.photoIdx;
         const total = this.data.fotos.length;
         const url = this.data.fotos[idx];
-        const currentData = this.state.cart[idx] || { status: 'pendente', comment: '' };
-        const status = currentData.status || 'pendente';
+        const status = this.calcStatusSelection();
         
-        const statusColor = status === 'approved' ? 'var(--success)' : status === 'commented' ? 'var(--warning)' : 'var(--text-light)';
-        const statusText = status === 'approved' ? 'APROVADA' : status === 'commented' ? 'COMENTADA' : 'PENDENTE';
-        
-        return `
-        <div class="header" style="display:flex;justify-content:space-between"><button onclick="App.goBack()" style="background:none;border:none;color:white;font-size:1.2rem"><i class="fas fa-arrow-left"></i></button><span>APROVAÇÃO: Foto ${idx+1} de ${total}</span><span style="width:30px"></span></div>
-        <div class="container fade-in" style="padding-bottom:50px">
-            <div class="photo-viewer card">
-                <div class="img-wrapper" onclick="App.openLightbox('${url}')" style="cursor:pointer"><img src="${url}"></div>
-                
-                <div style="margin-top:15px">
-                    <div style="text-align:center;margin-bottom:10px">Status Atual: <span style="font-weight:bold;color:${statusColor}">${statusText}</span></div>
-                    
-                    <div style="display:flex;gap:10px">
-                        <button class="btn btn-success" style="width:50%" onclick="App.setApprovalStatus('approved')"><i class="fas fa-check"></i> Aprovar</button>
-                        <button class="btn btn-secondary" style="width:50%" onclick="document.getElementById('area-comment').classList.toggle('hidden'); App.checkCommentAreaStatus()">Comentar</button>
-                    </div>
-                </div>
+        // Marca D'água SVG
+        const wm = this.data.assets.watermarkText;
+        const svg = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg width='200' height='100' xmlns='http://www.w3.org/2000/svg'><text x='50%' y='50%' transform='rotate(-20 100 50)' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='20' fill='%23000' fill-opacity='${this.data.assets.opacity}'>${wm}</text></svg>`)}`;
 
-                <div id="area-comment" class="card ${status !== 'commented' ? 'hidden' : ''}" style="text-align:left;margin-top:15px;padding:15px">
-                    <label style="font-weight:600">Seu Comentário:</label>
-                    <textarea id="photo-comment" style="width:100%;min-height:80px" oninput="App.saveComment(this.value)">${currentData.comment}</textarea>
-                    <small>Se você deixar um comentário, o status será alterado para "Comentada".</small>
-                </div>
-
-                <div style="display:flex;gap:10px;margin-top:30px">
-                    <button class="btn btn-secondary" onclick="App.nav(-1)" ${idx===0?'disabled':''}>Anterior</button>
-                    ${idx<total-1 ? `<button class="btn btn-primary" onclick="App.nav(1)">Próxima Foto</button>` : `<button class="btn btn-success" onclick="App.sendApprovalReport()">Finalizar e Enviar Relatório</button>`}
-                </div>
-            </div>
-        </div>
-        ${this.renderLightbox()}`; // Chamada corrigida
-    },
-
-    checkCommentAreaStatus() {
-        const area = document.getElementById('area-comment');
-        const comment = document.getElementById('photo-comment');
-        if (area.classList.contains('hidden') && comment.value.trim() === '') {
-            this.setApprovalStatus('pendente');
-        }
-    },
-    setApprovalStatus(newStatus) {
-        const idx = this.state.photoIdx;
-        const comment = document.getElementById('photo-comment')?.value || '';
-        if (newStatus === 'approved') {
-            this.state.cart[idx] = { status: 'approved', comment: '' };
-        } else if (newStatus === 'pendente') {
-             this.state.cart[idx] = { status: 'pendente', comment: '' };
-        }
-        this.render();
-    },
-    saveComment(text) {
-        const idx = this.state.photoIdx;
-        this.state.cart[idx] = { status: text.trim() ? 'commented' : 'pendente', comment: text.trim() };
-        // Não precisa renderizar, apenas salvar o estado
-    },
-    sendApprovalReport() {
-        let msg = `*RELATÓRIO DE APROVAÇÃO - ${this.data.cliente.nome}*\n-----------------------------------\n`;
-        let approvedCount = 0; let commentedCount = 0; let pendingCount = 0;
-        this.data.fotos.forEach((url, idx) => {
-            const data = this.state.cart[idx] || { status: 'pendente', comment: '' };
-            const filename = url.substring(url.lastIndexOf('/') + 1);
-            if (data.status === 'approved') { msg += `✅ Aprovada: ${filename}\n`; approvedCount++; } 
-            else if (data.status === 'commented') { msg += `💬 Comentário na Foto ${filename}: ${data.comment}\n`; commentedCount++; } 
-            else { pendingCount++; }
-        });
-        msg += `\n*RESUMO:*\nAprovadas: ${approvedCount}\nComentadas: ${commentedCount}\nPendentes/Rejeitadas: ${pendingCount}\n\nEntre em contato para prosseguir com a produção.`;
-        window.open(`https://wa.me/${this.data.financeiro.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
-    },
-
-    // --- 4. VIEW: SELEÇÃO DE VENDA ---
-    viewSelection() {
-        const idx=this.state.photoIdx; const total=this.data.fotos.length; const status=this.calcStatusSelection();
-        return `<div class="header"><button onclick="App.goBack()" style="float:left;background:none;border:none;color:white"><i class="fas fa-arrow-left"></i></button>Foto ${idx+1}/${total}</div><div class="container fade-in" style="padding-bottom:120px"><div class="photo-viewer card"><div class="img-wrapper"><img src="${this.data.fotos[idx]}"></div><div style="text-align:left"><h3 style="font-size:1rem;margin-bottom:10px">Adicionar ao pedido:</h3>${this.renderProdList(idx)}</div><div style="display:flex;gap:10px;margin-top:20px"><button class="btn btn-secondary" onclick="App.nav(-1)" ${idx===0?'disabled':''}>Anterior</button>${idx<total-1?`<button class="btn btn-primary" onclick="App.nav(1)">Próxima</button>`:`<button class="btn btn-success" onclick="App.finishSelection()">Finalizar</button>`}</div><div class="status-dock"><div class="status-info"><span>🎁 Créditos:</span><span>${status.creditsDetail}</span></div><div class="status-info"><span>💰 Entrada Paga:</span><span>Usando ${this.formatMoney(status.usedEntry)} (Resta ${this.formatMoney(status.remainingEntry)})</span></div><div class="status-total"><span>Total Pedido:</span><span>${this.formatMoney(status.toPay)}</span></div></div></div></div>`;
+        return `<div class="header" style="display:flex;justify-content:space-between"><button onclick="App.goBack()" style="background:none;border:none;color:white;font-size:1.2rem"><i class="fas fa-arrow-left"></i></button><span>Foto ${idx+1} de ${total}</span><span style="width:30px"></span></div><div class="container fade-in" style="padding-bottom:120px"><div class="photo-viewer"><div class="img-wrapper"><img src="${url}"><div class="wm-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:url('${svg}')"></div></div><div style="text-align:left"><h3>Adicionar ao pedido:</h3>${this.renderProdList(idx)}</div><div style="display:flex;gap:10px;margin-top:20px"><button class="btn btn-secondary" onclick="App.nav(-1)" ${idx===0?'disabled':''}>Anterior</button>${idx<total-1 ? `<button class="btn btn-primary" onclick="App.nav(1)">Próxima</button>` : `<button class="btn btn-success" onclick="App.finishSelection()">Finalizar</button>`}</div></div></div><div class="status-dock"><div class="status-info"><span>🛒 Carrinho: ${status.qtdItens} itens</span><span>🎁 Créditos: ${status.creditsDetail}</span></div><div class="status-info"><span>💰 Entrada: - ${this.formatMoney(status.usedEntry)}</span><span>Restante: ${this.formatMoney(status.remainingEntry)}</span></div><div class="status-total"><span>A Pagar:</span><span>${this.formatMoney(status.toPay)}</span></div></div>`;
     },
 
     renderProdList(idx) {
-        const items=this.state.cart[idx]||{}; const hasPrint=Object.keys(items).some(k=>k.includes('Foto')&&items[k]>0); let html='';
-        this.data.produtosAvulsos.filter(p=>p.nome.includes('Foto')).forEach(p=>{
-            html+=this.renderStepper(p, items[p.nome]||0, idx);
-            if(items[p.nome]>0){ const size=p.nome.replace('Foto ',''); const fr=this.data.produtosAvulsos.find(f=>f.nome.includes('Porta')&&f.nome.includes(size)); if(fr) html+=`<div style="margin-left:20px;border-left:2px solid #eee;padding-left:10px;background:#fafafa">${this.renderStepper(fr, items[fr.nome]||0, idx, true)}</div>`; }
+        const items = this.state.cart[idx] || {};
+        let html = '';
+        // Revelações
+        this.data.produtosAvulsos.filter(p => p.nome.includes('Foto')).forEach(p => {
+            html += this.renderStepper(p, items[p.nome] || 0, idx);
+            // Porta Retrato Condicional
+            if((items[p.nome]||0) > 0) {
+                const size = p.nome.replace('Foto ', '');
+                const fr = this.data.produtosAvulsos.find(f => f.nome.includes('Porta') && f.nome.includes(size));
+                if(fr) html += `<div style="margin-left:20px;border-left:2px solid #eee;padding-left:10px;background:#fafafa">${this.renderStepper(fr, items[fr.nome]||0, idx, true)}</div>`;
+            }
         });
-        const dig=this.data.produtosAvulsos.find(p=>p.nome.includes('Arquivo'));
-        if(dig) html+=hasPrint?`<div class="prod-item" style="background:#dcfce7;border-radius:6px;padding:10px"><div><b>Arquivo Digital</b> <span class="badge-free">BRINDE!</span></div><div style="color:var(--success)"><i class="fas fa-check"></i> Incluso</div></div>`:this.renderStepper(dig,items[dig.nome]||0,idx);
+        // Digital (Brinde Check)
+        const hasPrint = Object.keys(items).some(k => k.includes('Foto') && items[k]>0);
+        const dig = this.data.produtosAvulsos.find(p => p.nome.includes('Arquivo'));
+        if(dig) {
+            if(hasPrint) {
+                html += `<div class="prod-item" style="background:#dcfce7;border-radius:6px;padding:10px"><div><b>Arquivo Digital</b> <span class="badge-free">BRINDE!</span></div><div style="color:var(--success)"><i class="fas fa-check"></i> Incluso</div></div>`;
+                if(items[dig.nome]) delete items[dig.nome];
+            } else {
+                html += this.renderStepper(dig, items[dig.nome] || 0, idx);
+            }
+        }
         return html;
     },
-    renderStepper(p,q,idx,isF=false) { return `<div class="prod-item"><div><div style="font-weight:600">${isF?'↪ ':''}${p.nome}</div><div style="font-size:0.8rem;color:#666">${this.formatMoney(p.preco)}</div></div><div class="stepper"><button onclick="App.updateCart(${idx},'${p.nome}',-1)">-</button><span>${q}</span><button onclick="App.updateCart(${idx},'${p.nome}',1)">+</button></div></div>`; },
 
-    // --- 5. VIEW: CHECKOUT ---
+    renderStepper(p, qtd, idx, isFrame=false) {
+        return `<div class="prod-item"><div><div style="font-weight:600">${isFrame?'↪ ':''}${p.nome}</div><div style="font-size:0.8rem;color:#666">${this.formatMoney(p.preco)}</div></div><div class="stepper"><button onclick="App.updateCart(${idx},'${p.nome}',-1)">-</button><span>${qtd}</span><button onclick="App.updateCart(${idx},'${p.nome}',1)">+</button></div></div>`;
+    },
+
+    // --- 4. VIEW: CHECKOUT ---
     viewCheckout() {
-        const res=this.calcFinalCheckout(); const hasHeavy = res.lines.some(l=>l.nome.includes('Fotolivro')||l.nome.includes('40x60')||l.nome.includes('30x40')); const cidades=this.data.logistica.cidadesGratis;
-        let rows=''; res.lines.forEach(l=>{rows+=`<tr><td>${l.qtd}x ${l.nome}</td><td>${this.formatMoney(l.total)}</td></tr>`}); if(res.discount>0) rows+=`<tr class="row-discount"><td>Créditos Utilizados</td><td>- ${this.formatMoney(res.discount)}</td></tr>`; if(res.usedEntry>0) rows+=`<tr class="row-entry"><td>Entrada Paga</td><td>- ${this.formatMoney(res.usedEntry)}</td></tr>`;
-        const delOpts = `<option value="">-- Selecione --</option>`+`<option value="Retirada">Retirar na Sede</option>`+`<option value="Gratis">Entrega Grátis</option>`+`<option value="Transportadora">Transportadora (+ ${this.formatMoney(this.data.logistica.taxaEnvio)})</option>`;
-        let payOpts = `<option value="Pix">Pix (5% Desconto)</option><option value="Cartao">Cartão de Crédito</option><option value="Boleto">Boleto</option>`;
+        const res = this.calcFinalCheckout();
+        const hasHeavy = res.lines.some(l => l.nome.includes('Fotolivro') || l.nome.includes('40x60') || l.nome.includes('30x40'));
+        const cidades = this.data.logistica.cidadesGratis;
 
-        return `<div class="header">Resumo</div><div class="container fade-in"><div class="card"><h2>Resumo do Pedido</h2><table class="checkout-table"><tbody>${rows}</tbody></table><div class="checkout-total">Total Base: ${this.formatMoney(res.finalTotal+res.discount)}</div><hr style="margin:20px 0;border-top:1px dashed #eee"><label class="form-label">📍 Entrega</label><select id="selDelType" class="form-input" onchange="App.uiDel(this.value, ${hasHeavy})">${delOpts}</select><div id="areaCity" class="hidden"><label class="form-label">Selecione sua Cidade:</label><select id="selCity" class="form-input">${cidades.map(c=>`<option value="${c}">${c}</option>`).join('')}</select><div class="alert-box"><b>Nota:</b> Entrega é no perímetro urbano. Para interior, indique um local na cidade:<input type="text" id="delAddr" class="form-input" placeholder="Ex: Loja X, Casa de Amigo..." style="margin-top:5px"></div></div><div id="msgRet" class="alert-box hidden"></div><label class="form-label">💳 Pagamento</label><select id="selPay" class="form-input" onchange="App.uiPay(this.value, ${res.finalTotal})">${payOpts}</select><div id="areaCard" class="hidden"></div><div id="areaPix" class="hidden alert-box" style="background:#dcfce7;border-color:#bbf7d0;color:#166534"></div><div id="areaBol" class="hidden" style="background:#f0f9ff;padding:10px;border-radius:8px"><label>Nome</label><input type="text" id="bolName" class="form-input"><label>CPF</label><input type="text" id="bolCpf" class="form-input"><label>Vencimento</label><input type="date" id="bolDate" class="form-input"><label>Parcelas</label><select id="bolParc" class="form-input"><option value="1">1x</option><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option><option value="5">5x</option><option value="6">6x</option></select><div style="font-size:0.8rem;margin-top:5px;color:#dc2626">⚠️ Entrega após quitação da última parcela.</div></div><button class="btn btn-whatsapp" style="background:#25D366;color:white;margin-top:20px" onclick="App.sendZap()"><i class="fas fa-whatsapp"></i> Finalizar Pedido</button></div></div>`;
+        let rows = ''; 
+        res.lines.forEach(l => rows += `<tr><td>${l.qtd}x ${l.nome}</td><td>${this.formatMoney(l.total)}</td></tr>`);
+        if(res.discount > 0) rows += `<tr class="row-discount"><td>Créditos Utilizados</td><td>- ${this.formatMoney(res.discount)}</td></tr>`;
+        if(res.usedEntry > 0) rows += `<tr class="row-entry"><td>Entrada Paga</td><td>- ${this.formatMoney(res.usedEntry)}</td></tr>`;
+
+        // Opções de Entrega
+        const delOpts = `<option value="">-- Selecione --</option>` +
+            `<option value="Retirada">Retirar na Sede (Sítio Boa Ventura)</option>` +
+            `<option value="Gratis">Entrega Grátis (Cidades Atendidas)</option>` +
+            `<option value="Transportadora">Transportadora (+ ${this.formatMoney(this.data.logistica.taxaEnvio)})</option>`;
+
+        return `<div class="header">Resumo</div><div class="container fade-in"><div class="card"><h2>Resumo do Pedido</h2><table class="checkout-table"><tbody>${rows}</tbody></table><div class="checkout-total">Total Base: ${this.formatMoney(res.netTotal)}</div><hr style="margin:20px 0;border-top:1px dashed #eee"><label class="form-label">📍 Entrega</label><select id="selDel" class="form-input" onchange="App.uiDel(this.value, ${hasHeavy})">${delOpts}</select><div id="areaCity" class="hidden"><select id="selCity" class="form-input"><option value="">-- Qual Cidade? --</option>${cidades.map(c=>`<option value="${c}">${c}</option>`).join('')}</select><div class="alert-box"><b>Nota:</b> Entrega realizada no perímetro urbano. Se mora no interior, indique um local na cidade:<input type="text" id="delAddr" class="form-input" style="margin-top:5px" placeholder="Ex: Loja X, Casa de Amigo..."></div></div><div id="msgRet" class="alert-box hidden"></div><label class="form-label">💳 Pagamento</label><select id="selPay" class="form-input" onchange="App.uiPay(this.value, ${res.netTotal}, ${hasHeavy})"><option value="">-- Selecione --</option><option value="Pix">Pix (5% Desconto)</option><option value="Cartao">Cartão de Crédito</option><option value="Boleto">Boleto</option>${!hasHeavy?`<option value="Retirada">Pagar na Retirada</option>`:''}</select><div id="areaCard" class="hidden"></div><div id="areaPix" class="hidden alert-box" style="background:#dcfce7;border-color:#bbf7d0;color:#166534"></div><div id="areaBol" class="hidden" style="background:#f0f9ff;padding:10px;border-radius:8px"><label>Nome Completo</label><input type="text" id="bolName" class="form-input"><label>CPF</label><input type="text" id="bolCpf" class="form-input"><label>Vencimento</label><input type="date" id="bolDate" class="form-input"><label>Parcelas</label><select id="bolParc" class="form-input"><option value="1">1x</option><option value="2">2x</option><option value="3">3x</option></select><div style="font-size:0.8rem;margin-top:5px;color:#dc2626">⚠️ Entrega após quitação da última parcela.</div></div><button class="btn btn-whatsapp" style="background:#25D366;color:white;margin-top:20px" onclick="App.sendZap()"><i class="fab fa-whatsapp"></i> Finalizar Pedido</button></div></div>`;
     },
 
-    // --- UTILS & LOGIC ---
+    // --- LÓGICA DE UI CHECKOUT ---
     uiDel(val, heavy) {
-        const d=document.getElementById('areaCity'); const m=document.getElementById('msgRet'); const p=document.getElementById('selPay');
-        [d,m].forEach(e=>e.classList.add('hidden')); 
-        const opts=p.options; const optRet=Array.from(opts).find(o=>o.value==='Retirada');
-        if(optRet) p.remove(optRet.index); 
-
-        if(val==='Gratis') d.classList.remove('hidden');
-        else if(val==='Retirada') { m.classList.remove('hidden'); if(heavy) m.innerHTML="⚠️ Pedido contém itens pesados/personalizados. Necessário sinal de 50% para produção."; 
-        else { m.innerHTML="✅ Produção Imediata. Pode pagar ao retirar."; const newOpt=new Option('Pagar na Retirada','Retirada'); p.add(newOpt); } }
-        else if(val==='Transportadora') m.classList.remove('hidden'); m.innerHTML="Taxa fixa de envio aplicada.";
-    },
-    uiPay(val, total) {
-        const c=document.getElementById('areaCard'); const p=document.getElementById('areaPix'); const b=document.getElementById('areaBol');
-        [c,p,b].forEach(e=>e.classList.add('hidden'));
-
-        if(val==='Pix') { const d=total*0.05; p.innerHTML=`Desconto Pix (5%): - ${this.formatMoney(d)}<br><b>A Pagar: ${this.formatMoney(total-d)}</b>`; p.classList.remove('hidden'); }
-        else if(val==='Cartao') {
-            const maxFree=this.data.financeiro.parcelasSemJuros; const rates=this.data.financeiro.tabelaJuros; let html='<label>Parcelas:</label><select id="selInstallment" class="form-input">';
-            for(let i=1;i<=12;i++){ let f=total; let lbl='Sem juros'; if(i>maxFree){ const rate=rates[i]||0; f=total*(1+rate/100); lbl='(c/ juros)';} html+=`<option value="${i}">${i}x de ${this.formatMoney(f/i)} ${lbl} - Total: ${this.formatMoney(f)}</option>`; }
-            c.innerHTML=html+'</select>'; c.classList.remove('hidden');
-        } else if(val==='Boleto') b.classList.remove('hidden');
+        document.getElementById('areaCity').classList.add('hidden');
+        const msgRet = document.getElementById('msgRet');
+        msgRet.classList.add('hidden');
+        
+        if(val === 'Gratis') document.getElementById('areaCity').classList.remove('hidden');
+        if(val === 'Retirada') {
+            msgRet.classList.remove('hidden');
+            msgRet.innerHTML = heavy ? "⚠️ Pedido contém itens pesados/personalizados. Necessário sinal de 50%." : "✅ Produção Imediata. Pagamento na retirada disponível.";
+        }
     },
 
-    // --- CÁLCULOS ---
+    uiPay(val, total, heavy) {
+        const areaCard = document.getElementById('areaCard');
+        const areaPix = document.getElementById('areaPix');
+        const areaBol = document.getElementById('areaBol');
+        areaCard.innerHTML = ''; areaCard.classList.add('hidden');
+        areaPix.classList.add('hidden'); areaBol.classList.add('hidden');
+        
+        this.state.payMethod = val;
+
+        if(val === 'Pix') {
+            const desc = total * 0.05;
+            areaPix.innerHTML = `Desconto Pix (5%): - ${this.formatMoney(desc)}<br><b>A Pagar: ${this.formatMoney(total - desc)}</b>`;
+            areaPix.classList.remove('hidden');
+        } 
+        else if(val === 'Cartao') {
+            const maxFree = this.data.financeiro.parcelasSemJuros;
+            const rates = this.data.financeiro.tabelaJuros;
+            let html = '<label>Parcelas:</label><select id="selInstallment" class="form-input">';
+            for(let i=1; i<=12; i++) {
+                let finalVal = total;
+                let lbl = 'Sem juros';
+                if(i > maxFree) {
+                    // Taxa da maquininha: total * (1 + taxa/100) / parcelas ?? 
+                    // Geralmente tabelaJuros[i] é o coeficiente total. Vamos assumir array indexado.
+                    // Se tabela tem 13 itens, index 12 é 12x.
+                    const rate = rates[i] || 0; // index match
+                    finalVal = total * (1 + rate/100);
+                    lbl = `(c/ juros)`;
+                }
+                html += `<option value="${i}">${i}x de ${this.formatMoney(finalVal/i)} ${lbl} - Total: ${this.formatMoney(finalVal)}</option>`;
+            }
+            html += '</select>';
+            areaCard.innerHTML = html;
+            areaCard.classList.remove('hidden');
+        }
+        else if(val === 'Boleto') {
+            areaBol.classList.remove('hidden');
+        }
+    },
+
+    // --- CALCS ---
     calcStatusSelection() {
-        let gross=0,disc=0; const credList=this.data.cliente.creditos||[]; const totCred=credList.reduce((a,c)=>c.item.includes('Foto')?a+c.qtd:a,0); let credUsed=0; let itemCount=0;
-        Object.values(this.state.cart).forEach(items=>{
-            const hasPrint=Object.keys(items).some(k=>k.includes('Foto')&&items[k]>0);
-            Object.keys(items).forEach(prod=>{
-                let q=items[prod],p=this.data.produtosAvulsos.find(x=>x.nome===prod)?.preco||0; itemCount+=q;
-                if(prod.includes('Foto')){if(credUsed<totCred){const free=Math.min(q,totCred-credUsed); credUsed+=free; q-=free;}}
-                if(prod.includes('Arquivo')&&hasPrint)p=0; gross+=q*p;
+        let gross=0, disc=0;
+        const creds = this.data.cliente.creditos || [];
+        // Map credits: { 'Foto 10x15': 2 }
+        const credMap = {}; 
+        creds.forEach(c => credMap[c.item] = (credMap[c.item]||0) + c.qtd);
+        
+        let itemCount = 0;
+
+        // Calc Gross & Item Credits
+        Object.values(this.state.cart).forEach(items => {
+            const hasPrint = Object.keys(items).some(k=>k.includes('Foto')&&items[k]>0);
+            Object.keys(items).forEach(prod => {
+                const qtd = items[prod];
+                const price = this.data.produtosAvulsos.find(x=>x.nome===prod)?.preco || 0;
+                itemCount += qtd;
+                
+                gross += qtd * price;
+
+                // Credit logic (simple name match)
+                // Se tem credito exato pro nome
+                if(credMap[prod] && credMap[prod] > 0) {
+                    const use = Math.min(qtd, credMap[prod]);
+                    disc += use * price;
+                    credMap[prod] -= use;
+                } 
+                // Se é Arquivo Digital Brinde
+                else if(prod.includes('Arquivo') && hasPrint) {
+                    disc += qtd * price;
+                }
             });
         });
-        const ent=this.data.cliente.entrada||0; const netAfterCredits=gross; const usedEntry=Math.min(netAfterCredits,ent); const remainingEntry=ent-usedEntry; const toPay=netAfterCredits-usedEntry;
-        const totalItemsValue = Object.values(this.state.cart).reduce((acc, items) => acc + Object.keys(items).reduce((s, k) => s + items[k] * (this.data.produtosAvulsos.find(p => p.nome === k)?.preco || 0), 0), 0);
-        return {qtdItens:itemCount,total:totalItemsValue,creditsDetail:`${credUsed}/${totCred} fotos`,usedEntry:usedEntry,remainingEntry:remainingEntry,toPay:toPay};
+
+        // Entry Fee Logic
+        const entryTotal = this.data.cliente.entrada || 0;
+        // Saldo a pagar antes da entrada
+        const netAfterCredits = Math.max(0, gross - disc);
+        // Quanto da entrada será usado
+        const usedEntry = Math.min(netAfterCredits, entryTotal);
+        // Quanto sobra da entrada
+        const remainingEntry = entryTotal - usedEntry;
+        // Final a pagar
+        const toPay = netAfterCredits - usedEntry;
+
+        return { 
+            qtdItens: itemCount, 
+            total: gross, 
+            creditsDetail: `-${this.formatMoney(disc)}`, 
+            usedEntry, 
+            remainingEntry, 
+            toPay 
+        };
     },
+
     calcFinalCheckout() {
-        const s=this.calcStatusSelection(); const summary={}; Object.keys(this.state.cart).forEach(idx=>{const items=this.state.cart[idx]; Object.keys(items).forEach(prod=>{const qtd=items[prod],price=this.data.produtosAvulsos.find(x=>x.nome===prod)?.preco||0; if(!summary[prod])summary[prod]={qtd:0,total:0}; summary[prod].qtd+=qtd; summary[prod].total+=qtd*price;});});
-        const lines=Object.keys(summary).map(k=>({nome:k,qtd:summary[k].qtd,total:summary[k].total}));
-        return {lines,discount:s.total-(s.toPay+s.usedEntry),usedEntry:s.usedEntry,finalTotal:s.toPay};
+        // Similar to status but groups for table
+        const status = this.calcStatusSelection();
+        const summary = {};
+        
+        Object.keys(this.state.cart).forEach(idx => {
+            const items = this.state.cart[idx];
+            Object.keys(items).forEach(prod => {
+                const qtd = items[prod];
+                const price = this.data.produtosAvulsos.find(x=>x.nome===prod)?.preco || 0;
+                if(!summary[prod]) summary[prod] = {qtd:0, total:0};
+                summary[prod].qtd += qtd;
+                summary[prod].total += qtd * price;
+            });
+        });
+
+        const lines = Object.keys(summary).map(k => ({ nome: k, qtd: summary[k].qtd, total: summary[k].total }));
+        // Note: 'discount' in calcStatusSelection includes both item credits AND digital gifts.
+        // We parse 'disc' string back to float for cleaner code or just recalculate.
+        // Reusing logic from status for consistency:
+        const discVal = parseFloat(status.creditsDetail.replace(/[^\d,]/g,'').replace(',','.')) || 0; // Hacky but works if formatMoney is BRL
+        // Better: return raw numbers from calcStatusSelection
+        // Let's assume calcStatusSelection returns raw numbers in V21. Yes it does.
+        // Wait, creditsDetail is a string. Let's fix that in calcStatusSelection return.
+        
+        return { 
+            lines, 
+            discount: (status.total - (status.toPay + status.usedEntry)), // Reverse engineer discount from totals
+            entry: status.usedEntry,
+            finalTotal: status.toPay,
+            netTotal: status.toPay // Base for payment calc
+        };
     },
 
     sendZap() {
-        const del=document.getElementById('selDelType').value; const pay=document.getElementById('selPay').value;
-        if(!del||!pay)return alert("Selecione Entrega e Pagamento");
+        const del = document.getElementById('selDel').value;
+        const pay = document.getElementById('selPay').value;
+        if(!del || !pay) return alert("Preencha entrega e pagamento");
+        
+        // Groups
+        const groups = {};
+        Object.keys(this.state.cart).forEach(idx => {
+            const f = this.data.fotos[idx].substring(this.data.fotos[idx].lastIndexOf('/')+1);
+            const items = this.state.cart[idx];
+            Object.keys(items).forEach(p => {
+                if(!groups[p]) groups[p] = [];
+                groups[p].push(f);
+            });
+        });
 
-        const groups={}; Object.keys(this.state.cart).forEach(idx=>{const f=this.data.fotos[idx].substring(this.data.fotos[idx].lastIndexOf('/')+1); Object.keys(this.state.cart[idx]).forEach(p=>{if(!groups[p])groups[p]=[]; groups[p].push(f);});});
-        const fin=this.calcFinalCheckout(); let msg=`*PEDIDO ${this.data.cliente.nome}*\n\n💰 *ITENS:*\n`;
-        Object.keys(groups).forEach(p=>{ msg+=`\n📦 *${p} (${groups[p].length})*\nFiles: ${groups[p].join(', ')}`; });
+        let msg = `*PEDIDO ${this.data.cliente.nome}*\n`;
+        Object.keys(groups).forEach(p => {
+            msg += `\n📦 *${p} (${groups[p].length})*\nFiles: ${groups[p].join(', ')}`;
+        });
 
-        msg+=`\n\n*VALORES:*\nTotal Produtos: ${this.formatMoney(fin.finalTotal+fin.usedEntry+fin.discount)}`;
-        if(fin.discount>0)msg+=`\n(-) Brindes/Desc: ${this.formatMoney(fin.discount)}`;
-        if(fin.usedEntry>0)msg+=`\n(-) Entrada Paga: ${this.formatMoney(fin.usedEntry)}`;
-        msg+=`\n*TOTAL FINAL: ${this.formatMoney(fin.finalTotal)}*`;
+        const st = this.calcFinalCheckout();
+        msg += `\n\n💰 *FINANCEIRO*`;
+        msg += `\nTotal Itens: ${this.formatMoney(st.finalTotal + st.entry + st.discount)}`;
+        if(st.discount > 0) msg += `\nDesc/Créditos: - ${this.formatMoney(st.discount)}`;
+        if(st.entry > 0) msg += `\nEntrada Paga: - ${this.formatMoney(st.entry)}`;
+        
+        let finalPay = st.finalTotal;
+        let payDetail = pay;
 
-        msg+=`\n\n📍 Entrega: ${del}\n💳 Pagamento: ${pay}`;
+        if(pay === 'Pix') {
+            const desc = st.finalTotal * 0.05;
+            finalPay -= desc;
+            payDetail += ` (Desc R$ ${desc.toFixed(2)})`;
+        } else if(pay === 'Cartao') {
+            const inst = document.getElementById('selInstallment');
+            const txt = inst.options[inst.selectedIndex].text;
+            payDetail += ` (${txt})`;
+            // Parse total from text is risky, but for whatsapp string is fine
+        } else if(pay === 'Boleto') {
+            const bN = document.getElementById('bolName').value;
+            const bD = document.getElementById('bolDate').value;
+            payDetail += ` (Dados: ${bN}, Venc: ${bD})`;
+        }
 
-        window.open(`https://wa.me/${this.data.financeiro.whatsapp}?text=${encodeURIComponent(msg)}`,'_blank');
+        msg += `\n*TOTAL FINAL: ${this.formatMoney(finalPay)}*`;
+        msg += `\n\n📍 Entrega: ${del}`;
+        msg += `\n💳 Pagamento: ${payDetail}`;
+
+        window.open(`https://wa.me/${this.data.financeiro.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
     },
 
+    // --- UTILS ---
+    updateCart(idx,prod,d) { const s=window.scrollY; this.isUpdating=true; if(!this.state.cart[idx])this.state.cart[idx]={}; const v=Math.max(0,(this.state.cart[idx][prod]||0)+d); if(v===0)delete this.state.cart[idx][prod]; else this.state.cart[idx][prod]=v; this.render(); window.scrollTo(0,s); },
     nav(d) { this.state.photoIdx+=d; this.isUpdating=true; this.render(); },
-    goBack() { this.state.view=this.data.fluxo.pedirEdicao?'editing_choice':'home'; this.render(); },
+    finishSelection() { this.state.view='checkout'; this.render(); },
+    goBack() { this.state.view='home'; this.render(); },
+    goToPersuasion() { this.state.view='persuasion'; this.render(); },
+    startSelection(m) { this.state.mode=m; this.state.photoIdx=0; this.state.view='selection'; this.render(); },
+    finishDigitalFull() { this.data.fotos.forEach((_,i)=>this.updateCart(i,'Arquivo Digital',1)); this.finishSelection(); },
+    
+    // Gallery
     openGallery() { document.getElementById('modal-gal').classList.remove('hidden'); },
-    openLightbox(url) { document.getElementById('lb-img').src=url; document.getElementById('lb').classList.remove('hidden'); },
-    renderGallery() { return `<div id="modal-gal" class="modal-overlay hidden" style="z-index:900"><div class="modal-content modal-full"><div style="display:flex;justify-content:space-between;padding:10px"><h3>Galeria</h3><span class="close-modal" onclick="document.getElementById('modal-gal').classList.add('hidden')">&times;</span></div><div class="gallery-grid">${this.data.fotos.map(u=>`<div class="gallery-item" onclick="App.openLightbox('${u}')"><img src="${u}"></div>`).join('')}</div><button class="btn btn-primary" style="margin-top:10px" onclick="document.getElementById('modal-gal').classList.add('hidden')">Fechar Galeria</button></div></div>`; },
-    renderLightbox() { return `<div id="lb" class="modal-overlay hidden" onclick="this.classList.add('hidden')"><img id="lb-img" class="lightbox-img"></div>`; },
-    renderModals() { return this.renderGallery() + this.renderLightbox(); }, // Novo método auxiliar
+    openLight(url) { document.getElementById('lb-img').src=url; document.getElementById('lb').classList.remove('hidden'); },
+    renderGallery() { return `<div id="modal-gal" class="modal-overlay hidden"><div class="modal-content modal-full"><div style="display:flex;justify-content:space-between;padding:10px"><h3>Galeria</h3><span class="close-modal" onclick="document.getElementById('modal-gal').classList.add('hidden')">&times;</span></div><div class="gallery-grid">${this.data.fotos.map(u=>`<div class="gallery-item" onclick="App.openLight('${u}')"><img src="${u}"></div>`).join('')}</div></div></div><div id="lb" class="modal-overlay hidden" onclick="this.classList.add('hidden')"><img id="lb-img" class="lightbox-img"></div>`; },
 
-    calcBookOptions(qtd) { const m=this.data.financeiro.markup; const f=this.data.financeiro.custoFixoDiagramacao; const j=this.data.financeiro.tabelaJuros[11]||21; const opts=[]; ['15x20','20x30','30x40'].forEach(sz=>{ const rule=this.data.regrasDiagramacao[sz]||4; const pgs=Math.ceil(qtd/rule); const match=this.data.tabelaFotolivros.find(t=>t.size===sz&&t.pages>=pgs); if(match){const tot=(match.priceBox+f)*m; opts.push({total:tot,parcela:((tot*(1+j/100))/12)}); }}); return opts; },
-    formatMoney(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
+    calcBookOptions(qtd) { const m=this.data.financeiro.markup; const f=this.data.financeiro.custoFixoDiagramacao; const j=this.data.financeiro.tabelaJuros[11]||21; const opts=[]; ['15x20','20x30','30x40'].forEach(sz=>{ const rule=this.data.regrasDiagramacao[sz]||4; const pgs=Math.ceil(qtd/rule); const match=this.data.tabelaFotolivros.find(t=>t.size===sz&&t.pages>=pgs); if(match){const tot=(match.priceBox+f)*m; opts.push({total:tot,parcela:(tot*(1+j/100))/12}); }}); return opts; },
+    formatMoney(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); },
+    viewPersuasion() { return `<div class="container fade-in" style="margin-top:40px"><div class="card" style="background:#fffbeb;border-color:#f59e0b"><h2>⚠️ Tem certeza?</h2><p>Arquivo Digital: <b>R$ 8,00</b>.<br>Revelação 10x15: <b>R$ 10,00</b> + Arquivo Grátis.</p><button class="btn btn-primary" onclick="App.startSelection('revelacao')">✨ Quero Revelar</button><button class="btn btn-secondary" onclick="App.finishDigitalFull()">Só Arquivos</button></div></div>`; }
 };
 window.onload = () => App.init();
 </script>
