@@ -1,0 +1,550 @@
+<script>window.NBV_CONFIG = {
+  "assets": {
+    "watermarkText": "NBV - PROVA",
+    "opacity": 0.15
+  },
+  "fluxo": {
+    "pedirEdicao": true,
+    "pedirAprovacao": true,
+    "minimoFotosLivro": 20
+  },
+  "logistica": {
+    "taxaEnvio": 30,
+    "cidadesGratis": [
+      "Boa Ventura de São Roque",
+      "Turvo",
+      "Pitanga"
+    ],
+    "enderecoSede": "Rod. PR 466 km 210, Bairro Coamo (Anexo Mercado JL)"
+  },
+  "financeiro": {
+    "descontoPix": 5,
+    "parcelasSemJuros": 4,
+    "tabelaJuros": [
+      0,
+      4.59,
+      5.99,
+      7.49,
+      8.99,
+      10.49,
+      11.99,
+      13.49,
+      14.99,
+      16.49,
+      17.99,
+      21
+    ],
+    "whatsapp": "5542998370150",
+    "markup": 2.5,
+    "custoFixoDiagramacao": 30
+  },
+  "produtosAvulsos": [
+    {
+      "nome": "Foto 10x15",
+      "preco": 10,
+      "icone": "fas fa-image"
+    },
+    {
+      "nome": "Foto 15x20",
+      "preco": 20,
+      "icone": "fas fa-image"
+    },
+    {
+      "nome": "Foto 20x30",
+      "preco": 30,
+      "icone": "fas fa-image"
+    },
+    {
+      "nome": "Foto 30x40",
+      "preco": 40,
+      "icone": "fas fa-image"
+    },
+    {
+      "nome": "Arquivo Digital",
+      "preco": 8,
+      "icone": "fas fa-cloud-download-alt"
+    }
+  ],
+  "tabelaFotolivros": [
+    {
+      "size": "15x20",
+      "pages": 20,
+      "price": 214,
+      "priceBox": 356
+    },
+    {
+      "size": "20x30",
+      "pages": 20,
+      "price": 317,
+      "priceBox": 443
+    },
+    {
+      "size": "30x40",
+      "pages": 20,
+      "price": 592,
+      "priceBox": 754
+    }
+  ],
+  "regrasDiagramacao": {
+    "15x20": 3,
+    "20x30": 4,
+    "30x40": 5
+  },
+  "cliente": {
+    "nome": "teste2",
+    "entrada": 40,
+    "incluirAlbum": false,
+    "contrato": {
+      "tamanho": "15x20",
+      "qtdFotos": 20,
+      "valorTotal": 0
+    },
+    "creditos": [
+      {
+        "item": "Foto 30x40",
+        "qtd": 1
+      }
+    ]
+  },
+  "fotos": [
+    "https://i.postimg.cc/3wKv1b2R/foto-0815.jpg",
+    "https://i.postimg.cc/jjs7cky2/foto-0817.jpg",
+    "https://i.postimg.cc/5txCgk86/foto-0819.jpg",
+    "https://i.postimg.cc/pd2FC1Km/foto-0826.jpg",
+    "https://i.postimg.cc/667YCyWx/foto-0829.jpg",
+    "https://i.postimg.cc/NGypR5sY/foto-0830.jpg",
+    "https://i.postimg.cc/mZ0VjBks/foto-0831.jpg",
+    "https://i.postimg.cc/ryvgjMmv/foto-0838.jpg",
+    "https://i.postimg.cc/bYKLgprd/foto-0840.jpg",
+    "https://i.postimg.cc/9FZbNKwy/foto-0843.jpg",
+    "https://i.postimg.cc/65nc1g4d/foto-0844.jpg",
+    "https://i.postimg.cc/Dwh6V61x/foto-1051.jpg",
+    "https://i.postimg.cc/fRsC4CxQ/foto-1053.jpg",
+    "https://i.postimg.cc/kgyc7Scx/foto-1125.jpg",
+    "https://i.postimg.cc/nh1knmkB/foto-1308.jpg",
+    "https://i.postimg.cc/bvNRrvCg/foto-1435.jpg",
+    "https://i.postimg.cc/jjdh2j3V/foto-1478.jpg",
+    "https://i.postimg.cc/Jh65kWSn/foto-1862.jpg",
+    "https://i.postimg.cc/FKWVLQw9/foto-1864.jpg",
+    "https://i.postimg.cc/tTstdMHJ/foto-1869.jpg",
+    "https://i.postimg.cc/0QzdGBqd/foto-1874.jpg",
+    "https://i.postimg.cc/k4LNTvnw/foto-1875.jpg",
+    "https://i.postimg.cc/2SdW4fLD/foto-1876.jpg"
+  ]
+};</script><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Galeria Studio NBV</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    /* --- DESIGN SYSTEM MODERN --- */
+    :root { --primary: #0066cc; --primary-dark: #004c99; --bg: #f4f6f8; --card: #fff; --text: #1f2937; --success: #10b981; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 50px; }
+    
+    /* UTILS */
+    .hidden { display: none !important; }
+    .fade-in { animation: fadeIn 0.4s ease-out; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { background: #e2e8f0; color: #333; }
+    .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+    .btn-success { background: var(--success); color: white; }
+
+    /* LAYOUT */
+    .header { background: #111; color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+    .logo span { color: var(--primary); font-weight: 800; }
+    .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+
+    /* MENU GRID */
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .card { background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); text-align: center; border: 1px solid #e5e7eb; transition: transform 0.2s; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+    .card h2 { margin-top: 0; font-size: 1.3rem; color: #111; }
+    .card p { color: #666; font-size: 0.95rem; line-height: 1.5; }
+    .price-tag { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin: 10px 0 0; }
+    .installment { font-size: 0.9rem; color: #666; font-weight: 600; margin-bottom: 15px; }
+    .link-details { color: #666; text-decoration: underline; font-size: 0.85rem; cursor: pointer; margin-top: 10px; display: inline-block; }
+
+    /* WORKSTATION (SELEÇÃO) */
+    .photo-viewer { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; }
+    .img-wrapper { position: relative; display: inline-block; width: 100%; min-height: 200px; background: #eee; border-radius: 8px; overflow: hidden; }
+    .img-wrapper img { width: 100%; height: auto; display: block; pointer-events: none; }
+    .wm-overlay { position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; background-repeat: repeat; opacity: 0.6; }
+    
+    .controls { margin-top: 15px; padding: 15px; background: #f8fafc; border-radius: 8px; }
+    .checkbox-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; }
+    .nav-buttons { display: flex; gap: 10px; margin-top: 20px; }
+
+    /* PERSUASION */
+    .persuasion-box { background: #fffbeb; border: 2px solid #f59e0b; padding: 25px; border-radius: 12px; text-align: center; }
+    .pulse-btn { animation: pulse 2s infinite; font-size: 1.1rem; padding: 18px; margin-bottom: 15px; box-shadow: 0 0 15px rgba(0,102,204,0.4); }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+
+    /* MODAL */
+    .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .modal-content { background: white; padding: 25px; border-radius: 12px; max-width: 500px; width: 100%; text-align: center; position: relative; max-height: 90vh; overflow-y: auto; }
+    .modal-img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; }
+    .close-modal { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #666; }
+
+    /* LIGHTBOX */
+    .lightbox { position: fixed; top:0; left:0; width:100%; height:100%; background: black; z-index: 2000; display: flex; align-items: center; justify-content: center; }
+    .lightbox img { max-width: 100%; max-height: 100%; }
+    .lightbox-wm { position: absolute; top:0; left:0; width:100%; height:100%; pointer-events: none; background-repeat: repeat; }
+    .lightbox-close { position: absolute; top: 20px; right: 20px; color: white; font-size: 30px; cursor: pointer; background: rgba(0,0,0,0.5); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+
+    /* RESUMO */
+    .summary-box { background: white; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; white-space: pre-wrap; font-family: monospace; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+
+<div id="app">
+    <div style="text-align:center; padding:50px"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Carregando...</div>
+</div>
+
+<script>
+const App = {
+    data: {},
+    state: { 
+        view: 'home', // home, selection, persuasion, checkout
+        mode: '', // fotolivro, revelacao, digital
+        photoIdx: 0,
+        selection: new Set(),
+        modalOpen: null // id do modal aberto
+    },
+
+    init() {
+        if(!window.NBV_CONFIG) return document.getElementById('app').innerHTML = "Erro de Configuração";
+        this.data = window.NBV_CONFIG;
+        
+        // Simulação de preço inicial do fotolivro (Melhor valor)
+        this.bookPrice = this.calcBookPrice();
+        
+        this.render();
+    },
+
+    // --- RENDERIZADORES ---
+    
+    render() {
+        const app = document.getElementById('app');
+        if (this.state.view === 'home') app.innerHTML = this.viewHome();
+        else if (this.state.view === 'selection') app.innerHTML = this.viewSelection();
+        else if (this.state.view === 'persuasion') app.innerHTML = this.viewPersuasion();
+        else if (this.state.view === 'checkout') app.innerHTML = this.viewCheckout();
+        
+        window.scrollTo({top:0, behavior:'smooth'});
+    },
+
+    viewHome() {
+        return `
+        <div class="header"><div class="logo">Studio<span>NBV</span></div></div>
+        <div class="container fade-in">
+            <h2 style="text-align:center; margin-bottom:30px">Olá, ${this.data.cliente.nome}!</h2>
+            
+            <div class="menu-grid">
+                <div class="card">
+                    <h2>📸 Espiar Fotos</h2>
+                    <p>Dê uma olhada em todas as fotos do ensaio.</p>
+                    <button class="btn btn-primary" onclick="App.openGalleryModal()">Ver Galeria</button>
+                </div>
+
+                <div class="card" style="border:2px solid var(--primary)">
+                    <h2>📚 Fotolivro Premium</h2>
+                    <p>Eternize momentos em capa dura.</p>
+                    <div class="price-tag">${this.formatMoney(this.bookPrice.total)}</div>
+                    <div class="installment">ou 12x ${this.formatMoney(this.bookPrice.parcela)}</div>
+                    <button class="btn btn-primary" onclick="App.startSelection('fotolivro')">Montar Fotolivro</button>
+                    <span class="link-details" onclick="App.openInfoModal('fotolivro')">Ver detalhes e fotos</span>
+                </div>
+
+                <div class="card">
+                    <h2>🖼️ Fazer Revelação</h2>
+                    <p>Fotos avulsas em papel profissional.</p>
+                    <button class="btn btn-primary" onclick="App.startSelection('revelacao')">Selecionar Fotos</button>
+                    <span class="link-details" onclick="App.openInfoModal('revelacao')">Ver tamanhos</span>
+                </div>
+
+                <div class="card">
+                    <h2>💾 Arquivo Digital</h2>
+                    <p>Download das fotos em alta resolução.</p>
+                    <button class="btn btn-outline" onclick="App.goToPersuasion()">Comprar Arquivos</button>
+                    <span class="link-details" onclick="App.openInfoModal('digital')">Como funciona?</span>
+                </div>
+            </div>
+        </div>
+        ${this.renderModals()}
+        `;
+    },
+
+    viewSelection() {
+        const total = this.data.fotos.length;
+        const current = this.data.fotos[this.state.photoIdx];
+        const isSelected = this.state.selection.has(this.state.photoIdx);
+        const isLast = this.state.photoIdx === total - 1;
+        
+        // Título dinâmico
+        const titles = { fotolivro: "Selecionando p/ Álbum", revelacao: "Selecionando p/ Revelar" };
+        
+        // Marca D'água SVG
+        const svg = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg width='200' height='100' xmlns='http://www.w3.org/2000/svg'><text x='50%' y='50%' transform='rotate(-20 100 50)' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='20' fill='%23000' fill-opacity='${this.data.assets.opacity}'>${this.data.assets.watermarkText}</text></svg>`)}`;
+
+        return `
+        <div class="header">
+            <button onclick="App.goBack()" style="float:left; background:none; border:none; color:white; font-size:1.2rem"><i class="fas fa-arrow-left"></i></button>
+            ${titles[this.state.mode]}
+        </div>
+        <div class="container fade-in">
+            <div class="photo-viewer">
+                <p style="color:#666; margin-bottom:10px">Foto ${this.state.photoIdx + 1} de ${total}</p>
+                
+                <div class="img-wrapper">
+                    <img src="${current}">
+                    <div class="wm-overlay" style="background-image:url('${svg}')"></div>
+                </div>
+
+                <div class="controls">
+                    <label class="checkbox-wrapper">
+                        <input type="checkbox" style="width:20px; height:20px" ${isSelected ? 'checked' : ''} onchange="App.toggleSelection()">
+                        Selecionar esta foto
+                    </label>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="App.nav(-1)" ${this.state.photoIdx===0?'disabled style="opacity:0.5"':''}>Anterior</button>
+                    
+                    ${!isLast 
+                        ? `<button class="btn btn-primary" onclick="App.nav(1)">Próxima</button>`
+                        : `<button class="btn btn-success" onclick="App.finishSelection()">Finalizar Pedido <i class="fas fa-check"></i></button>`
+                    }
+                </div>
+            </div>
+        </div>`;
+    },
+
+    viewPersuasion() {
+        return `
+        <div class="container fade-in" style="margin-top:50px">
+            <div class="persuasion-box">
+                <h2 style="color:#b45309; font-size:1.8rem"><i class="fas fa-exclamation-triangle"></i> Espere um pouco!</h2>
+                <p style="font-size:1.1rem; line-height:1.6">Arquivos digitais se perdem no HD ou na nuvem com o passar dos anos.<br>Suas memórias merecem ser tocadas.</p>
+                
+                <ul style="text-align:left; margin:20px auto; max-width:400px; color:#444">
+                    <li style="margin-bottom:10px">✅ <b>Durabilidade:</b> Papel profissional dura gerações.</li>
+                    <li style="margin-bottom:10px">✅ <b>Cores Reais:</b> Telas de celular enganam as cores.</li>
+                    <li style="margin-bottom:10px">✅ <b>Decoração:</b> Sua casa merece essas fotos expostas.</li>
+                </ul>
+
+                <button class="btn btn-primary pulse-btn" onclick="App.startSelection('revelacao')">
+                    ✨ Quero Fazer Revelação (Melhor Opção)
+                </button>
+
+                <div style="margin-top:20px">
+                    <button class="btn btn-secondary" style="width:auto; display:inline-block; font-size:0.9rem" onclick="App.finishDigitalOrder()">
+                        Ainda prefiro somente os arquivos
+                    </button>
+                </div>
+                
+                <br>
+                <button onclick="App.goBack()" style="background:none; border:none; text-decoration:underline; cursor:pointer; color:#666">Voltar</button>
+            </div>
+        </div>`;
+    },
+
+    viewCheckout() {
+        const resumo = this.calcTotal();
+        return `
+        <div class="header">Resumo do Pedido</div>
+        <div class="container fade-in">
+            <div class="card">
+                <h2 style="color:var(--success)">Pedido Realizado!</h2>
+                <div class="summary-box">${resumo.texto}</div>
+                <div style="font-size:1.5rem; font-weight:bold; text-align:right; color:var(--primary); margin-bottom:20px">
+                    Total: ${this.formatMoney(resumo.total)}
+                </div>
+                <p style="color:#666; font-size:0.9rem">Ao clicar abaixo, você será redirecionado para o WhatsApp para combinar o pagamento e a entrega.</p>
+                <button class="btn btn-whatsapp" style="background:#25D366; color:white" onclick="App.sendWhatsapp('${encodeURIComponent(resumo.texto)}', ${resumo.total})">
+                    <i class="fab fa-whatsapp"></i> Enviar Pedido
+                </button>
+                <button class="btn btn-secondary" style="margin-top:10px" onclick="location.reload()">Voltar ao Início</button>
+            </div>
+        </div>`;
+    },
+
+    // --- MODAIS ---
+    renderModals() {
+        // Textos Padrão (Fallback) se não tiver no DB
+        const txt = {
+            fotolivro: { t: "Fotolivro Premium", d: "Capa dura, abertura 180 graus. Qualidade de galeria de arte." },
+            revelacao: { t: "Revelação Profissional", d: "Papel Fujifilm original. Tamanhos 10x15, 15x20 e ampliações." },
+            digital: { t: "Arquivos em Alta", d: "Entrega via link. Cuidado com backups!" }
+        };
+        
+        let html = '';
+        const cats = ['fotolivro', 'revelacao', 'digital'];
+        const placeholder = "https://via.placeholder.com/600x400?text=Exemplo";
+
+        cats.forEach(cat => {
+            html += `
+            <div id="modal-${cat}" class="modal-overlay hidden" onclick="if(event.target===this) App.closeModal('${cat}')">
+                <div class="modal-content fade-in">
+                    <span class="close-modal" onclick="App.closeModal('${cat}')">&times;</span>
+                    <img src="${placeholder}" class="modal-img">
+                    <h3>${txt[cat].t}</h3>
+                    <p>${txt[cat].d}</p>
+                    <button class="btn btn-primary" onclick="App.startSelection('${cat}')">Começar Agora</button>
+                </div>
+            </div>`;
+        });
+
+        // Modal Galeria
+        const svg = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg width='150' height='150' xmlns='http://www.w3.org/2000/svg'><text x='50%' y='50%' transform='rotate(-45 75 75)' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='16' fill='%23fff' fill-opacity='0.4'>NBV PROVA</text></svg>`)}`;
+        html += `
+        <div id="modal-gallery" class="modal-overlay hidden" onclick="if(event.target===this) App.closeGalleryModal()">
+            <div class="modal-content fade-in" style="max-width:800px">
+                <span class="close-modal" onclick="App.closeGalleryModal()">&times;</span>
+                <h3>Galeria (${this.data.fotos.length} fotos)</h3>
+                <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); gap:5px; max-height:60vh; overflow-y:auto">
+                    ${this.data.fotos.map(url => `
+                        <div style="position:relative; cursor:pointer; aspect-ratio:1" onclick="App.openLightbox('${url}')">
+                            <img src="${url}" style="width:100%; height:100%; object-fit:cover">
+                            <div style="position:absolute; top:0; left:0; width:100%; height:100%; background-image:url('${svg}')"></div>
+                        </div>`).join('')}
+                </div>
+            </div>
+        </div>`;
+
+        return html;
+    },
+
+    // --- AÇÕES ---
+    openInfoModal(cat) { document.getElementById(`modal-${cat}`).classList.remove('hidden'); },
+    closeModal(cat) { document.getElementById(`modal-${cat}`).classList.add('hidden'); },
+    openGalleryModal() { document.getElementById('modal-gallery').classList.remove('hidden'); },
+    closeGalleryModal() { document.getElementById('modal-gallery').classList.add('hidden'); },
+
+    startSelection(mode) {
+        this.closeModal(mode); // fecha se estiver aberto
+        this.state.mode = mode;
+        this.state.photoIdx = 0;
+        this.state.selection.clear();
+        this.state.view = 'selection';
+        this.render();
+    },
+
+    goToPersuasion() { this.state.view = 'persuasion'; this.render(); },
+    
+    finishDigitalOrder() {
+        // Seleciona todas automaticamente
+        this.state.mode = 'digital';
+        this.data.fotos.forEach((_, idx) => this.state.selection.add(idx));
+        this.state.view = 'checkout';
+        this.render();
+    },
+
+    finishSelection() {
+        if(this.state.selection.size === 0) return alert("Selecione pelo menos uma foto!");
+        this.state.view = 'checkout';
+        this.render();
+    },
+
+    goBack() { this.state.view = 'home'; this.render(); },
+    
+    nav(d) {
+        this.state.photoIdx += d;
+        this.render(); // Re-renderiza para atualizar imagem e botões
+    },
+
+    toggleSelection() {
+        const idx = this.state.photoIdx;
+        if(this.state.selection.has(idx)) this.state.selection.delete(idx);
+        else this.state.selection.add(idx);
+        // Não precisa re-renderizar tudo, mas vamos manter simples
+        // O checkbox já muda visualmente
+    },
+
+    // --- LIGHTBOX ---
+    openLightbox(url) {
+        const svg = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg width='300' height='300' xmlns='http://www.w3.org/2000/svg'><text x='50%' y='50%' transform='rotate(-45 150 150)' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='30' fill='%23fff' fill-opacity='0.3'>${this.data.assets.watermarkText}</text></svg>`)}`;
+        const html = `
+        <div id="lb" class="lightbox fade-in" onclick="document.getElementById('lb').remove()">
+            <img src="${url}">
+            <div class="lightbox-wm" style="background-image:url('${svg}')"></div>
+            <div class="lightbox-close">&times;</div>
+        </div>`;
+        document.body.insertAdjacentHTML('beforeend', html);
+    },
+
+    // --- LÓGICA DE NEGÓCIO ---
+    calcBookPrice() {
+        const totalFotos = this.data.fotos.length;
+        // Pega tabela e regras do DB
+        const tabela = this.data.tabelaFotolivros;
+        // Pega uma simulação média (ex: 20x30)
+        const sizeSim = '20x30'; 
+        const regra = this.data.regrasDiagramacao[sizeSim] || 4;
+        const pags = Math.ceil(totalFotos / regra);
+        // Acha preço na tabela (ou o último/maior disponível)
+        const match = tabela.filter(t => t.size === sizeSim).find(t => t.pages >= pags) || tabela[tabela.length-1];
+        
+        if(!match) return { total: 0, parcela: 0 };
+        
+        const markup = this.data.financeiro.markup;
+        const fixo = this.data.financeiro.custoFixoDiagramacao;
+        const total = (match.priceBox + fixo) * markup;
+        const parcela = (total * 1.21) / 12; // Juros de 21% em 12x
+        return { total, parcela };
+    },
+
+    calcTotal() {
+        const qtd = this.state.selection.size;
+        const mode = this.state.mode;
+        let total = 0;
+        let texto = `MODO: ${mode.toUpperCase()}\nQTD FOTOS: ${qtd}\n\n`;
+        
+        if (mode === 'fotolivro') {
+            const calc = this.calcBookPrice();
+            // Aqui vamos ajustar para a qtd selecionada realmente
+            const rule = this.data.regrasDiagramacao['20x30'] || 4; // Default size 20x30
+            const pags = Math.ceil(qtd / rule);
+            const match = this.data.tabelaFotolivros.find(t => t.size === '20x30' && t.pages >= pags);
+            if(match) {
+                const markup = this.data.financeiro.markup;
+                const fixo = this.data.financeiro.custoFixoDiagramacao;
+                total = (match.priceBox + fixo) * markup;
+                texto += `Fotolivro Premium 20x30 (${match.pages} Páginas)\nValor Estimado: ${this.formatMoney(total)}`;
+            } else {
+                texto += "Orçamento sob consulta (muitas fotos).";
+            }
+        } 
+        else if (mode === 'revelacao') {
+            const preco = this.data.produtosAvulsos.find(p=>p.nome.includes('10x15'))?.preco || 10;
+            total = qtd * preco;
+            texto += `Revelação 10x15 (${qtd}x ${this.formatMoney(preco)})\n`;
+        }
+        else if (mode === 'digital') {
+            const preco = this.data.produtosAvulsos.find(p=>p.nome.includes('Digital'))?.preco || 8;
+            total = qtd * preco;
+            texto += `Arquivos Digitais (${qtd}x ${this.formatMoney(preco)})\n`;
+        }
+
+        return { total, texto };
+    },
+
+    sendWhatsapp(msg, total) {
+        let finalMsg = `*PEDIDO - ${this.data.cliente.nome}*\n----------------\n${decodeURIComponent(msg)}\n----------------\n*TOTAL ESTIMADO: ${this.formatMoney(total)}*`;
+        window.open(`https://wa.me/${this.data.financeiro.whatsapp}?text=${encodeURIComponent(finalMsg)}`, '_blank');
+    },
+
+    formatMoney(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
+};
+
+window.onload = () => App.init();
+</script>
+</body>
+</html>
