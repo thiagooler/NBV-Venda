@@ -1,0 +1,536 @@
+<script>window.NBV_CONFIG = {
+  "assets": {
+    "watermarkText": "",
+    "opacity": 0.1
+  },
+  "fluxo": {
+    "pedirEdicao": false,
+    "pedirAprovacao": true,
+    "minimoFotosLivro": 20
+  },
+  "logistica": {
+    "taxaEnvio": 30,
+    "cidadesGratis": [
+      "Boa Ventura de São Roque",
+      "Turvo",
+      "Ibema (Restaurante do Boneco)",
+      "Pitanga",
+      "Santa Maria do Oeste"
+    ],
+    "enderecoSede": "Rod. PR 466 km 210, Bairro Coamo (Anexo Mercado JL)"
+  },
+  "financeiro": {
+    "descontoPix": 5,
+    "parcelasSemJuros": 4,
+    "parcelasBoleto": 6,
+    "tabelaJuros": [
+      0,
+      4.59,
+      5.99,
+      7.49,
+      8.99,
+      10.49,
+      11.99,
+      13.49,
+      14.99,
+      16.49,
+      17.99,
+      21
+    ],
+    "whatsapp": "5542998370150",
+    "markup": 2.5,
+    "custoFixoDiagramacao": 30
+  },
+  "apresentacao": {
+    "fotolivro": {
+      "titulo": "Memórias que duram para sempre",
+      "texto": "Capa dura, papel fotográfico de alta gramatura e abertura 180°. Uma joia para a família.",
+      "img": "https://www.phooto.com.br/wp-content/uploads/2018/11/capadura21x28-semselo.png"
+    },
+    "revelacao": {
+      "titulo": "Sinta a fotografia em suas mãos",
+      "texto": "Papel Fujifilm profissional. Cores vivas por mais de 100 anos.",
+      "img": "https://cdn.iset.io/assets/73325/produtos/146/kjkah.jpg"
+    },
+    "digital": {
+      "titulo": "Arquivo Digital (Download)",
+      "texto": "Receba o link para download. Atenção: Recomendamos a impressão para garantir a durabilidade.",
+      "img": "https://static.vecteezy.com/ti/fotos-gratis/t2/24644806-pasta-e-verifica-marca-foto.jpg"
+    }
+  },
+  "produtosAvulsos": [
+    {
+      "nome": "Foto 10x15",
+      "preco": 10,
+      "icone": "fas fa-image"
+    },
+    {
+      "nome": "Foto 15x20",
+      "preco": 20,
+      "icone": "fas fa-image"
+    },
+    {
+      "nome": "Foto 20x30",
+      "preco": 30,
+      "icone": "fas fa-image"
+    },
+    {
+      "nome": "Foto 30x40",
+      "preco": 40,
+      "icone": "fas fa-image"
+    },
+    {
+      "nome": "Foto 40x60",
+      "preco": 60,
+      "icone": "fas fa-image"
+    },
+    {
+      "nome": "Porta retrato 10x15",
+      "preco": 20,
+      "icone": "fas fa-portrait"
+    },
+    {
+      "nome": "Porta retrato 15x20",
+      "preco": 35,
+      "icone": "fas fa-portrait"
+    },
+    {
+      "nome": "Porta retrato 20x30",
+      "preco": 45,
+      "icone": "fas fa-portrait"
+    },
+    {
+      "nome": "Porta retrato 30x40",
+      "preco": 120,
+      "icone": "fas fa-portrait"
+    },
+    {
+      "nome": "Porta retrato 40x60",
+      "preco": 290,
+      "icone": "fas fa-portrait"
+    },
+    {
+      "nome": "Arquivo Digital",
+      "preco": 8,
+      "icone": "fas fa-cloud-download-alt"
+    }
+  ],
+  "tabelaFotolivros": [
+    {
+      "size": "30x40",
+      "pages": 20,
+      "price": 592,
+      "priceBox": 754
+    },
+    {
+      "size": "30x40",
+      "pages": 30,
+      "price": 750,
+      "priceBox": 912
+    },
+    {
+      "size": "30x40",
+      "pages": 40,
+      "price": 879,
+      "priceBox": 1070
+    },
+    {
+      "size": "30x40",
+      "pages": 50,
+      "price": 1037,
+      "priceBox": 1228
+    },
+    {
+      "size": "30x40",
+      "pages": 60,
+      "price": 1195,
+      "priceBox": 1386
+    },
+    {
+      "size": "30x40",
+      "pages": 80,
+      "price": 1511,
+      "priceBox": 1702
+    },
+    {
+      "size": "30x40",
+      "pages": 100,
+      "price": 1827,
+      "priceBox": 2018
+    },
+    {
+      "size": "20x30",
+      "pages": 20,
+      "price": 317,
+      "priceBox": 443
+    },
+    {
+      "size": "20x30",
+      "pages": 30,
+      "price": 406,
+      "priceBox": 532
+    },
+    {
+      "size": "20x30",
+      "pages": 50,
+      "price": 584,
+      "priceBox": 710
+    },
+    {
+      "size": "20x30",
+      "pages": 60,
+      "price": 673,
+      "priceBox": 799
+    },
+    {
+      "size": "20x30",
+      "pages": 80,
+      "price": 851,
+      "priceBox": 977
+    },
+    {
+      "size": "20x30",
+      "pages": 100,
+      "price": 1029,
+      "priceBox": 1155
+    },
+    {
+      "size": "15x20",
+      "pages": 20,
+      "price": 214,
+      "priceBox": 356
+    },
+    {
+      "size": "15x20",
+      "pages": 30,
+      "price": 269,
+      "priceBox": 382
+    },
+    {
+      "size": "15x20",
+      "pages": 40,
+      "price": 324,
+      "priceBox": 437
+    },
+    {
+      "size": "15x20",
+      "pages": 50,
+      "price": 379,
+      "priceBox": 492
+    },
+    {
+      "size": "15x20",
+      "pages": 60,
+      "price": 434,
+      "priceBox": 547
+    },
+    {
+      "size": "15x20",
+      "pages": 70,
+      "price": 489,
+      "priceBox": 602
+    },
+    {
+      "size": "15x20",
+      "pages": 80,
+      "price": 544,
+      "priceBox": 657
+    },
+    {
+      "size": "15x20",
+      "pages": 100,
+      "price": 100,
+      "priceBox": 767
+    }
+  ],
+  "regrasDiagramacao": {
+    "15x20": 3,
+    "20x30": 4,
+    "30x40": 5
+  },
+  "cliente": {
+    "nome": "lorena",
+    "entrada": 0,
+    "incluirAlbum": false,
+    "contrato": {
+      "tamanho": "15x20",
+      "qtdFotos": 20,
+      "valorTotal": 0
+    },
+    "creditos": []
+  },
+  "fotos": [
+    "https://i.postimg.cc/3wKv1b2R/foto-0815.jpg",
+    "https://i.postimg.cc/jjs7cky2/foto-0817.jpg",
+    "https://i.postimg.cc/5txCgk86/foto-0819.jpg",
+    "https://i.postimg.cc/pd2FC1Km/foto-0826.jpg",
+    "https://i.postimg.cc/667YCyWx/foto-0829.jpg",
+    "https://i.postimg.cc/NGypR5sY/foto-0830.jpg",
+    "https://i.postimg.cc/mZ0VjBks/foto-0831.jpg",
+    "https://i.postimg.cc/ryvgjMmv/foto-0838.jpg",
+    "https://i.postimg.cc/bYKLgprd/foto-0840.jpg",
+    "https://i.postimg.cc/9FZbNKwy/foto-0843.jpg",
+    "https://i.postimg.cc/65nc1g4d/foto-0844.jpg",
+    "https://i.postimg.cc/Dwh6V61x/foto-1051.jpg",
+    "https://i.postimg.cc/fRsC4CxQ/foto-1053.jpg",
+    "https://i.postimg.cc/kgyc7Scx/foto-1125.jpg",
+    "https://i.postimg.cc/nh1knmkB/foto-1308.jpg",
+    "https://i.postimg.cc/bvNRrvCg/foto-1435.jpg",
+    "https://i.postimg.cc/jjdh2j3V/foto-1478.jpg",
+    "https://i.postimg.cc/Jh65kWSn/foto-1862.jpg",
+    "https://i.postimg.cc/FKWVLQw9/foto-1864.jpg",
+    "https://i.postimg.cc/tTstdMHJ/foto-1869.jpg",
+    "https://i.postimg.cc/0QzdGBqd/foto-1874.jpg",
+    "https://i.postimg.cc/k4LNTvnw/foto-1875.jpg",
+    "https://i.postimg.cc/2SdW4fLD/foto-1876.jpg"
+  ]
+};</script><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Galeria Studio NBV</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    :root { --primary: #0066cc; --primary-dark: #004c99; --bg: #f4f6f8; --card: #fff; --text: #1f2937; --success: #10b981; --warning: #f59e0b; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 80px; }
+    .hidden { display: none !important; }
+    .fade-in { animation: fadeIn 0.4s ease-out; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: #e2e8f0; color: #333; }
+    .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+    .btn-success { background: var(--success); color: white; }
+    .header { background: #111; color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+    .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .card { background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; margin-bottom: 20px; }
+    .card img { max-width: 100%; border-radius: 8px; margin-bottom: 10px; height: 150px; object-fit: cover; }
+    .photo-viewer { text-align: center; }
+    .img-wrapper { position: relative; width: 100%; min-height: 200px; background: #eee; border-radius: 8px; overflow: hidden; margin-bottom: 15px; }
+    .img-wrapper img { width: 100%; height: auto; display: block; }
+    .prod-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
+    .stepper { display: flex; align-items: center; gap: 10px; }
+    .stepper button { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ccc; background: white; font-weight: bold; }
+    .status-dock { position: fixed; bottom: 0; left: 0; width: 100%; background: #1e293b; color: white; padding: 15px; z-index: 900; border-top: 3px solid var(--success); box-shadow: 0 -4px 20px rgba(0,0,0,0.2); }
+    .status-info { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 5px; color: #cbd5e1; }
+    .status-total { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 800; color: #fff; margin-top: 5px; border-top: 1px solid #334155; padding-top: 5px; }
+    .badge-free { background: var(--success); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-left: 5px; }
+    .credit-tag { background: #e0f2fe; color: #0284c7; padding: 8px; border-radius: 6px; font-size: 0.85rem; display: block; margin-bottom: 15px; font-weight: 600; border: 1px solid #bae6fd; text-align: left; }
+    .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; align-items:center; justify-content:center; }
+    .modal-full { width: 95%; height: 95%; max-width: 1200px; background: black; display:flex; flex-direction:column; }
+    .close-modal { position: absolute; top: 10px; right: 15px; font-size: 30px; cursor: pointer; color:#fff; z-index:1001 }
+    .checkout-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-bottom: 15px; }
+    .checkout-table td { padding: 8px 0; border-bottom: 1px solid #eee; }
+    .row-discount { color: var(--success); font-weight: 600; } .row-entry { color: #dc2626; font-weight: 600; }
+    .form-label { display: block; text-align: left; font-weight: 600; margin: 15px 0 5px; color: #333; }
+    .form-input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; background: #fff; }
+    .alert-box { background: #fff3cd; color: #856404; padding: 10px; border-radius: 6px; margin: 10px 0; font-size: 0.9rem; border: 1px solid #ffeeba; text-align: left; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 5px; }
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+const App = {
+    data: {},
+    state: { view: 'init', mode: '', photoIdx: 0, cart: {} },
+
+    init() {
+        if(!window.NBV_CONFIG) return document.body.innerHTML = "<h2 style='text-align:center;padding:50px'>Erro: Configuração não encontrada.</h2>";
+        this.data = window.NBV_CONFIG;
+        
+        // Roteamento para Aprovação Simples ou Venda Completa
+        if (this.data.fluxo.pedirEdicao) {
+            this.state.view = 'editing_choice'; // Venda Completa (Começa na Edição)
+        } else {
+            this.state.view = 'approval_only'; // Aprovação Simples (Vai direto para o carrossel)
+        }
+        this.render();
+    },
+
+    render() {
+        const app = document.getElementById('app');
+        if (this.state.view === 'editing_choice') app.innerHTML = this.viewEditing();
+        else if (this.state.view === 'home') app.innerHTML = this.viewHome();
+        else if (this.state.view === 'selection') app.innerHTML = this.viewSelection();
+        else if (this.state.view === 'persuasion') app.innerHTML = this.viewPersuasion();
+        else if (this.state.view === 'checkout') app.innerHTML = this.viewCheckout();
+        else if (this.state.view === 'approval_only') app.innerHTML = this.viewApprovalOnly();
+        
+        if(!this.isUpdating) window.scrollTo(0,0);
+        this.isUpdating = false;
+    },
+
+    // --- 1. VIEWS DE INTRO / ROTEAMENTO ---
+    viewEditing() {
+        return `<div class="header">Studio<span>NBV</span></div><div class="container fade-in"><div class="card"><h2>Escolha a Edição</h2><p style="color:#666">Selecione qual opção você deseja:</p><button class="btn btn-outline" onclick="App.chooseEdit(true)" style="border-color:var(--primary);color:var(--primary)">✨ <b>Com Edição Artística</b><br><small>Tratamento completo. Prazo 30 dias.</small></button><button class="btn btn-outline" onclick="App.chooseEdit(false)" style="border-color:var(--success);color:var(--success)">⚡ <b>Produção Rápida</b><br><small>Fotos originais. Prazo 10 dias.</small></button></div></div>`;
+    },
+    chooseEdit(want) {
+        if(want) window.location.href = `https://wa.me/${this.data.financeiro.whatsapp}?text=Olá, gostaria de produzir com Edição Artística (Opção 1).`;
+        else { this.state.view = 'home'; this.render(); }
+    },
+
+    viewHome() {
+        const total = this.data.fotos.length; const minBook = this.data.fluxo.minimoFotosLivro || 20; const info = this.data.apresentacao; const entry = this.data.cliente.entrada || 0;
+        const creds = this.data.cliente.creditos || [];
+        const printCredit = creds.find(c=>c.item.includes('Foto')) ? `${creds.find(c=>c.item.includes('Foto')).qtd} fotos inclusas` : 'Nenhuma foto inclusa';
+        const entryText = entry > 0 ? `<br>💰 Entrada paga: ${this.formatMoney(entry)}` : '';
+        const detailsText = `${printCredit}${entryText}`;
+
+        let bookCard = ''; 
+        if(total>=minBook) {
+            const op = this.calcBookOptions(total)[0];
+            const bookCredit = this.data.cliente.incluirAlbum ? `✅ Contrato: Álbum Incluso<br>💰 Entrada paga: ${this.formatMoney(entry)}` : '';
+            bookCard = `<div class="card" style="border:2px solid var(--primary)"><img src="${info.fotolivro.img}"><h2>📚 Fotolivro</h2><p>${info.fotolivro.texto}</p>${bookCredit ? `<div class="credit-tag">${bookCredit}</div>` : ''}<div style="margin:10px 0;font-size:0.9rem">A partir de <b>${this.formatMoney(op.total)}</b></div><button class="btn btn-primary" onclick="App.startSelection('fotolivro')">Montar Fotolivro</button></div>`;
+        }
+
+        return `<div class="header">Studio<span>NBV</span></div><div class="container fade-in"><h2 style="text-align:center;margin-bottom:10px">Olá, ${this.data.cliente.nome}!</h2><p style="text-align:center;color:#666;margin-bottom:30px">Selecione qual opção você deseja:</p><div class="menu-grid"><div class="card"><h2>📸 Espiar Fotos</h2><p>Veja todas as ${total} fotos.</p><button class="btn btn-secondary" onclick="App.openGallery()">Ver Galeria</button></div>${bookCard}<div class="card"><img src="${info.revelacao.img}"><h2>🖼️ Revelação</h2><p>${info.revelacao.texto}</p><div class="credit-tag"><b>Seus Créditos:</b><br>${detailsText}</div><button class="btn btn-primary" onclick="App.startSelection('revelacao')">Selecionar Fotos</button></div><div class="card"><img src="${info.digital.img}"><h2>💾 Arquivo Digital</h2><p>${info.digital.texto}</p><button class="btn btn-outline" onclick="App.goToPersuasion()">Comprar Arquivos</button></div></div></div>${this.renderGallery()}${this.renderLightbox()}`;
+    },
+
+    // --- 3. VIEW: APROVAÇÃO SIMPLES ---
+    viewApprovalOnly() {
+        const idx = this.state.photoIdx;
+        const total = this.data.fotos.length;
+        const url = this.data.fotos[idx];
+        const currentData = this.state.cart[idx] || { status: 'pendente', comment: '' };
+        const status = currentData.status || 'pendente';
+        
+        return `<div class="header" style="display:flex;justify-content:space-between"><button onclick="App.goBack()" style="background:none;border:none;color:white;font-size:1.2rem"><i class="fas fa-arrow-left"></i></button><span>APROVAÇÃO: Foto ${idx+1} de ${total}</span><span style="width:30px"></span></div><div class="container fade-in" style="padding-bottom:50px"><div class="photo-viewer card"><div class="img-wrapper" onclick="App.openLight('${url}')" style="cursor:pointer"><img src="${url}"></div><div style="margin-top:15px"><div style="text-align:center;margin-bottom:10px">Status Atual: <span style="font-weight:bold;color:${status==='approved'?'var(--success)':status==='commented'?'var(--warning)': 'var(--text-light)'}">${status==='approved'?'APROVADA':status==='commented'?'COMENTADA':'PENDENTE'}</span></div><div style="display:flex;gap:10px"><button class="btn btn-success" style="width:50%" onclick="App.setApprovalStatus('approved')"><i class="fas fa-check"></i> Aprovar</button><button class="btn btn-secondary" style="width:50%" onclick="document.getElementById('area-comment').classList.toggle('hidden')"><i class="fas fa-comment"></i> Comentar</button></div></div><div id="area-comment" class="card ${status !== 'commented' ? 'hidden' : ''}" style="text-align:left;margin-top:15px;padding:15px"><label style="font-weight:600">Seu Comentário:</label><textarea id="photo-comment" style="width:100%;min-height:80px" oninput="App.saveComment(this.value)">${currentData.comment}</textarea><small>Se você deixar um comentário, o status será alterado para "Comentada".</small></div><div style="display:flex;gap:10px;margin-top:30px"><button class="btn btn-secondary" onclick="App.nav(-1)" ${idx===0?'disabled':''}>Anterior</button>${idx<total-1 ? `<button class="btn btn-primary" onclick="App.nav(1)">Próxima</button>` : `<button class="btn btn-success" onclick="App.sendApprovalReport()">Finalizar e Enviar Relatório</button>`}</div></div></div>${this.renderLightbox()}`;
+    },
+
+    setApprovalStatus(newStatus) {
+        const idx = this.state.photoIdx;
+        const comment = document.getElementById('photo-comment')?.value || '';
+        if (newStatus === 'approved') {
+            this.state.cart[idx] = { status: 'approved', comment: '' };
+        } else if (newStatus === 'commented') {
+            this.state.cart[idx] = { status: comment.trim() ? 'commented' : 'pendente', comment: comment.trim() };
+        } else {
+             this.state.cart[idx] = { status: 'pendente', comment: '' };
+        }
+        this.render();
+    },
+    saveComment(text) {
+        const idx = this.state.photoIdx;
+        this.state.cart[idx] = { status: text.trim() ? 'commented' : 'pendente', comment: text.trim() };
+        this.render();
+    },
+    sendApprovalReport() {
+        let msg = `*RELATÓRIO DE APROVAÇÃO - ${this.data.cliente.nome}*\n-----------------------------------\n`;
+        let approvedCount = 0; let commentedCount = 0; let pendingCount = 0;
+        this.data.fotos.forEach((url, idx) => {
+            const data = this.state.cart[idx] || { status: 'pendente', comment: '' };
+            const filename = url.substring(url.lastIndexOf('/') + 1);
+            if (data.status === 'approved') { msg += `✅ Aprovada: ${filename}\n`; approvedCount++; } 
+            else if (data.status === 'commented') { msg += `💬 Comentário na Foto ${filename}: ${data.comment}\n`; commentedCount++; } 
+            else { pendingCount++; }
+        });
+        msg += `\n*RESUMO:*\nAprovadas: ${approvedCount}\nComentadas: ${commentedCount}\nPendentes/Rejeitadas: ${pendingCount}\n\n⚠️ Por favor, entre em contato.`;
+        window.open(`https://wa.me/${this.data.financeiro.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+    },
+
+    // --- 4. VIEW: SELEÇÃO DE VENDA ---
+    viewSelection() {
+        const idx=this.state.photoIdx; const total=this.data.fotos.length; const status=this.calcStatusSelection();
+        return `<div class="header"><button onclick="App.goBack()" style="float:left;background:none;border:none;color:white"><i class="fas fa-arrow-left"></i></button>Foto ${idx+1}/${total}</div><div class="container fade-in" style="padding-bottom:120px"><div class="photo-viewer card"><div class="img-wrapper"><img src="${this.data.fotos[idx]}"></div><div style="text-align:left"><h3 style="font-size:1rem;margin-bottom:10px">Adicionar ao pedido:</h3>${this.renderProdList(idx)}</div><div style="display:flex;gap:10px;margin-top:20px"><button class="btn btn-secondary" onclick="App.nav(-1)" ${idx===0?'disabled':''}>Anterior</button>${idx<total-1?`<button class="btn btn-primary" onclick="App.nav(1)">Próxima</button>`:`<button class="btn btn-success" onclick="App.finishSelection()">Finalizar</button>`}</div><div class="status-dock"><div class="status-info"><span>🎁 Créditos:</span><span>${status.creditsDetail}</span></div><div class="status-info"><span>💰 Entrada Paga:</span><span>Usando ${this.formatMoney(status.usedEntry)} (Resta ${this.formatMoney(status.remainingEntry)})</span></div><div class="status-total"><span>Total Pedido:</span><span>${this.formatMoney(status.toPay)}</span></div></div></div></div>`;
+    },
+
+    renderProdList(idx) {
+        const items=this.state.cart[idx]||{}; const hasPrint=Object.keys(items).some(k=>k.includes('Foto')&&items[k]>0); let html='';
+        this.data.produtosAvulsos.filter(p=>p.nome.includes('Foto')).forEach(p=>{
+            html+=this.renderStepper(p, items[p.nome]||0, idx);
+            if(items[p.nome]>0){ const size=p.nome.replace('Foto ',''); const fr=this.data.produtosAvulsos.find(f=>f.nome.includes('Porta')&&f.nome.includes(size)); if(fr) html+=`<div style="margin-left:20px;border-left:2px solid #eee;padding-left:10px;background:#fafafa">${this.renderStepper(fr, items[fr.nome]||0, idx, true)}</div>`; }
+        });
+        const dig=this.data.produtosAvulsos.find(p=>p.nome.includes('Arquivo'));
+        if(dig) html+=hasPrint?`<div class="prod-item" style="background:#dcfce7;border-radius:6px;padding:10px"><div><b>Arquivo Digital</b> <span class="badge-free">BRINDE!</span></div><div style="color:var(--success)"><i class="fas fa-check"></i> Incluso</div></div>`:this.renderStepper(dig,items[dig.nome]||0,idx);
+        return html;
+    },
+    renderStepper(p,q,idx,isF=false) { return `<div class="prod-item"><div><div style="font-weight:600">${isF?'↪ ':''}${p.nome}</div><div style="font-size:0.8rem;color:#666">${this.formatMoney(p.preco)}</div></div><div class="stepper"><button onclick="App.updateCart(${idx},'${p.nome}',-1)">-</button><span>${q}</span><button onclick="App.updateCart(${idx},'${p.nome}',1)">+</button></div></div>`; },
+
+    // --- 5. VIEW: CHECKOUT ---
+    viewCheckout() {
+        const res=this.calcFinalCheckout(); const hasHeavy = res.lines.some(l=>l.nome.includes('Fotolivro')||l.nome.includes('40x60')||l.nome.includes('30x40')); const cidades=this.data.logistica.cidadesGratis;
+        let rows=''; res.lines.forEach(l=>{rows+=`<tr><td>${l.qtd}x ${l.nome}</td><td>${this.formatMoney(l.total)}</td></tr>`}); if(res.discount>0) rows+=`<tr class="row-discount"><td>Créditos Utilizados</td><td>- ${this.formatMoney(res.discount)}</td></tr>`; if(res.usedEntry>0) rows+=`<tr class="row-entry"><td>Entrada Paga</td><td>- ${this.formatMoney(res.usedEntry)}</td></tr>`;
+
+        const delOpts = `<option value="">-- Selecione --</option>`+`<option value="Retirada">Retirar na Sede</option>`+`<option value="Gratis">Entrega Grátis</option>`+`<option value="Transportadora">Transportadora (+ ${this.formatMoney(this.data.logistica.taxaEnvio)})</option>`;
+
+        let payOpts = `<option value="Pix">Pix (5% Desconto)</option><option value="Cartao">Cartão de Crédito</option><option value="Boleto">Boleto</option>`;
+
+        return `<div class="header">Resumo</div><div class="container fade-in"><div class="card"><h2>Resumo do Pedido</h2><table class="checkout-table"><tbody>${rows}</tbody></table><div class="checkout-total">Total Base: ${this.formatMoney(res.finalTotal+res.discount)}</div><hr style="margin:20px 0;border-top:1px dashed #eee"><label class="form-label">📍 Entrega</label><select id="selDelType" class="form-input" onchange="App.uiDel(this.value, ${hasHeavy})">${delOpts}</select><div id="areaCity" class="hidden"><label class="form-label">Selecione sua Cidade:</label><select id="selCity" class="form-input">${cidades.map(c=>`<option value="${c}">${c}</option>`).join('')}</select><div class="alert-box"><b>Nota:</b> Entrega é no perímetro urbano. Para interior, indique um local na cidade:<input type="text" id="delAddr" class="form-input" placeholder="Ex: Loja X, Casa de Amigo..." style="margin-top:5px"></div></div><div id="msgRet" class="alert-box hidden"></div><label class="form-label">💳 Pagamento</label><select id="selPay" class="form-input" onchange="App.uiPay(this.value, ${res.finalTotal})">${payOpts}</select><div id="areaCard" class="hidden"></div><div id="areaPix" class="hidden alert-box" style="background:#dcfce7;border-color:#bbf7d0;color:#166534"></div><div id="areaBol" class="hidden" style="background:#f0f9ff;padding:10px;border-radius:8px"><label>Nome</label><input type="text" id="bolName" class="form-input"><label>CPF</label><input type="text" id="bolCpf" class="form-input"><label>Vencimento</label><input type="date" id="bolDate" class="form-input"><label>Parcelas</label><select id="bolParc" class="form-input"><option value="1">1x</option><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option><option value="5">5x</option><option value="6">6x</option></select><div style="font-size:0.8rem;margin-top:5px;color:#dc2626">⚠️ Entrega após quitação da última parcela.</div></div><button class="btn btn-whatsapp" style="background:#25D366;color:white;margin-top:20px" onclick="App.sendZap()"><i class="fab fa-whatsapp"></i> Finalizar Pedido</button></div></div>`;
+    },
+    uiDel(val, heavy) {
+        const d=document.getElementById('areaCity'); const m=document.getElementById('msgRet'); const p=document.getElementById('selPay');
+        [d,m].forEach(e=>e.classList.add('hidden')); 
+        const opts=p.options; const optRet=Array.from(opts).find(o=>o.value==='Retirada');
+        if(optRet) p.remove(optRet.index); 
+
+        if(val==='Gratis') d.classList.remove('hidden');
+        else if(val==='Retirada') { m.classList.remove('hidden'); if(heavy) m.innerHTML="⚠️ Pedido contém itens pesados/personalizados. Necessário sinal de 50% para produção."; 
+        else { m.innerHTML="✅ Produção Imediata. Pode pagar ao retirar."; const newOpt=new Option('Pagar na Retirada','Retirada'); p.add(newOpt); } }
+        else if(val==='Transportadora') m.classList.remove('hidden'); m.innerHTML="Taxa fixa de envio aplicada.";
+    },
+    uiPay(val, total) {
+        const c=document.getElementById('areaCard'); const p=document.getElementById('areaPix'); const b=document.getElementById('areaBol');
+        [c,p,b].forEach(e=>e.classList.add('hidden'));
+
+        if(val==='Pix') { const d=total*0.05; p.innerHTML=`Desconto Pix (5%): - ${this.formatMoney(d)}<br><b>A Pagar: ${this.formatMoney(total-d)}</b>`; p.classList.remove('hidden'); }
+        else if(val==='Cartao') {
+            const maxFree=this.data.financeiro.parcelasSemJuros; const rates=this.data.financeiro.tabelaJuros; let html='<label>Parcelas:</label><select id="selInstallment" class="form-input">';
+            for(let i=1;i<=12;i++){ let f=total; let lbl='Sem juros'; if(i>maxFree){ const rate=rates[i]||0; f=total*(1+rate/100); lbl='(c/ juros)';} html+=`<option value="${i}">${i}x de ${this.formatMoney(f/i)} ${lbl} - Total: ${this.formatMoney(f)}</option>`; }
+            c.innerHTML=html+'</select>'; c.classList.remove('hidden');
+        } else if(val==='Boleto') b.classList.remove('hidden');
+    },
+
+    // --- CÁLCULOS & UTILS ---
+    calcStatusSelection() {
+        let gross=0,disc=0; const credList=this.data.cliente.creditos||[]; const totCred=credList.reduce((a,c)=>c.item.includes('Foto')?a+c.qtd:a,0); let credUsed=0; let itemCount=0;
+        Object.values(this.state.cart).forEach(items=>{
+            const hasPrint=Object.keys(items).some(k=>k.includes('Foto')&&items[k]>0);
+            Object.keys(items).forEach(prod=>{
+                let q=items[prod],p=this.data.produtosAvulsos.find(x=>x.nome===prod)?.preco||0; itemCount+=q;
+                if(prod.includes('Foto')){if(credUsed<totCred){const free=Math.min(q,totCred-credUsed); credUsed+=free; q-=free;}}
+                if(prod.includes('Arquivo')&&hasPrint)p=0; gross+=q*p;
+            });
+        });
+        const ent=this.data.cliente.entrada||0; const netAfterCredits=gross; const usedEntry=Math.min(netAfterCredits,ent); const remainingEntry=ent-usedEntry; const toPay=netAfterCredits-usedEntry;
+        const totalItemsValue = Object.values(this.state.cart).reduce((acc, items) => acc + Object.keys(items).reduce((s, k) => s + items[k] * (this.data.produtosAvulsos.find(p => p.nome === k)?.preco || 0), 0), 0);
+        return {qtdItens:itemCount,total:totalItemsValue,creditsDetail:`${credUsed}/${totCred} fotos`,usedEntry:usedEntry,remainingEntry:remainingEntry,toPay:toPay};
+    },
+    calcFinalCheckout() {
+        const s=this.calcStatusSelection(); return {lines:Object.keys(s.items).map(k=>({nome:k,qtd:s.items[k].qtd,total:s.items[k].total})),discount:s.total-(s.toPay+s.usedEntry),usedEntry:s.usedEntry,finalTotal:s.toPay};
+    },
+    sendZap() {
+        const del=document.getElementById('selDelType').value; const pay=document.getElementById('selPay').value;
+        if(!del||!pay)return alert("Selecione Entrega e Pagamento");
+
+        const items=this.calcFinalCheckout().lines;
+        let msg=`*PEDIDO ${this.data.cliente.nome}*\n\n💰 *ITENS:*\n`;
+        items.forEach(l=>msg+=`\n📦 ${l.qtd}x ${l.nome}`);
+
+        const fin=this.calcFinalCheckout();
+        msg+=`\n\n*VALORES:*\nTotal Produtos: ${this.formatMoney(fin.finalTotal+fin.entry+fin.discount)}`;
+        if(fin.discount>0)msg+=`\n(-) Brindes/Desc: ${this.formatMoney(fin.discount)}`;
+        if(fin.entry>0)msg+=`\n(-) Entrada Paga: ${this.formatMoney(fin.entry)}`;
+        msg+=`\n*TOTAL FINAL: ${this.formatMoney(fin.finalTotal)}*`;
+
+        msg+=`\n\n📍 Entrega: ${del}\n💳 Pagamento: ${pay}`;
+
+        window.open(`https://wa.me/${this.data.financeiro.whatsapp}?text=${encodeURIComponent(msg)}`,'_blank');
+    },
+
+    nav(d) { this.state.photoIdx+=d; this.isUpdating=true; this.render(); },
+    goBack() { this.state.view=this.data.fluxo.pedirEdicao?'editing_choice':'home'; this.render(); },
+    openGallery() { document.getElementById('modal-gal').classList.remove('hidden'); },
+    openLight(url) { document.getElementById('lb-img').src=url; document.getElementById('lb').classList.remove('hidden'); },
+    formatMoney(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
+};
+window.onload = () => App.init();
+</script>
+</body>
+</html>
