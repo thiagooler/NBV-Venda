@@ -2,83 +2,59 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>NBV Admin - Master2</title>
+    <title>NBV Admin - Master V11</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script src="database.js"></script>
-
     <style>
         :root { --primary: #0066cc; --bg: #f3f4f6; --sidebar: #fff; --text: #1f2937; --border: #e5e7eb; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
-        
-        /* SIDEBAR */
-        .sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; }
+        .sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; overflow-y: auto; }
         .nav-btn { width: 100%; text-align: left; padding: 12px; margin-bottom: 5px; cursor: pointer; border: none; background: none; color: #666; font-weight: 600; display: flex; align-items: center; gap: 10px; border-radius: 6px; }
         .nav-btn:hover, .nav-btn.active { background: #eff6ff; color: var(--primary); }
         .nav-btn.active { font-weight: 700; border-right: 3px solid var(--primary); }
-
-        /* CONTENT */
         .main-content { flex: 1; padding: 30px; overflow-y: auto; }
         .section { display: none; animation: fadeIn 0.3s; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
-
-        /* FORMS */
         .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.9rem; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-family: inherit; }
-        .row { display: flex; gap: 15px; } 
-        .col { flex: 1; }
-
-        /* TABLES & LISTS */
-        .list-item, .table-row { background: #fff; padding: 10px; border: 1px solid #eee; border-radius: 6px; margin-bottom: 5px; display:flex; align-items:center; gap:10px; }
-        .btn-remove { background: #fee2e2; color: #dc2626; border: none; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; font-weight:bold; }
-        
-        /* BUTTONS */
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.9rem; }
+        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.85rem; color:#555; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; transition:0.2s }
+        .btn:hover { opacity: 0.9; }
         .btn-primary { background: var(--primary); }
         .btn-success { background: #10b981; }
         .btn-dark { background: #1f2937; }
-        .btn-add { background: #ecfdf5; color: #10b981; border: 1px dashed #10b981; }
-        .btn-add:hover { background: #d1fae5; }
-
-        /* HEADER */
-        .header-title { margin:0 0 20px; font-size:1.4rem; color:#333; display:flex; align-items:center; gap:10px; }
-        .status-bar { margin-top:10px; padding:10px; border-radius:6px; font-size:0.9rem; display:none; }
-        .status-success { background:#dcfce7; color:#166534; display:block; }
-        .status-error { background:#fee2e2; color:#991b1b; display:block; }
-        .status-loading { background:#e0f2fe; color:#075985; display:block; }
-
-        /* Config Box */
-        .gh-config { background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; font-size: 0.85rem; }
-        .gh-config input { padding: 6px; font-size: 0.8rem; margin-bottom: 5px; }
+        .status-bar { padding:15px; border-radius:8px; margin-bottom:20px; font-weight:bold; display:none; }
+        .status-success { background:#dcfce7; color:#166534; }
+        .status-error { background:#fee2e2; color:#991b1b; }
+        .status-loading { background:#e0f2fe; color:#075985; }
+        .gh-config { background: #f1f5f9; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; font-size: 0.85rem; }
+        .gh-config input { padding: 6px; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="header-title"><i class="fas fa-camera"></i> Studio<span style="color:var(--primary)">NBV</span></div>
+        <h2 style="margin:0 0 20px; color:#333"><i class="fas fa-camera"></i> Studio<span style="color:var(--primary)">NBV</span></h2>
         
         <div class="gh-config">
-            <label><i class="fab fa-github"></i> Configuração GitHub</label>
-            <input type="password" id="ghToken" placeholder="Token (ghp_...)">
+            <label><i class="fab fa-github"></i> GitHub</label>
+            <input type="password" id="ghToken" placeholder="Token">
             <input type="text" id="ghUser" placeholder="Usuário">
             <input type="text" id="ghRepo" placeholder="Repositório">
-            <button class="btn btn-dark" style="padding:6px; font-size:0.8rem" onclick="salvarCredenciaisLocal()">Salvar Acesso</button>
+            <input type="text" id="ghBranch" placeholder="Branch (main)" value="main">
+            <button class="btn btn-dark" style="padding:5px; font-size:0.8rem" onclick="salvarCredenciaisLocal()">Salvar</button>
         </div>
 
         <nav>
             <button class="nav-btn active" onclick="showTab('tab-cliente')"><i class="fas fa-user-plus"></i> Novo Cliente</button>
-            <button class="nav-btn" onclick="showTab('tab-fotolivros')"><i class="fas fa-book"></i> Tabela Fotolivros</button>
-            <button class="nav-btn" onclick="showTab('tab-produtos')"><i class="fas fa-images"></i> Produtos Avulsos</button>
-            <button class="nav-btn" onclick="showTab('tab-financeiro')"><i class="fas fa-coins"></i> Finan. & Logística</button>
+            <button class="nav-btn" onclick="showTab('tab-textos')"><i class="fas fa-paragraph"></i> Textos & Modais</button>
             <button class="nav-btn" onclick="showTab('tab-config')"><i class="fas fa-cogs"></i> Configs Gerais</button>
         </nav>
 
         <div style="margin-top:auto">
-            <button class="btn btn-primary" onclick="salvarDatabaseGlobal()"><i class="fas fa-save"></i> SALVAR ALTERAÇÕES GLOBAIS</button>
-            <small style="display:block; text-align:center; margin-top:5px; color:#666; font-size:0.75rem">Atualiza o database.js no GitHub</small>
+            <button class="btn btn-primary" onclick="salvarDatabaseGlobal()"><i class="fas fa-cloud-upload-alt"></i> SALVAR DB GLOBAL</button>
         </div>
     </div>
 
@@ -86,419 +62,155 @@
         <div id="status-display" class="status-bar"></div>
 
         <div id="tab-cliente" class="section active">
-            <h2><i class="fas fa-user-plus"></i> Gerar Link do Cliente</h2>
+            <h2>Gerar Link do Cliente</h2>
             <div style="background:white; padding:20px; border-radius:8px; border:1px solid #eee">
-                <div class="row">
-                    <div class="col">
-                        <label>Nome do Cliente (Nome da Pasta)</label>
-                        <input type="text" id="cliNome" placeholder="Ex: Casamento Maria">
-                    </div>
-                    <div class="col">
-                        <label>Modo de Fluxo</label>
-                        <select id="fluxoModo">
-                            <option value="venda">💰 Venda Completa (Edição + Produtos)</option>
-                            <option value="aprovacao">✅ Aprovação Simples</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group" style="margin-top:15px">
-                    <label>Links das Fotos (Uma URL por linha)</label>
-                    <textarea id="cliFotos" rows="6" placeholder="https://..."></textarea>
-                </div>
-
-                <div style="background:#eff6ff; padding:15px; border-radius:6px; margin-top:15px; border:1px solid #bfdbfe">
-                    <h4 style="margin:0 0 10px; color:#1e40af">Dados Financeiros do Cliente</h4>
-                    <div class="row">
-                        <div class="col">
-                            <label>Entrada Já Paga (R$)</label>
-                            <input type="number" id="cliEntrada" value="0.00">
-                        </div>
-                        <div class="col">
-                            <label>Incluir Álbum (Contrato)?</label>
-                            <select id="cliTemAlbum" onchange="toggleContrato()">
-                                <option value="nao">Não (Venda Avulsa)</option>
-                                <option value="sim">Sim (Contrato Fechado)</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div id="area-contrato" style="display:none; margin-top:15px; border-top:1px solid #bfdbfe; padding-top:10px">
-                        <div class="row">
-                            <div class="col"><label>Tamanho Contratado</label><select id="ctrTam"><option value="15x20">15x20</option><option value="20x30">20x30</option><option value="30x40">30x40</option></select></div>
-                            <div class="col"><label>Qtd. Fotos</label><input type="number" id="ctrQtd" value="20"></div>
-                            <div class="col"><label>Valor Total Contrato</label><input type="number" id="ctrValor" value="0.00"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group" style="margin-top:15px">
-                        <label>Créditos / Brindes Específicos</label>
-                        <div id="creditos-list"></div>
-                        <button class="btn btn-add" style="margin-top:5px; padding:5px" onclick="addCreditoRow()">+ Adicionar Brinde</button>
-                    </div>
-                </div>
-
-                <button class="btn btn-success" style="margin-top:20px; font-size:1.1rem" onclick="publicarCliente()">
-                    <i class="fas fa-cloud-upload-alt"></i> GERAR E PUBLICAR SITE
-                </button>
+                <label>Nome do Cliente (Pasta)</label>
+                <input type="text" id="cliNome" placeholder="Ex: Casamento_Ana">
+                <label>Links das Fotos</label>
+                <textarea id="cliFotos" rows="6"></textarea>
+                <button class="btn btn-success" onclick="publicarCliente()">GERAR E PUBLICAR SITE</button>
             </div>
         </div>
 
-        <div id="tab-fotolivros" class="section">
-            <h2><i class="fas fa-book"></i> Configuração de Fotolivros</h2>
-            <div class="row">
-                <div class="col"><label>Markup (Multiplicador)</label><input type="number" id="confMarkup" step="0.1"></div>
-                <div class="col"><label>Custo Diagramação (Fixo)</label><input type="number" id="confCustoFixo"></div>
-                <div class="col"><label>Mínimo Fotos p/ Álbum</label><input type="number" id="confMinFotos"></div>
+        <div id="tab-textos" class="section">
+            <h2>Textos de Venda (Modais)</h2>
+            <div style="background:white; padding:20px; border-radius:8px; border:1px solid #eee">
+                <h3>Fotolivro</h3>
+                <input type="text" id="txtBookTitle" placeholder="Título">
+                <textarea id="txtBookDesc" rows="3" placeholder="Descrição"></textarea>
+                <h3>Revelação</h3>
+                <input type="text" id="txtPrintTitle" placeholder="Título">
+                <textarea id="txtPrintDesc" rows="3" placeholder="Descrição"></textarea>
+                <h3>Digital</h3>
+                <input type="text" id="txtDigTitle" placeholder="Título">
+                <textarea id="txtDigDesc" rows="3" placeholder="Descrição"></textarea>
             </div>
-            
-            <h4 style="margin-top:20px">Tabela de Custo (Lab)</h4>
-            <div id="fotolivro-table"></div>
-            <button class="btn btn-add" onclick="addBookRow()">+ Nova Linha</button>
-
-            <h4 style="margin-top:20px">Regras de Diagramação (Fotos/Pág)</h4>
-            <div id="regras-container" style="display:flex; gap:20px"></div>
-        </div>
-
-        <div id="tab-produtos" class="section">
-            <h2><i class="fas fa-images"></i> Produtos Avulsos</h2>
-            <div id="produtos-list"></div>
-            <button class="btn btn-add" onclick="addProdRow()">+ Novo Produto</button>
-        </div>
-
-        <div id="tab-financeiro" class="section">
-            <h2><i class="fas fa-coins"></i> Financeiro & Logística</h2>
-            <div class="row">
-                <div class="col"><label>WhatsApp (Apenas números)</label><input type="text" id="confWhats"></div>
-                <div class="col"><label>Desconto Pix (%)</label><input type="number" id="confPix"></div>
-            </div>
-            <div class="form-group"><label>Tabela de Juros (Separado por vírgula)</label><input type="text" id="confJuros"></div>
-            
-            <hr>
-            
-            <div class="row">
-                <div class="col"><label>Taxa de Envio (R$)</label><input type="number" id="confFreteValor"></div>
-                <div class="col"><label>Cidades Frete Grátis</label><input type="text" id="confFreteCidades"></div>
-            </div>
-            <div class="form-group"><label>Endereço da Sede</label><input type="text" id="confSede"></div>
         </div>
 
         <div id="tab-config" class="section">
-            <h2><i class="fas fa-cogs"></i> Configurações Gerais</h2>
-            <div class="form-group"><label>Texto Marca D'água</label><input type="text" id="confWmText"></div>
-            <div class="form-group"><label>Opacidade Marca D'água (0.1 a 1.0)</label><input type="number" id="confWmOp" step="0.1"></div>
+            <h2>Configurações Gerais</h2>
+            <div style="background:white; padding:20px; border-radius:8px; border:1px solid #eee">
+                <label>Marca D'água Texto</label><input type="text" id="confWmText">
+                <label>Marca D'água Opacidade</label><input type="number" id="confWmOp" step="0.1">
+                <label>WhatsApp</label><input type="text" id="confWhats">
+            </div>
         </div>
-
     </div>
 
 <script>
-    // --- INICIALIZAÇÃO ---
     window.onload = function() {
         carregarCredenciaisLocal();
-        if(window.NBV_DB) carregarDadosNaTela(window.NBV_DB);
-        else showStatus("Erro: database.js não carregado.", "error");
+        if(window.NBV_DB) carregarDados(window.NBV_DB);
     };
 
     function showTab(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        // Acha o botão que clicou (gambiarra visual)
         event.currentTarget.classList.add('active');
-    }
-
-    function toggleContrato() {
-        const val = document.getElementById('cliTemAlbum').value;
-        document.getElementById('area-contrato').style.display = (val === 'sim') ? 'block' : 'none';
     }
 
     function showStatus(msg, type='loading') {
         const el = document.getElementById('status-display');
         el.className = 'status-bar status-' + type;
-        el.innerText = msg;
+        el.innerHTML = msg;
         el.style.display = 'block';
-        if(type !== 'loading') setTimeout(() => el.style.display = 'none', 5000);
     }
 
-    // --- CARREGAMENTO DE DADOS (DB -> TELA) ---
-    function carregarDadosNaTela(db) {
-        // Financeiro
-        document.getElementById('confMarkup').value = db.financeiro.markup;
-        document.getElementById('confCustoFixo').value = db.financeiro.custoFixoDiagramacao;
-        document.getElementById('confMinFotos').value = db.fluxo.minimoFotosLivro;
-        document.getElementById('confWhats').value = db.financeiro.whatsapp;
-        document.getElementById('confPix').value = db.financeiro.descontoPix;
-        document.getElementById('confJuros').value = db.financeiro.tabelaJuros.join(', ');
+    function carregarDados(db) {
+        // Textos
+        const apr = db.apresentacao || {};
+        if(apr.fotolivro) { document.getElementById('txtBookTitle').value = apr.fotolivro.titulo; document.getElementById('txtBookDesc').value = apr.fotolivro.texto; }
+        if(apr.revelacao) { document.getElementById('txtPrintTitle').value = apr.revelacao.titulo; document.getElementById('txtPrintDesc').value = apr.revelacao.texto; }
+        if(apr.digital) { document.getElementById('txtDigTitle').value = apr.digital.titulo; document.getElementById('txtDigDesc').value = apr.digital.texto; }
         
-        // Logística
-        document.getElementById('confFreteValor').value = db.logistica.taxaEnvio;
-        document.getElementById('confFreteCidades').value = db.logistica.cidadesGratis.join(', ');
-        document.getElementById('confSede').value = db.logistica.enderecoSede;
-
-        // Assets
+        // Configs
         document.getElementById('confWmText').value = db.assets.watermarkText;
         document.getElementById('confWmOp').value = db.assets.opacity;
-
-        // Tabelas
-        renderBooks(db.tabelaFotolivros);
-        renderProds(db.produtosAvulsos);
-        renderRegras(db.regrasDiagramacao);
+        document.getElementById('confWhats').value = db.financeiro.whatsapp;
     }
 
-    function renderBooks(list) {
-        const el = document.getElementById('fotolivro-table');
-        el.innerHTML = '';
-        list.forEach(item => addBookRow(item));
-    }
-    function addBookRow(item = {}) {
-        const html = `
-        <div class="table-row book-row">
-            <select class="bk-size" style="width:80px"><option ${item.size=='15x20'?'selected':''}>15x20</option><option ${item.size=='20x30'?'selected':''}>20x30</option><option ${item.size=='30x40'?'selected':''}>30x40</option></select>
-            <input type="number" class="bk-pages" value="${item.pages||''}" placeholder="Págs" style="width:60px">
-            <input type="number" class="bk-price" value="${item.price||''}" placeholder="Custo S/ Cx">
-            <input type="number" class="bk-box" value="${item.priceBox||''}" placeholder="Custo C/ Cx">
-            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
-        </div>`;
-        document.getElementById('fotolivro-table').insertAdjacentHTML('beforeend', html);
-    }
+    function montarObjeto() {
+        // Recria objeto baseado no window.NBV_DB atual + inputs
+        const db = window.NBV_DB; 
+        db.assets.watermarkText = document.getElementById('confWmText').value;
+        db.assets.opacity = parseFloat(document.getElementById('confWmOp').value);
+        db.financeiro.whatsapp = document.getElementById('confWhats').value;
 
-    function renderProds(list) {
-        const el = document.getElementById('produtos-list');
-        el.innerHTML = '';
-        list.forEach(item => addProdRow(item));
-    }
-    function addProdRow(item = {}) {
-        const html = `
-        <div class="list-item prod-row">
-            <input type="text" class="pd-name" value="${item.nome||''}" placeholder="Nome Produto" style="flex:2">
-            <input type="number" class="pd-price" value="${item.preco||''}" placeholder="Preço" style="flex:1">
-            <input type="text" class="pd-icon" value="${item.icone||'fas fa-image'}" placeholder="Icone" style="flex:1">
-            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
-        </div>`;
-        document.getElementById('produtos-list').insertAdjacentHTML('beforeend', html);
-    }
-
-    function renderRegras(regras) {
-        const el = document.getElementById('regras-container');
-        el.innerHTML = '';
-        for(let key in regras) {
-            el.innerHTML += `<div><label>${key}</label><input type="number" class="regra-item" data-key="${key}" value="${regras[key]}" style="width:80px"></div>`;
-        }
-    }
-
-    function addCreditoRow() {
-        // Pega produtos atuais para preencher o select
-        let opts = '';
-        document.querySelectorAll('.pd-name').forEach(i => { if(i.value) opts += `<option value="${i.value}">${i.value}</option>`; });
-        
-        const html = `
-        <div class="list-item cred-row">
-            <select class="cr-item" style="flex:2">${opts}</select>
-            <input type="number" class="cr-qtd" value="1" style="width:70px" placeholder="Qtd">
-            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
-        </div>`;
-        document.getElementById('creditos-list').insertAdjacentHTML('beforeend', html);
-    }
-
-    // --- MONTAGEM DO OBJETO DB (TELA -> JS) ---
-    function montarObjetoDB() {
-        // Captura listas
-        const livros = [];
-        document.querySelectorAll('.book-row').forEach(r => {
-            livros.push({
-                size: r.querySelector('.bk-size').value,
-                pages: parseInt(r.querySelector('.bk-pages').value),
-                price: parseFloat(r.querySelector('.bk-price').value),
-                priceBox: parseFloat(r.querySelector('.bk-box').value)
-            });
-        });
-
-        const produtos = [];
-        document.querySelectorAll('.prod-row').forEach(r => {
-            produtos.push({
-                nome: r.querySelector('.pd-name').value,
-                preco: parseFloat(r.querySelector('.pd-price').value),
-                icone: r.querySelector('.pd-icon').value
-            });
-        });
-
-        const regras = {};
-        document.querySelectorAll('.regra-item').forEach(r => {
-            regras[r.dataset.key] = parseInt(r.value);
-        });
-
-        // Monta Objeto Completo
-        return {
-            assets: {
-                watermarkText: document.getElementById('confWmText').value,
-                opacity: parseFloat(document.getElementById('confWmOp').value)
-            },
-            fluxo: {
-                pedirEdicao: true, // Padrão
-                pedirAprovacao: true,
-                minimoFotosLivro: parseInt(document.getElementById('confMinFotos').value)
-            },
-            logistica: {
-                taxaEnvio: parseFloat(document.getElementById('confFreteValor').value),
-                cidadesGratis: document.getElementById('confFreteCidades').value.split(',').map(s=>s.trim()),
-                enderecoSede: document.getElementById('confSede').value
-            },
-            financeiro: {
-                descontoPix: parseFloat(document.getElementById('confPix').value),
-                parcelasSemJuros: 4, // fixo ou add campo se quiser
-                tabelaJuros: document.getElementById('confJuros').value.split(',').map(Number),
-                whatsapp: document.getElementById('confWhats').value,
-                markup: parseFloat(document.getElementById('confMarkup').value),
-                custoFixoDiagramacao: parseFloat(document.getElementById('confCustoFixo').value)
-            },
-            produtosAvulsos: produtos,
-            tabelaFotolivros: livros,
-            regrasDiagramacao: regras
+        db.apresentacao = {
+            fotolivro: { titulo: document.getElementById('txtBookTitle').value, texto: document.getElementById('txtBookDesc').value, img: "https://via.placeholder.com/600x400" },
+            revelacao: { titulo: document.getElementById('txtPrintTitle').value, texto: document.getElementById('txtPrintDesc').value, img: "https://via.placeholder.com/600x400" },
+            digital: { titulo: document.getElementById('txtDigTitle').value, texto: document.getElementById('txtDigDesc').value, img: "https://via.placeholder.com/600x400" }
         };
+        return db;
     }
 
-    // --- GITHUB API ---
-    
-    function getGhCreds() {
+    // GITHUB
+    function getGh() {
         return {
             token: document.getElementById('ghToken').value,
             user: document.getElementById('ghUser').value,
-            repo: document.getElementById('ghRepo').value
+            repo: document.getElementById('ghRepo').value,
+            branch: document.getElementById('ghBranch').value
         };
     }
-
     function salvarCredenciaisLocal() {
-        const c = getGhCreds();
-        localStorage.setItem('nbv_gh_token', c.token);
-        localStorage.setItem('nbv_gh_user', c.user);
-        localStorage.setItem('nbv_gh_repo', c.repo);
-        alert("Salvo no navegador!");
+        const c = getGh();
+        localStorage.setItem('nbv_gh_token', c.token); localStorage.setItem('nbv_gh_user', c.user);
+        localStorage.setItem('nbv_gh_repo', c.repo); localStorage.setItem('nbv_gh_branch', c.branch);
+        alert("Salvo!");
     }
-
     function carregarCredenciaisLocal() {
         if(localStorage.getItem('nbv_gh_token')) document.getElementById('ghToken').value = localStorage.getItem('nbv_gh_token');
         if(localStorage.getItem('nbv_gh_user')) document.getElementById('ghUser').value = localStorage.getItem('nbv_gh_user');
         if(localStorage.getItem('nbv_gh_repo')) document.getElementById('ghRepo').value = localStorage.getItem('nbv_gh_repo');
+        if(localStorage.getItem('nbv_gh_branch')) document.getElementById('ghBranch').value = localStorage.getItem('nbv_gh_branch');
     }
 
-    // 1. SALVAR DATABASE GLOBAL
-    async function salvarDatabaseGlobal() {
-        const creds = getGhCreds();
-        if(!creds.token || !creds.user) return alert("Configure o GitHub primeiro!");
-        
-        showStatus("Salvando database.js no GitHub...", "loading");
-
-        const dbObj = montarObjetoDB();
-        const content = `window.NBV_DB = ${JSON.stringify(dbObj, null, 4)};`;
-        
-        try {
-            await uploadToGithub(creds, 'database.js', content, "Atualização Config Global");
-            showStatus("Configurações Salvas com Sucesso!", "success");
-            // Atualiza objeto em memória também
-            window.NBV_DB = dbObj; 
-        } catch(e) {
-            console.error(e);
-            showStatus("Erro ao salvar: " + e.message, "error");
-        }
-    }
-
-    // 2. PUBLICAR CLIENTE
-    async function publicarCliente() {
-        const creds = getGhCreds();
-        const nome = document.getElementById('cliNome').value.trim();
-        if(!creds.token || !nome) return alert("Preencha Nome e Config GitHub");
-
-        showStatus("Preparando arquivos...", "loading");
-
-        // Monta Config Específica do Cliente
-        const creditos = [];
-        document.querySelectorAll('.cred-row').forEach(r => {
-            creditos.push({ item: r.querySelector('.cr-item').value, qtd: parseInt(r.querySelector('.cr-qtd').value) });
-        });
-
-        const dbAtual = montarObjetoDB(); // Pega dados frescos da tela
-        const configCliente = {
-            ...dbAtual, // Herda tudo
-            cliente: {
-                nome: nome,
-                entrada: parseFloat(document.getElementById('cliEntrada').value),
-                incluirAlbum: document.getElementById('cliTemAlbum').value === 'sim',
-                contrato: {
-                    tamanho: document.getElementById('ctrTam').value,
-                    qtdFotos: parseInt(document.getElementById('ctrQtd').value),
-                    valorTotal: parseFloat(document.getElementById('ctrValor').value)
-                },
-                creditos: creditos
-            },
-            fotos: document.getElementById('cliFotos').value.split('\n').filter(s=>s.trim().length>4),
-            fluxo: {
-                ...dbAtual.fluxo,
-                pedirEdicao: document.getElementById('fluxoModo').value === 'venda'
-            }
-        };
-
-        try {
-            // Baixa o template (modelo.html)
-            showStatus("Baixando template...", "loading");
-            const tplReq = await fetch('modelo.html');
-            if(!tplReq.ok) throw new Error("modelo.html não encontrado na pasta local");
-            let html = await tplReq.text();
-
-            // Injeta Config
-            const script = `<script>window.NBV_CONFIG = ${JSON.stringify(configCliente, null, 2)};<\/script>`;
-            html = html.replace('', script);
-
-            // Upload
-            const path = `clientes/${nome.replace(/\s+/g, '-').toLowerCase()}/index.html`;
-            await uploadToGithub(creds, path, html, `Novo site: ${nome}`);
-            
-            showStatus(`Sucesso! Link: https://${creds.user}.github.io/${creds.repo}/${path}`, "success");
-            
-            // Abre o link
-            window.open(`https://${creds.user}.github.io/${creds.repo}/${path}`, '_blank');
-
-        } catch(e) {
-            console.error(e);
-            showStatus("Erro na publicação: " + e.message, "error");
-        }
-    }
-
-    // Helper de Upload
-    async function uploadToGithub(creds, path, contentStr, message) {
-        const apiUrl = `https://api.github.com/repos/${creds.user}/${creds.repo}/contents/${path}`;
-        
-        // Check SHA (se arquivo existe)
+    async function upload(creds, path, content, msg) {
+        const url = `https://api.github.com/repos/${creds.user}/${creds.repo}/contents/${path}`;
         let sha = null;
-        try {
-            const check = await fetch(apiUrl, { headers: { Authorization: `token ${creds.token}` } });
-            if(check.ok) {
-                const data = await check.json();
-                sha = data.sha;
-            }
-        } catch(e) {}
-
-        const body = {
-            message: message,
-            content: btoa(unescape(encodeURIComponent(contentStr))), // Base64 UTF8 Safe
-            branch: "main"
-        };
-        if(sha) body.sha = sha;
-
-        const res = await fetch(apiUrl, {
+        try { const r = await fetch(url+`?ref=${creds.branch}`,{headers:{Authorization:`token ${creds.token}`}}); if(r.ok) sha = (await r.json()).sha; } catch(e){}
+        
+        const res = await fetch(url, {
             method: 'PUT',
-            headers: { 
-                'Authorization': `token ${creds.token}`, 
-                'Content-Type': 'application/json' 
-            },
-            body: JSON.stringify(body)
+            headers: { Authorization:`token ${creds.token}`, 'Content-Type':'application/json' },
+            body: JSON.stringify({ message: msg, content: btoa(unescape(encodeURIComponent(content))), branch: creds.branch, sha: sha })
         });
-
-        if(!res.ok) {
-            const err = await res.json();
-            throw new Error(err.message);
-        }
+        if(!res.ok) throw new Error((await res.json()).message);
+        return `https://${creds.user}.github.io/${creds.repo}/${path}`;
     }
 
+    async function salvarDatabaseGlobal() {
+        const creds = getGh();
+        if(!creds.token) return alert("Configure GitHub");
+        showStatus("Salvando...", "loading");
+        try {
+            const db = montarObjeto();
+            await upload(creds, 'database.js', `window.NBV_DB = ${JSON.stringify(db, null, 4)};`, "Update DB");
+            window.NBV_DB = db;
+            showStatus("Salvo com sucesso!", "success");
+        } catch(e) { showStatus("Erro: "+e.message, "error"); }
+    }
+
+    async function publicarCliente() {
+        const creds = getGh();
+        const nome = document.getElementById('cliNome').value.trim();
+        if(!creds.token || !nome) return alert("Preencha dados");
+        showStatus("Gerando...", "loading");
+        
+        try {
+            const db = montarObjeto();
+            const config = { ...db, cliente: { nome: nome }, fotos: document.getElementById('cliFotos').value.split('\n').filter(s=>s.length>5) };
+            
+            const req = await fetch('modelo.html');
+            let html = await req.text();
+            html = html.replace('', `<script>window.NBV_CONFIG = ${JSON.stringify(config, null, 2)};<\/script>`);
+            
+            const url = await upload(creds, `clientes/${nome}/index.html`, html, `Site: ${nome}`);
+            showStatus(`Sucesso! <a href="${url}" target="_blank">${url}</a>`, "success");
+        } catch(e) { showStatus("Erro: "+e.message, "error"); }
+    }
 </script>
 </body>
 </html>
