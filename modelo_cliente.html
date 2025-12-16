@@ -49,7 +49,6 @@ const App = {
     state: { view: 'intro', idx: 0, mode: '', sel: [], pag: 'pix', frete: 'sede', modalOpen: false, lightboxUrl: null },
 
     init() {
-        // Tenta ler a config injetada
         if(window.NBV_CONFIG) {
             this.data = window.NBV_CONFIG;
             this.state.sel = this.data.fotos.map(url => ({ inAlbum: false, extras: {} }));
@@ -64,7 +63,6 @@ const App = {
         const view = this.state.view;
         let html = '';
 
-        // TELA 1: INTRO
         if(view === 'intro') {
             html = `<div class="container">
                 <h2>Olá, ${this.data.cliente.nome}!</h2>
@@ -78,7 +76,6 @@ const App = {
                 </div>
             </div>`;
         }
-        // TELA 2: MODO (MENU)
         else if(view === 'modo') {
             const opcoes = this.calcAlbum(this.data.fotos.length);
             const precoAlbum = opcoes.length > 0 ? this.fmt(opcoes[0].total) : "Sob Consulta";
@@ -86,7 +83,6 @@ const App = {
 
             html = `<div class="container">
                 <h2>Como deseja produzir?</h2>
-                
                 <div class="card" style="border:2px solid var(--primary)">
                     <div style="background:var(--primary);color:white;position:absolute;top:0;right:0;padding:5px 10px;border-radius:0 10px 0 10px;font-size:12px">RECOMENDADO</div>
                     <h3>📚 Fotolivro Premium</h3>
@@ -98,7 +94,6 @@ const App = {
                         <button class="btn btn-outline" onclick="App.verDet('book')">Detalhes</button>
                     </div>
                 </div>
-                
                 <div class="card">
                     <h3>🖼️ Fazer Revelação</h3>
                     <p>Fotos avulsas em papel profissional.</p>
@@ -107,7 +102,6 @@ const App = {
                         <button class="btn btn-outline" onclick="App.verDet('print')">Detalhes</button>
                     </div>
                 </div>
-                
                 <div class="card">
                     <h3>💾 Somente Arquivo</h3>
                     <p>Download das fotos.</p>
@@ -116,11 +110,9 @@ const App = {
                         <button class="btn btn-outline" onclick="App.verDet('digital')">Detalhes</button>
                     </div>
                 </div>
-                
                 <div style="text-align:center;margin-top:20px"><button class="btn-link" onclick="App.toggleModalFotos()">📸 Espiar Novamente</button></div>
             </div>`;
         }
-        // TELA 3: PERSUASÃO
         else if(view === 'persuasao') {
             html = `<div class="container">
                 <button class="btn-secondary" onclick="App.irParaModo()" style="width:auto;margin-bottom:15px">← Voltar</button>
@@ -139,7 +131,6 @@ const App = {
                 </div>
             </div>`;
         }
-        // TELA 4: DETALHES
         else if(view === 'detalhes') {
             const d = this.data.apresentacao[this.state.detTipo];
             html = `<div class="container">
@@ -152,13 +143,11 @@ const App = {
                 </div>
             </div>`;
         }
-        // TELA 5: WORKSTATION (SELEÇÃO)
         else if(view === 'workstation') {
             const i = this.state.idx;
             const f = this.data.fotos[i];
             const sel = this.state.sel[i];
             
-            // Marca d'água
             const svg = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg width='300' height='150' xmlns='http://www.w3.org/2000/svg'><text x='50%' y='50%' transform='rotate(-20 150 75)' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='20' fill='#000' fill-opacity='${this.data.assets.opacity}'>${this.data.assets.watermarkText}</text></svg>`);
             
             html = `<div class="container">
@@ -183,7 +172,6 @@ const App = {
                 <div style="text-align:center;margin-top:10px;color:#999">${i+1} de ${this.data.fotos.length}</div>
             </div>`;
         }
-        // TELA 6: CHECKOUT
         else if(view === 'checkout') {
             const res = this.calcTotal();
             html = `<div class="container">
@@ -193,7 +181,7 @@ const App = {
                 <div class="card">
                     <h3>🚚 Entrega</h3>
                     <select id="frete" onchange="App.setFrete(this.value)">
-                        <option value="sede">Retirar na Sede</option>
+                        <option value="sede">Retirar na Sede (${this.data.logistica.enderecoSede})</option>
                         <option value="transp">Transportadora (+ ${this.fmt(this.data.logistica.taxaEnvio)})</option>
                         <option value="gratis">Frete Grátis (${this.data.logistica.cidadesGratis.join(', ')})</option>
                     </select>
@@ -219,7 +207,7 @@ const App = {
         if(this.state.lightboxUrl) this.renderLightbox();
     },
 
-    // --- FUNÇÕES AUXILIARES DE RENDER ---
+    // HELPERS
     renderProds(sel) {
         let h = '';
         const prints = this.data.produtosAvulsos.filter(p=>p.nome.includes('Foto')||p.nome.includes('Revel'));
@@ -252,7 +240,6 @@ const App = {
         <div class="stepper"><button onclick="App.add('${p.nome}',-1)">-</button><span>${q}</span><button onclick="App.add('${p.nome}',1)" style="background:var(--primary);color:white">+</button></div></div>`;
     },
     
-    // --- LIGHTBOX & MODAL ---
     toggleModalFotos() { this.state.modalOpen = !this.state.modalOpen; this.render(); },
     renderModal() {
         const svg = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`<svg width='150' height='150' xmlns='http://www.w3.org/2000/svg'><text x='50%' y='50%' transform='rotate(-45 75 75)' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='16' fill='#000' fill-opacity='0.3'>NBV</text></svg>`);
@@ -265,7 +252,6 @@ const App = {
     },
     closeLb() { this.state.lightboxUrl = null; this.render(); },
     
-    // --- LÓGICA DE NAVEGAÇÃO ---
     irParaModo() { this.state.view = 'modo'; this.render(); },
     setMode(m) { this.state.mode = m; this.state.view = 'workstation'; this.state.idx=0; this.render(); },
     irPersuasao() { this.state.view = 'persuasao'; this.render(); },
@@ -291,7 +277,7 @@ const App = {
     setFrete(v) { this.state.frete = v; this.render(); },
     setPag(v) { this.state.pag = v; },
 
-    // --- CÁLCULOS (COM CRÉDITO) ---
+    // CALCULOS
     calcAlbum(qtd) {
         const ts = [...new Set(this.data.tabelaFotolivros.map(t=>t.size))];
         const res = [];
@@ -300,7 +286,7 @@ const App = {
             const pags = Math.ceil(qtd/fpp);
             const mtc = this.data.tabelaFotolivros.filter(t=>t.size===tam).sort((a,b)=>a.pages-b.pages).find(t=>t.pages>=pags);
             if(mtc) {
-                const tot = (mtc.price + this.data.financeiro.custoFixoDiagramacao) * this.data.financeiro.markup;
+                const tot = (mtc.priceBox + this.data.financeiro.custoFixoDiagramacao) * this.data.financeiro.markup;
                 res.push({ nome: `Fotolivro ${tam}`, total: tot, parcela: (tot*1.2)/12 });
             }
         });
