@@ -45,17 +45,17 @@ window.NBV_DB = {
         "fotolivro": {
             "titulo": "Memórias que duram para sempre",
             "texto": "Capa dura, papel fotográfico de alta gramatura e abertura 180°. Uma joia para a família.",
-            "img": "https://via.placeholder.com/600x400?text=Fotolivro+Premium"
+            "img": "https://www.phooto.com.br/wp-content/uploads/2018/11/capadura21x28-semselo.png"
         },
         "revelacao": {
             "titulo": "Sinta a fotografia em suas mãos",
             "texto": "Papel Fujifilm profissional. Cores vivas por mais de 100 anos.",
-            "img": "https://via.placeholder.com/600x400?text=Revelacao+Fujifilm"
+            "img": "https://cdn.iset.io/assets/73325/produtos/146/kjkah.jpg"
         },
         "digital": {
             "titulo": "Arquivo Digital (Download)",
             "texto": "Receba o link para download. Atenção: Recomendamos a impressão para garantir a durabilidade.",
-            "img": "https://via.placeholder.com/600x400?text=Arquivos+Digitais"
+            "img": "https://static.vecteezy.com/ti/fotos-gratis/t2/24644806-pasta-e-verifica-marca-foto.jpg"
         }
     },
     "produtosAvulsos": [
