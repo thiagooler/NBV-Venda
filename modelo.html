@@ -245,20 +245,25 @@ const App = {
 
     // --- MODAIS ---
     renderModals() {
-        const info = this.data.apresentacao || {};
-        const cats = ['fotolivro', 'revelacao', 'digital'];
-        let html = '';
+        // Textos Padrão (Fallback) se não tiver no DB
+        const txt = {
+            fotolivro: { t: "Fotolivro Premium", d: "Capa dura, abertura 180 graus. Qualidade de galeria de arte." },
+            revelacao: { t: "Revelação Profissional", d: "Papel Fujifilm original. Tamanhos 10x15, 15x20 e ampliações." },
+            digital: { t: "Arquivos em Alta", d: "Entrega via link. Cuidado com backups!" }
+        };
         
-        // Modais de Info
+        let html = '';
+        const cats = ['fotolivro', 'revelacao', 'digital'];
+        const placeholder = "https://via.placeholder.com/600x400?text=Exemplo";
+
         cats.forEach(cat => {
-            const content = info[cat] || { titulo: cat, texto: "...", img: "" };
             html += `
             <div id="modal-${cat}" class="modal-overlay hidden" onclick="if(event.target===this) App.closeModal('${cat}')">
                 <div class="modal-content fade-in">
                     <span class="close-modal" onclick="App.closeModal('${cat}')">&times;</span>
-                    <img src="${content.img}" class="modal-img">
-                    <h3>${content.titulo}</h3>
-                    <p>${content.texto}</p>
+                    <img src="${placeholder}" class="modal-img">
+                    <h3>${txt[cat].t}</h3>
+                    <p>${txt[cat].d}</p>
                     <button class="btn btn-primary" onclick="App.startSelection('${cat}')">Começar Agora</button>
                 </div>
             </div>`;
@@ -351,7 +356,7 @@ const App = {
         const sizeSim = '20x30'; 
         const regra = this.data.regrasDiagramacao[sizeSim] || 4;
         const pags = Math.ceil(totalFotos / regra);
-        // Acha preço na tabela
+        // Acha preço na tabela (ou o último/maior disponível)
         const match = tabela.filter(t => t.size === sizeSim).find(t => t.pages >= pags) || tabela[tabela.length-1];
         
         if(!match) return { total: 0, parcela: 0 };
@@ -359,7 +364,7 @@ const App = {
         const markup = this.data.financeiro.markup;
         const fixo = this.data.financeiro.custoFixoDiagramacao;
         const total = (match.priceBox + fixo) * markup;
-        const parcela = (total * 1.20) / 12; // Simulação de juros padrão 12x
+        const parcela = (total * 1.21) / 12; // Juros de 21% em 12x
         return { total, parcela };
     },
 
@@ -370,14 +375,15 @@ const App = {
         let texto = `MODO: ${mode.toUpperCase()}\nQTD FOTOS: ${qtd}\n\n`;
         
         if (mode === 'fotolivro') {
-            const calc = this.calcBookPrice(); // Simplificação: usa o preço base da galeria toda ou ajusta
-            // Aqui vamos ajustar para a qtd selecionada
-            const rule = this.data.regrasDiagramacao['20x30'] || 4; // Default size
+            const calc = this.calcBookPrice();
+            // Aqui vamos ajustar para a qtd selecionada realmente
+            const rule = this.data.regrasDiagramacao['20x30'] || 4; // Default size 20x30
             const pags = Math.ceil(qtd / rule);
             const match = this.data.tabelaFotolivros.find(t => t.size === '20x30' && t.pages >= pags);
             if(match) {
                 const markup = this.data.financeiro.markup;
-                total = (match.priceBox + this.data.financeiro.custoFixoDiagramacao) * markup;
+                const fixo = this.data.financeiro.custoFixoDiagramacao;
+                total = (match.priceBox + fixo) * markup;
                 texto += `Fotolivro Premium 20x30 (${match.pages} Páginas)\nValor Estimado: ${this.formatMoney(total)}`;
             } else {
                 texto += "Orçamento sob consulta (muitas fotos).";
@@ -398,7 +404,7 @@ const App = {
     },
 
     sendWhatsapp(msg, total) {
-        let finalMsg = `*PEDIDO - ${this.data.cliente.nome}*\n----------------\n${decodeURIComponent(msg)}\n----------------\n*TOTAL: ${this.formatMoney(total)}*`;
+        let finalMsg = `*PEDIDO - ${this.data.cliente.nome}*\n----------------\n${decodeURIComponent(msg)}\n----------------\n*TOTAL ESTIMADO: ${this.formatMoney(total)}*`;
         window.open(`https://wa.me/${this.data.financeiro.whatsapp}?text=${encodeURIComponent(finalMsg)}`, '_blank');
     },
 
