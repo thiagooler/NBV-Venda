@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>NBV Admin - Gerador V14 (Modelos Separados)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
+    <script src="js/database.js"></script>
+
+    <style>
+        :root { --primary: #0066cc; --bg: #f3f4f6; --sidebar: #fff; --text: #1f2937; --border: #e5e7eb; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; overflow-y: auto; }
+        .main-content { flex: 1; padding: 30px; overflow-y: auto; }
+        .nav-btn { width: 100%; text-align: left; padding: 12px; margin-bottom: 5px; cursor: pointer; border: none; background: none; color: #666; font-weight: 600; display: flex; align-items: center; gap: 10px; border-radius: 6px; }
+        .nav-btn:hover, .nav-btn.active { background: #eff6ff; color: var(--primary); }
+        .section { display: none; } .section.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.9rem; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .row { display: flex; gap: 15px; } .col { flex: 1; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-primary { background: var(--primary); } .btn-add { background: #ecfdf5; color: #16a34a; border: 1px dashed #16a34a; }
+        .btn-remove { background: #fee2e2; color: #dc2626; border: none; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; }
+        .list-item { background: #fff; padding: 10px; border: 1px solid #eee; border-radius: 6px; margin-bottom: 5px; display:flex; align-items:center; gap:10px; }
+        .credito-box { border: 1px dashed var(--primary); padding: 15px; border-radius: 8px; background: #f0f9ff; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2 style="margin:0 0 20px; font-size:1.4rem; color:#333"><i class="fas fa-camera"></i> Studio<span style="color:var(--primary)">NBV</span></h2>
+        <nav>
+            <button class="nav-btn active" onclick="showTab('tab-cliente')"><i class="fas fa-user"></i> Cliente & Fluxo</button>
+            <button class="nav-btn" onclick="showTab('tab-apresentacao')"><i class="fas fa-bullhorn"></i> Apresentação</button>
+            <button class="nav-btn" onclick="showTab('tab-fotolivro')"><i class="fas fa-book"></i> Tabela Fotolivros</button>
+            <button class="nav-btn" onclick="showTab('tab-produtos')"><i class="fas fa-images"></i> Produtos Avulsos</button>
+            <button class="nav-btn" onclick="showTab('tab-financeiro')"><i class="fas fa-coins"></i> Financeiro & Log.</button>
+        </nav>
+        <div style="margin-top:auto; padding-top:15px; border-top:1px solid #eee">
+            <button class="btn btn-primary" onclick="gerarSiteCompleto()"><i class="fas fa-file-zipper"></i> GERAR SITE CLIENTE</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div id="tab-cliente" class="section active">
+            <h2>Dados do Cliente</h2>
+            <div class="form-group"><label>Nome do Cliente</label><input type="text" id="cliName" placeholder="Ex: Maria e João"></div>
+            <div class="form-group"><label>Links das Fotos (Uma URL por linha)</label><textarea id="cliFotos" rows="6" placeholder="https://..."></textarea></div>
+            <div class="form-group">
+                <label>Objetivo do Link:</label>
+                <select id="fluxoModo">
+                    <option value="venda">💰 Venda Completa</option>
+                    <option value="aprovacao">✅ Apenas Aprovação</option>
+                </select>
+            </div>
+            <div class="row">
+                <div class="col"><div class="form-group"><label>Entrada já Paga (R$)</label><input type="number" id="cliEntrada" value="0.00"></div></div>
+                <div class="col"><div class="form-group"><label>Contrato Fechado?</label><select id="cliIncluirAlbum"><option value="nao">Não</option><option value="sim">Sim</option></select></div></div>
+            </div>
+            <div class="credito-box">
+                <label style="color:var(--primary)">🎁 Créditos / Brindes Inclusos</label>
+                <div id="creditos-list"></div>
+                <button class="btn btn-add" style="width:auto; padding:8px 15px; font-size:0.9rem" onclick="addCreditoRow()">+ Adicionar Crédito</button>
+            </div>
+        </div>
+
+        <div id="tab-apresentacao" class="section">
+            <h2>Textos de Venda</h2>
+            <div class="form-group"><label>Texto Fotolivro</label><textarea id="txtBook" rows="2"></textarea></div>
+            <div class="form-group"><label>Img Fotolivro</label><input type="text" id="imgBook"></div>
+            <hr>
+            <div class="form-group"><label>Texto Revelação</label><textarea id="txtPrint" rows="2"></textarea></div>
+            <div class="form-group"><label>Img Revelação</label><input type="text" id="imgPrint"></div>
+        </div>
+
+        <div id="tab-fotolivro" class="section">
+            <h2>Tabela de Preços (Custo)</h2>
+            <div class="row">
+                <div class="col"><label>Markup</label><input type="number" id="markup"></div>
+                <div class="col"><label>Custo Fixo Diag.</label><input type="number" id="custoFixo"></div>
+            </div>
+            <div id="fotolivro-table"></div>
+            <button class="btn btn-add" onclick="addBookRow()">+ Adicionar Tamanho</button>
+        </div>
+
+        <div id="tab-produtos" class="section">
+            <h2>Produtos Avulsos</h2>
+            <div id="produtos-list"></div>
+            <button class="btn btn-add" onclick="addProdRow()">+ Adicionar Produto</button>
+        </div>
+
+        <div id="tab-financeiro" class="section">
+            <h2>Financeiro & Config</h2>
+            <div class="form-group"><label>WhatsApp (DDD+Num)</label><input type="text" id="whatsNum"></div>
+            <div class="form-group"><label>Taxa de Entrega (R$)</label><input type="number" id="shipPrice"></div>
+            <div class="form-group"><label>Cidades Frete Grátis</label><input type="text" id="freeCities"></div>
+            <div class="form-group"><label>Marca D'água Texto</label><input type="text" id="wmText"></div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            if(window.NBV_DB) carregarDB(window.NBV_DB);
+            else alert("Erro: js/database.js não encontrado. Certifique-se que a pasta 'js' existe.");
+        };
+
+        function showTab(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            const btn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick').includes(id));
+            if(btn) btn.classList.add('active');
+        }
+
+        function carregarDB(db) {
+            document.getElementById('txtBook').value = db.apresentacao.book.text;
+            document.getElementById('imgBook').value = db.apresentacao.book.img;
+            document.getElementById('txtPrint').value = db.apresentacao.print.text;
+            document.getElementById('imgPrint').value = db.apresentacao.print.img;
+            
+            document.getElementById('markup').value = db.financeiro.markup;
+            document.getElementById('custoFixo').value = db.financeiro.custoFixoDiagramacao;
+            document.getElementById('whatsNum').value = db.financeiro.whatsapp;
+            document.getElementById('shipPrice').value = db.logistica.taxaEnvio;
+            document.getElementById('freeCities').value = db.logistica.cidadesGratis.join(', ');
+            document.getElementById('wmText').value = db.assets.watermarkText;
+            
+            const tbL = document.getElementById('fotolivro-table'); tbL.innerHTML = ''; 
+            (db.tabelaFotolivros || []).forEach(i => addBookRow(i));
+            const tbP = document.getElementById('produtos-list'); tbP.innerHTML = ''; 
+            (db.produtosAvulsos || []).forEach(i => addProdRow(i));
+        }
+
+        function montarObjeto() {
+            const db = {
+                assets: { watermarkText: document.getElementById('wmText').value, opacity: 0.3 },
+                financeiro: {
+                    markup: Number(document.getElementById('markup').value),
+                    custoFixoDiagramacao: Number(document.getElementById('custoFixo').value),
+                    whatsapp: document.getElementById('whatsNum').value,
+                    descontoPix: 5 // Default
+                },
+                logistica: {
+                    taxaEnvio: Number(document.getElementById('shipPrice').value),
+                    cidadesGratis: document.getElementById('freeCities').value.split(',').map(s=>s.trim())
+                },
+                apresentacao: {
+                    book: { text: document.getElementById('txtBook').value, img: document.getElementById('imgBook').value },
+                    print: { text: document.getElementById('txtPrint').value, img: document.getElementById('imgPrint').value },
+                    digital: { text: "Link download.", img: "https://via.placeholder.com/400x200" }
+                },
+                tabelaFotolivros: [], produtosAvulsos: [],
+                regrasDiagramacao: { "20x20":4, "25x25":5 }
+            };
+            document.querySelectorAll('.book-row').forEach(r => {
+                db.tabelaFotolivros.push({ size: r.querySelector('.bk-size').value, pages: Number(r.querySelector('.bk-pages').value), price: Number(r.querySelector('.bk-price').value) });
+            });
+            document.querySelectorAll('.prod-row').forEach(r => {
+                db.produtosAvulsos.push({ nome: r.querySelector('.pd-name').value, preco: Number(r.querySelector('.pd-price').value) });
+            });
+            return db;
+        }
+
+        // Helpers de UI
+        function addBookRow(d={}) {
+            document.getElementById('fotolivro-table').insertAdjacentHTML('beforeend', `<div class="list-item book-row"><input type="text" class="bk-size" value="${d.size||'20x20'}" style="width:80px"><input type="number" class="bk-pages" value="${d.pages||20}" style="width:60px"><input type="number" class="bk-price" value="${d.price||0}" style="width:80px"><button class="btn-remove" onclick="this.parentElement.remove()">X</button></div>`);
+        }
+        function addProdRow(d={}) {
+            document.getElementById('produtos-list').insertAdjacentHTML('beforeend', `<div class="list-item prod-row"><input type="text" class="pd-name" value="${d.nome||''}" style="flex:2"><input type="number" class="pd-price" value="${d.preco||0}" style="flex:1"><button class="btn-remove" onclick="this.parentElement.remove()">X</button></div>`);
+        }
+        function addCreditoRow() {
+            let opts = '<option value="">Selecione...</option>';
+            document.querySelectorAll('.prod-row').forEach(r => { const val = r.querySelector('.pd-name').value; if(val) opts += `<option value="${val}">${val}</option>`; });
+            document.getElementById('creditos-list').insertAdjacentHTML('beforeend', `<div class="list-item credito-row"><select class="cr-item" style="flex:2">${opts}</select><input type="number" class="cr-qtd" value="1" style="width:70px"><button class="btn-remove" onclick="this.parentElement.remove()">X</button></div>`);
+        }
+
+        // ==========================================
+        // O GERADOR FINAL
+        // ==========================================
+        async function gerarSiteCompleto() {
+            const nomeCli = document.getElementById('cliName').value || "Cliente";
+            const fotos = document.getElementById('cliFotos').value.split('\n').filter(x => x.trim());
+            
+            if(fotos.length === 0) return alert("Adicione fotos!");
+
+            const creditos = [];
+            document.querySelectorAll('.credito-row').forEach(r => {
+                const item = r.querySelector('.cr-item').value;
+                const qtd = Number(r.querySelector('.cr-qtd').value);
+                if(item && qtd > 0) creditos.push({ item, qtd });
+            });
+
+            // Config Final
+            const configDB = montarObjeto();
+            const configCliente = {
+                ...configDB,
+                cliente: { 
+                    nome: nomeCli, 
+                    entrada: Number(document.getElementById('cliEntrada').value),
+                    incluirAlbum: document.getElementById('cliIncluirAlbum').value === 'sim',
+                    creditos: creditos
+                },
+                fluxo: { 
+                    pedirEdicao: document.getElementById('fluxoModo').value === 'venda', 
+                    minimoFotosLivro: 15 
+                },
+                fotos: fotos
+            };
+
+            // 1. Carrega o modelo
+            try {
+                const response = await fetch('modelo_cliente.html');
+                if (!response.ok) throw new Error("Não foi possível ler o arquivo 'modelo_cliente.html'. Use Live Server.");
+                let template = await response.text();
+
+                // 2. Injeta a configuração
+                const scriptInjection = `window.NBV_CONFIG = ${JSON.stringify(configCliente, null, 4)};`;
+                template = template.replace('// [[INJECT_CONFIG_HERE]]', scriptInjection);
+
+                // 3. Gera o ZIP
+                const zip = new JSZip();
+                zip.file("index.html", template);
+                zip.generateAsync({type:"blob"}).then(function(content) {
+                    saveAs(content, `Pedido_${nomeCli.replace(/\s+/g,'_')}.zip`);
+                });
+
+            } catch (e) {
+                alert("ERRO CRÍTICO: " + e.message);
+                console.error(e);
+            }
+        }
+    </script>
+</body>
+</html>
