@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>NBV Admin - Gerador V15</title>
+    <title>NBV Admin - V16 (Blindado)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -11,6 +11,7 @@
     <style>
         :root { --primary: #0066cc; --bg: #f3f4f6; --sidebar: #fff; --text: #1f2937; --border: #e5e7eb; --success: #16a34a; --danger: #dc2626; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
         .sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; overflow-y: auto; }
         .main-content { flex: 1; padding: 30px; overflow-y: auto; position: relative; }
         
@@ -58,6 +59,7 @@
         <nav>
             <button class="nav-btn active" onclick="showTab('tab-github')"><i class="fab fa-github"></i> Conexão</button>
             <button class="nav-btn" onclick="showTab('tab-financeiro')"><i class="fas fa-coins"></i> Configurações</button>
+            <button class="nav-btn" onclick="showTab('tab-apresentacao')"><i class="fas fa-bullhorn"></i> Textos</button>
             <button class="nav-btn" onclick="showTab('tab-fotolivro')"><i class="fas fa-book"></i> Fotolivros</button>
             <button class="nav-btn" onclick="showTab('tab-produtos')"><i class="fas fa-images"></i> Avulsos</button>
             <div style="height:1px; background:#eee; margin:10px 0"></div>
@@ -133,6 +135,10 @@
 
         <div id="tab-financeiro" class="section">
             <h2>Configurações Gerais</h2>
+            <div class="row">
+                <div class="col"><label>Markup</label><input type="number" id="markup"></div>
+                <div class="col"><label>Custo Fixo</label><input type="number" id="custoFixo"></div>
+            </div>
             <div class="form-group"><label>WhatsApp</label><input type="text" id="whatsNum"></div>
             <div class="form-group"><label>Taxa Entrega</label><input type="number" id="shipPrice"></div>
             <div class="form-group"><label>Endereço Sede</label><input type="text" id="endSede"></div>
@@ -140,12 +146,17 @@
             <div class="form-group"><label>Marca D'água</label><input type="text" id="wmText"></div>
         </div>
 
+        <div id="tab-apresentacao" class="section">
+            <h2>Textos</h2>
+            <label>Fotolivro</label><textarea id="txtBook" rows="2"></textarea>
+            <input type="text" id="imgBook" placeholder="URL Imagem">
+            <hr>
+            <label>Revelação</label><textarea id="txtPrint" rows="2"></textarea>
+            <input type="text" id="imgPrint" placeholder="URL Imagem">
+        </div>
+
         <div id="tab-fotolivro" class="section">
             <h2>Tabela Fotolivro</h2>
-            <div class="row">
-                <div class="col"><label>Markup</label><input type="number" id="markup"></div>
-                <div class="col"><label>Custo Fixo</label><input type="number" id="custoFixo"></div>
-            </div>
             <div id="fotolivro-table"></div>
             <button class="btn btn-add" onclick="addBookRow()">+ Tamanho</button>
         </div>
@@ -158,12 +169,22 @@
 
     </div>
 
+    <script src="js/database.js" onerror="console.log('Database local não encontrado. Conecte ao GitHub.')"></script>
+
     <script>
         let ghState = { sha: null, isConnected: false };
 
         window.onload = () => {
             Github.restaurarCredenciais();
-            if(document.getElementById('ghToken').value) {
+            
+            // Tenta usar o banco local se carregou
+            if (window.NBV_DB) {
+                preencherCamposSeguro(window.NBV_DB);
+                Github.updateStatus(true); // Marca como pronto (local)
+                document.getElementById('status-display').innerHTML = '<i class="fas fa-hdd"></i> Modo Local';
+            } 
+            // Se não, tenta conectar GitHub
+            else if(document.getElementById('ghToken').value) {
                 Github.carregar(false);
             } else {
                 showTab('tab-github');
@@ -235,28 +256,25 @@
                         headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
                     });
 
-                    if(!res.ok) throw new Error(res.statusText);
+                    if(!res.ok) {
+                        if(res.status === 404) throw new Error("Arquivo não encontrado. Verifique o caminho (ex: js/database.js)");
+                        else throw new Error(res.statusText);
+                    }
 
                     const data = await res.json();
                     ghState.sha = data.sha;
                     
                     const content = decodeURIComponent(escape(window.atob(data.content)));
-                    
                     let jsonStr = content.trim();
-                    jsonStr = jsonStr.replace(/^window\.NBV_DB\s*=\s*/, ''); 
-                    jsonStr = jsonStr.replace(/;\s*$/, '');
-                    jsonStr = jsonStr.replace(/,(\s*[}\]])/g, '$1'); // Remove vírgulas finais
+                    jsonStr = jsonStr.replace(/^window\.NBV_DB\s*=\s*/, '').replace(/;\s*$/, '').replace(/,(\s*[}\]])/g, '$1');
 
                     let db;
-                    try {
-                        db = new Function('return ' + jsonStr)();
-                    } catch(parseError) {
-                        throw new Error("Erro de sintaxe no arquivo do GitHub.");
-                    }
+                    try { db = new Function('return ' + jsonStr)(); } 
+                    catch(e) { throw new Error("Erro de sintaxe no arquivo do GitHub."); }
 
-                    preencherCampos(db);
+                    preencherCamposSeguro(db);
                     this.updateStatus(true);
-                    if(showAlert) alert("Conectado com sucesso!");
+                    if(showAlert) alert("Dados carregados com sucesso!");
 
                 } catch(e) {
                     console.error(e);
@@ -304,21 +322,47 @@
             }
         };
 
-        // --- UI FILLER ---
-        function preencherCampos(db) {
-            document.getElementById('markup').value = db.financeiro.markup;
-            document.getElementById('custoFixo').value = db.financeiro.custoFixoDiagramacao;
-            document.getElementById('whatsNum').value = db.financeiro.whatsapp;
-            document.getElementById('shipPrice').value = db.logistica.taxaEnvio;
-            document.getElementById('freeCities').value = db.logistica.cidadesGratis.join(', ');
-            document.getElementById('endSede').value = db.logistica.enderecoSede;
-            document.getElementById('wmText').value = db.assets.watermarkText;
+        // --- FUNÇÃO BLINDADA PARA PREENCHER CAMPOS ---
+        function preencherCamposSeguro(db) {
+            // Garante que o objeto tenha todas as chaves para não dar erro de "undefined"
+            const defaults = {
+                financeiro: { markup:2.5, custoFixoDiagramacao:100, whatsapp:"", descontoPix:5, parcelasSemJuros:4, tabelaJuros:[] },
+                logistica: { taxaEnvio:30, enderecoSede:"", cidadesGratis:[] },
+                assets: { watermarkText:"NBV" },
+                apresentacao: { book:{}, print:{}, digital:{} },
+                tabelaFotolivros: [],
+                produtosAvulsos: []
+            };
+
+            // Mescla superficialmente para garantir existência
+            const safeDB = { ...defaults, ...db };
+            if(!safeDB.financeiro) safeDB.financeiro = defaults.financeiro;
+            if(!safeDB.logistica) safeDB.logistica = defaults.logistica;
+            if(!safeDB.apresentacao) safeDB.apresentacao = defaults.apresentacao;
+
+            // Preenche UI
+            document.getElementById('markup').value = safeDB.financeiro.markup || 2.5;
+            document.getElementById('custoFixo').value = safeDB.financeiro.custoFixoDiagramacao || 0;
+            document.getElementById('whatsNum').value = safeDB.financeiro.whatsapp || "";
+            
+            document.getElementById('shipPrice').value = safeDB.logistica.taxaEnvio || 0;
+            document.getElementById('endSede').value = safeDB.logistica.enderecoSede || "";
+            document.getElementById('freeCities').value = (safeDB.logistica.cidadesGratis || []).join(', ');
+            
+            document.getElementById('wmText').value = safeDB.assets?.watermarkText || "";
+
+            if(safeDB.apresentacao) {
+                document.getElementById('txtBook').value = safeDB.apresentacao.book?.text || "";
+                document.getElementById('imgBook').value = safeDB.apresentacao.book?.img || "";
+                document.getElementById('txtPrint').value = safeDB.apresentacao.print?.text || "";
+                document.getElementById('imgPrint').value = safeDB.apresentacao.print?.img || "";
+            }
             
             document.getElementById('fotolivro-table').innerHTML = ''; 
-            (db.tabelaFotolivros || []).forEach(i => addBookRow(i));
+            (safeDB.tabelaFotolivros || []).forEach(i => addBookRow(i));
 
             document.getElementById('produtos-list').innerHTML = ''; 
-            (db.produtosAvulsos || []).forEach(i => addProdRow(i));
+            (safeDB.produtosAvulsos || []).forEach(i => addProdRow(i));
         }
 
         function montarObjeto() {
@@ -339,8 +383,8 @@
                     enderecoSede: document.getElementById('endSede').value
                 },
                 apresentacao: {
-                    book: { text: "Fotolivro Premium", img: "https://via.placeholder.com/400x200" },
-                    print: { text: "Revelação Fuji", img: "https://via.placeholder.com/400x200" },
+                    book: { text: document.getElementById('txtBook').value, img: document.getElementById('imgBook').value },
+                    print: { text: document.getElementById('txtPrint').value, img: document.getElementById('imgPrint').value },
                     digital: { text: "Link Download", img: "https://via.placeholder.com/400x200" }
                 },
                 tabelaFotolivros: [],
@@ -424,7 +468,7 @@
                 },
                 fluxo: { 
                     pedirEdicao: document.getElementById('fluxoModo').value === 'venda', 
-                    minimoFotosLivro: 20 
+                    minimoFotosLivro: 15 
                 },
                 fotos: fotos
             };
