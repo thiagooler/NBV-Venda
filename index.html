@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>NBV Admin - V16 (Conexão Direta)</title>
+    <title>NBV Admin - V17 (Ultra Blindado)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -21,12 +21,11 @@
 
         .nav-btn { width: 100%; text-align: left; padding: 12px; margin-bottom: 5px; cursor: pointer; border: none; background: none; color: #666; font-weight: 600; display: flex; align-items: center; gap: 10px; border-radius: 6px; }
         .nav-btn:hover, .nav-btn.active { background: #eff6ff; color: var(--primary); }
-        
         .section { display: none; } .section.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
         
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; margin-top: 5px; font-family: monospace; }
-        label { font-weight: 600; font-size: 0.85rem; color: #374151; margin-top: 15px; display: block; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; margin-top: 5px; font-family: monospace; font-size:0.9rem; }
+        label { font-weight: 600; font-size: 0.85rem; color: #374151; margin-top: 12px; display: block; }
         .row { display: flex; gap: 15px; } .col { flex: 1; }
 
         .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
@@ -41,13 +40,14 @@
         .credito-box { border: 1px dashed var(--primary); padding: 15px; border-radius: 8px; background: #f0f9ff; margin-top: 15px; }
         
         #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; flex-direction: column; }
+        .debug-console { font-family: monospace; font-size: 0.75rem; background: #222; color: #0f0; padding: 10px; border-radius: 6px; margin-top: 10px; max-height: 100px; overflow-y: auto; display: none; }
     </style>
 </head>
 <body>
 
     <div id="loading-overlay">
-        <i class="fas fa-circle-notch fa-spin" style="font-size: 40px; color: var(--primary)"></i>
-        <p id="loading-text" style="margin-top: 15px; font-weight: 600; color: #555">Conectando ao GitHub...</p>
+        <i class="fas fa-spinner fa-spin" style="font-size: 40px; color: var(--primary)"></i>
+        <p id="loading-text" style="margin-top: 15px; font-weight: 600; color: #555">Conectando...</p>
     </div>
 
     <div class="sidebar">
@@ -58,18 +58,17 @@
         </div>
 
         <nav>
-            <button class="nav-btn active" onclick="showTab('tab-github')"><i class="fab fa-github"></i> Conexão GitHub</button>
+            <button class="nav-btn active" onclick="showTab('tab-github')"><i class="fab fa-github"></i> Conexão</button>
+            <button class="nav-btn" onclick="showTab('tab-financeiro')"><i class="fas fa-coins"></i> Configurações</button>
+            <button class="nav-btn" onclick="showTab('tab-fotolivro')"><i class="fas fa-book"></i> Fotolivros</button>
+            <button class="nav-btn" onclick="showTab('tab-produtos')"><i class="fas fa-images"></i> Avulsos</button>
             <div style="height:1px; background:#eee; margin:10px 0"></div>
-            <button class="nav-btn" onclick="showTab('tab-financeiro')"><i class="fas fa-coins"></i> 1. Configurações</button>
-            <button class="nav-btn" onclick="showTab('tab-fotolivro')"><i class="fas fa-book"></i> 2. Fotolivros</button>
-            <button class="nav-btn" onclick="showTab('tab-produtos')"><i class="fas fa-images"></i> 3. Avulsos</button>
-            <div style="height:1px; background:#eee; margin:10px 0"></div>
-            <button class="nav-btn" onclick="showTab('tab-cliente')"><i class="fas fa-user-plus"></i> 4. Novo Pedido</button>
+            <button class="nav-btn" onclick="showTab('tab-cliente')"><i class="fas fa-user-plus"></i> Novo Pedido</button>
         </nav>
         
         <div style="margin-top:auto; padding-top:15px; border-top:1px solid #eee">
             <button class="btn btn-primary" onclick="gerarSiteCompleto()" id="btn-gerar" disabled style="opacity:0.5; cursor:not-allowed">
-                <i class="fas fa-file-zipper"></i> GERAR SITE CLIENTE
+                <i class="fas fa-file-zipper"></i> GERAR SITE
             </button>
         </div>
     </div>
@@ -77,31 +76,22 @@
     <div class="main-content">
 
         <div id="tab-github" class="section active">
-            <h2>☁️ Conectar ao Repositório</h2>
-            <div class="card" style="background:white; padding:25px; border-radius:12px; border:1px solid #ddd; max-width: 600px;">
-                
+            <h2>☁️ Conexão GitHub (Database)</h2>
+            <div class="card" style="background:white; padding:20px; border-radius:8px; border:1px solid #ddd">
                 <div class="form-group">
-                    <label>Seu Token GitHub (PAT)</label>
+                    <label>Token Pessoal (GitHub PAT)</label>
                     <input type="password" id="ghToken" placeholder="ghp_...">
                 </div>
-                
-                <div class="form-group">
-                    <label>Seu Usuário GitHub</label>
-                    <input type="text" id="ghUser" placeholder="Ex: thiagowarrior">
-                </div>
-
                 <div class="row">
-                    <div class="col">
-                        <label>Nome do Repositório</label>
-                        <input type="text" id="ghRepo" value="NBV-Venda" style="background:#f0f9ff; border-color:#bae6fd">
-                    </div>
-                    <div class="col">
-                        <label>Caminho do Arquivo</label>
-                        <input type="text" id="ghPath" value="js/database.js" style="background:#f0f9ff; border-color:#bae6fd">
-                    </div>
+                    <div class="col"><label>Usuário</label><input type="text" id="ghUser"></div>
+                    <div class="col"><label>Repositório</label><input type="text" id="ghRepo" value="NBV-Venda"></div>
                 </div>
-
-                <div class="row" style="margin-top:25px">
+                <div class="form-group">
+                    <label>Caminho do Arquivo (Ex: js/database.js)</label>
+                    <input type="text" id="ghPath" value="js/database.js">
+                </div>
+                
+                <div class="row" style="margin-top:20px">
                     <div class="col">
                         <button class="btn btn-primary" onclick="Github.carregar(true)">
                             <i class="fas fa-download"></i> BAIXAR DADOS
@@ -109,17 +99,17 @@
                     </div>
                     <div class="col">
                         <button class="btn btn-github" onclick="Github.salvar()">
-                            <i class="fas fa-cloud-upload-alt"></i> SALVAR DADOS
+                            <i class="fas fa-upload"></i> SALVAR DADOS
                         </button>
                     </div>
                 </div>
-                <p id="gh-debug" style="margin-top:15px; font-size:0.8rem; color:#666; word-break:break-all"></p>
+                
+                <div id="debug-log" class="debug-console"></div>
             </div>
         </div>
 
         <div id="tab-financeiro" class="section">
             <h2>⚙️ Configurações Gerais</h2>
-            
             <div class="row">
                 <div class="col"><label>Markup</label><input type="number" id="markup"></div>
                 <div class="col"><label>Custo Fixo</label><input type="number" id="custoFixo"></div>
@@ -128,7 +118,7 @@
                 <div class="col"><label>Desc. Pix (%)</label><input type="number" id="descPix"></div>
                 <div class="col"><label>Parcelas S/ Juros</label><input type="number" id="parcSemJuros"></div>
             </div>
-            <label>Tabela Juros (Array)</label><input type="text" id="tabJuros">
+            <label>Tabela Juros</label><input type="text" id="tabJuros">
             <label>WhatsApp</label><input type="text" id="whatsNum">
 
             <hr style="margin:20px 0; border:0; border-top:1px solid #eee">
@@ -138,17 +128,14 @@
             <label>Cidades Grátis</label><input type="text" id="cidadesGratis">
 
             <hr style="margin:20px 0; border:0; border-top:1px solid #eee">
-            <h3>🎨 Visual</h3>
+            <h3>🎨 Visual e Textos</h3>
             <label>Marca D'água</label><input type="text" id="wmText">
-        </div>
-
-        <div id="tab-apresentacao" class="section">
-            <h2>Textos</h2>
+            
             <label>Texto Fotolivro</label><textarea id="txtBook" rows="2"></textarea>
-            <input type="text" id="imgBook" placeholder="URL Imagem">
-            <hr>
+            <input type="text" id="imgBook" placeholder="URL Imagem Fotolivro">
+            
             <label>Texto Revelação</label><textarea id="txtPrint" rows="2"></textarea>
-            <input type="text" id="imgPrint" placeholder="URL Imagem">
+            <input type="text" id="imgPrint" placeholder="URL Imagem Revelação">
         </div>
 
         <div id="tab-fotolivro" class="section">
@@ -183,6 +170,14 @@
                         </select>
                     </div>
                 </div>
+                
+                <div class="form-group">
+                    <label>Modo de Venda:</label>
+                    <select id="fluxoModo">
+                        <option value="venda">Venda Completa</option>
+                        <option value="aprovacao">Apenas Aprovação</option>
+                    </select>
+                </div>
 
                 <div id="area-contrato" style="display:none; background:#e0f2fe; padding:15px; margin-top:10px; border-radius:8px">
                     <label>Valor Total Contrato</label><input type="number" id="ctrValorTotal">
@@ -213,7 +208,7 @@
         window.onload = () => {
             Github.restaurarCredenciais();
             if(document.getElementById('ghToken').value) {
-                Github.carregar(false);
+                Github.carregar(false); // Tenta conectar silenciosamente
             } else {
                 showTab('tab-github');
             }
@@ -223,6 +218,7 @@
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
+            
             const btns = document.querySelectorAll('.nav-btn');
             for(let b of btns) { if(b.getAttribute('onclick').includes(id)) b.classList.add('active'); }
         }
@@ -231,7 +227,14 @@
             document.getElementById('area-contrato').style.display = document.getElementById('cliIncluirAlbum').value === 'sim' ? 'block' : 'none';
         }
 
-        // --- GITHUB API ---
+        function logDebug(msg) {
+            const el = document.getElementById('debug-log');
+            el.style.display = 'block';
+            el.innerText += `> ${msg}\n`;
+            el.scrollTop = el.scrollHeight;
+            console.log(msg);
+        }
+
         const Github = {
             restaurarCredenciais: function() {
                 ['ghToken','ghUser','ghRepo','ghPath'].forEach(k => {
@@ -248,7 +251,12 @@
             getApiUrl: function() {
                 const u = document.getElementById('ghUser').value.trim();
                 const r = document.getElementById('ghRepo').value.trim();
-                const p = document.getElementById('ghPath').value.trim();
+                let p = document.getElementById('ghPath').value.trim();
+                
+                // Correção automática de espaços comuns no path
+                p = p.replace(/\s/g, ''); 
+                document.getElementById('ghPath').value = p; // Atualiza visualmente pro usuário ver
+
                 return `https://api.github.com/repos/${u}/${r}/contents/${p}`;
             },
 
@@ -265,7 +273,7 @@
                 
                 if(connected) {
                     el.className = 'status-bar status-connected';
-                    el.innerHTML = '<i class="fas fa-check-circle"></i> Conectado ao GitHub';
+                    el.innerHTML = '<i class="fas fa-check-circle"></i> Conectado';
                     btn.disabled = false;
                     btn.style.opacity = 1;
                     btn.style.cursor = 'pointer';
@@ -286,7 +294,7 @@
 
                 this.setLoading(true, "Baixando dados...");
                 const apiUrl = this.getApiUrl();
-                document.getElementById('gh-debug').innerText = "Tentando: " + apiUrl;
+                logDebug("Acessando: " + apiUrl);
 
                 try {
                     const res = await fetch(apiUrl, {
@@ -294,48 +302,55 @@
                     });
 
                     if(!res.ok) {
-                        if(res.status === 404) throw new Error(`Arquivo não encontrado.\nVerifique se a pasta 'js' existe no repo '${document.getElementById('ghRepo').value}'.`);
+                        logDebug(`Erro HTTP: ${res.status}`);
+                        if(res.status === 404) throw new Error("Arquivo não encontrado (404). Verifique Repositório e Caminho.");
                         else throw new Error(res.status + " " + res.statusText);
                     }
 
                     const data = await res.json();
                     ghState.sha = data.sha;
+                    logDebug("SHA obtido: " + data.sha);
                     
                     const content = decodeURIComponent(escape(window.atob(data.content)));
+                    logDebug("Conteúdo baixado. Processando...");
                     
-                    // Limpeza do JS para extrair JSON
+                    // Limpeza extrema do JS
                     let jsonStr = content.trim();
                     jsonStr = jsonStr.replace(/^window\.NBV_DB\s*=\s*/, ''); 
                     jsonStr = jsonStr.replace(/;\s*$/, '');
-                    
-                    // Tratamento de vírgula extra (trailing comma) que quebra JSON
-                    jsonStr = jsonStr.replace(/,(\s*[}\]])/g, '$1');
+                    jsonStr = jsonStr.replace(/,(\s*[}\]])/g, '$1'); // Trailing commas
 
                     let db;
                     try {
                         db = new Function('return ' + jsonStr)();
                     } catch(parseError) {
-                        throw new Error("Erro de sintaxe no arquivo do GitHub: " + parseError.message);
+                        logDebug("Erro de parse: " + parseError.message);
+                        // Fallback: Tenta um objeto vazio se falhar, para não travar
+                        db = {};
+                        if(showAlert) alert("Aviso: O arquivo database.js tem erros de sintaxe. Carregando defaults.");
                     }
 
-                    preencherCamposSeguro(db);
+                    // Preenchimento Seguro (Nunca trava com undefined)
+                    preencherCamposSeguro(db || {});
                     this.updateStatus(true);
-                    if(showAlert) alert("✅ Conectado! Dados carregados.");
+                    logDebug("Sucesso!");
+                    if(showAlert) alert("✅ Conectado com sucesso!");
 
                 } catch(e) {
                     console.error(e);
+                    logDebug("EXCEPTION: " + e.message);
                     this.updateStatus(false);
-                    if(showAlert) alert("ERRO: " + e.message);
+                    if(showAlert) alert("FALHA DE CONEXÃO:\n" + e.message);
                 } finally {
                     this.setLoading(false);
                 }
             },
 
             salvar: async function() {
-                if(!ghState.isConnected) { alert("Conecte primeiro!"); return; }
+                if(!ghState.isConnected) { alert("Conecte-se primeiro!"); return; }
                 const token = document.getElementById('ghToken').value;
                 
-                this.setLoading(true, "Salvando...");
+                this.setLoading(true, "Salvando na nuvem...");
 
                 try {
                     // Update SHA antes de salvar
@@ -352,14 +367,14 @@
                     const res = await fetch(this.getApiUrl(), {
                         method: 'PUT',
                         headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ message: "Update via Admin", content: contentBase64, sha: ghState.sha })
+                        body: JSON.stringify({ message: "Update via Admin V17", content: contentBase64, sha: ghState.sha })
                     });
 
                     if(!res.ok) throw new Error(await res.text());
                     
                     const resData = await res.json();
                     ghState.sha = resData.content.sha;
-                    alert("✅ Salvo com sucesso!");
+                    alert("✅ Salvo no GitHub!");
 
                 } catch(e) {
                     alert("Erro ao salvar: " + e.message);
@@ -371,59 +386,63 @@
 
         // --- PREENCHIMENTO SEGURO ---
         function preencherCamposSeguro(db) {
-            // Cria defaults se vier vazio
-            const safeDB = {
+            // Objeto Default Completo
+            const def = {
                 financeiro: { markup:2.5, custoFixoDiagramacao:30, whatsapp:"", descontoPix:5, parcelasSemJuros:4, tabelaJuros:[0] },
                 logistica: { taxaEnvio:30, enderecoSede:"", cidadesGratis:[] },
                 assets: { watermarkText:"NBV" },
                 apresentacao: { book:{}, print:{}, digital:{} },
-                tabelaFotolivros: [],
-                produtosAvulsos: [],
-                regrasDiagramacao: { "15x20":3, "20x30":4, "30x40":5 }
+                tabelaFotolivros: [], productosAvulsos: [], regrasDiagramacao: { "15x20":3, "20x30":4, "30x40":5 }
             };
             
-            // Mescla
-            Object.keys(safeDB).forEach(k => { if(db[k]) safeDB[k] = db[k]; });
-            if(db.financeiro) safeDB.financeiro = { ...safeDB.financeiro, ...db.financeiro };
-            if(db.logistica) safeDB.logistica = { ...safeDB.logistica, ...db.logistica };
-            if(db.apresentacao) safeDB.apresentacao = { ...safeDB.apresentacao, ...db.apresentacao };
+            // Garante que db não seja null
+            if (!db) db = {};
+
+            // Acessores seguros (Null Coalescing)
+            const fin = db.financeiro || def.financeiro;
+            const log = db.logistica || def.logistica;
+            const ast = db.assets || def.assets;
+            const apr = db.apresentacao || def.apresentacao;
+            const tab = db.tabelaFotolivros || [];
+            const prd = db.produtosAvulsos || [];
+            const reg = db.regrasDiagramacao || def.regrasDiagramacao;
 
             // Preenche UI
-            document.getElementById('markup').value = safeDB.financeiro.markup;
-            document.getElementById('custoFixo').value = safeDB.financeiro.custoFixoDiagramacao;
-            document.getElementById('descPix').value = safeDB.financeiro.descontoPix;
-            document.getElementById('parcSemJuros').value = safeDB.financeiro.parcelasSemJuros;
-            document.getElementById('tabJuros').value = (safeDB.financeiro.tabelaJuros || []).join(', ');
-            document.getElementById('whatsNum').value = safeDB.financeiro.whatsapp;
+            document.getElementById('markup').value = fin.markup || 2.5;
+            document.getElementById('custoFixo').value = fin.custoFixoDiagramacao || 0;
+            document.getElementById('whatsNum').value = fin.whatsapp || "";
+            document.getElementById('descPix').value = fin.descontoPix || 5;
+            document.getElementById('parcSemJuros').value = fin.parcelasSemJuros || 4;
+            document.getElementById('tabJuros').value = (fin.tabelaJuros || []).join(', ');
             
-            document.getElementById('taxaEnvio').value = safeDB.logistica.taxaEnvio;
-            document.getElementById('endSede').value = safeDB.logistica.enderecoSede;
-            document.getElementById('cidadesGratis').value = (safeDB.logistica.cidadesGratis || []).join(', ');
+            document.getElementById('taxaEnvio').value = log.taxaEnvio || 0;
+            document.getElementById('endSede').value = log.enderecoSede || "";
+            document.getElementById('cidadesGratis').value = (log.cidadesGratis || []).join(', ');
             
-            document.getElementById('wmText').value = safeDB.assets.watermarkText;
+            document.getElementById('wmText').value = ast.watermarkText || "";
 
-            if(safeDB.apresentacao) {
-                document.getElementById('txtBook').value = safeDB.apresentacao.book?.text || "";
-                document.getElementById('imgBook').value = safeDB.apresentacao.book?.img || "";
-                document.getElementById('txtPrint').value = safeDB.apresentacao.print?.text || "";
-                document.getElementById('imgPrint').value = safeDB.apresentacao.print?.img || "";
-            }
+            // Textos
+            document.getElementById('txtBook').value = apr.book?.text || "";
+            document.getElementById('imgBook').value = apr.book?.img || "";
+            document.getElementById('txtPrint').value = apr.print?.text || "";
+            document.getElementById('imgPrint').value = apr.print?.img || "";
             
+            // Tabelas
             document.getElementById('fotolivro-table').innerHTML = ''; 
-            (safeDB.tabelaFotolivros || []).forEach(i => addBookRow(i));
+            tab.forEach(i => addBookRow(i));
 
             document.getElementById('produtos-list').innerHTML = ''; 
-            (safeDB.produtosAvulsos || []).forEach(i => addProdRow(i));
+            prd.forEach(i => addProdRow(i));
 
+            // Regras
             const regContainer = document.getElementById('regras-diagramacao');
             regContainer.innerHTML = '';
-            const regras = safeDB.regrasDiagramacao || { "15x20":3, "20x30":4, "30x40":5 };
-            for(let size in regras) {
+            for(let size in reg) {
                 regContainer.insertAdjacentHTML('beforeend', 
                     `<div class="list-item regra-row">
                         <label style="width:100px; margin:0; margin-top:0">${size}:</label>
-                        <input type="text" class="re-size hidden" value="${size}" style="display:none">
-                        <input type="number" class="re-qtd" value="${regras[size]}" style="width:60px">
+                        <input type="text" class="re-size" value="${size}" style="display:none">
+                        <input type="number" class="re-qtd" value="${reg[size]}" style="width:60px">
                         <span style="font-size:0.9rem; color:#666; margin-left:5px">fotos/pág</span>
                     </div>`
                 );
@@ -514,6 +533,7 @@
             </div>`);
         }
 
+        // GERADOR
         async function gerarSiteCompleto() {
             if(!ghState.isConnected) return alert("Conecte ao GitHub!");
             const nomeCli = document.getElementById('cliName').value || "Cliente";
