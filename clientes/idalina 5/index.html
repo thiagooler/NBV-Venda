@@ -1,0 +1,538 @@
+<script>window.NBV_CONFIG = {
+  "assets": {
+    "watermarkText": "",
+    "opacity": 0.1
+  },
+  "fluxo": {
+    "pedirEdicao": true,
+    "pedirAprovacao": true,
+    "minimoFotosLivro": 20
+  },
+  "logistica": {
+    "taxaEnvio": 30,
+    "cidadesGratis": [
+      "Boa Ventura de São Roque",
+      "Turvo",
+      "Ibema (Restaurante do Boneco)",
+      "Pitanga",
+      "Santa Maria do Oeste"
+    ],
+    "enderecoSede": "Rod. PR 466 km 210, Bairro Coamo (Anexo Mercado JL)"
+  },
+  "financeiro": {
+    "descontoPix": 5,
+    "parcelasSemJuros": 4,
+    "parcelasBoleto": 6,
+    "tabelaJuros": [
+      0,
+      4.59,
+      5.99,
+      7.49,
+      8.99,
+      10.49,
+      11.99,
+      13.49,
+      14.99,
+      16.49,
+      17.99,
+      21
+    ],
+    "whatsapp": "5542998370150",
+    "markup": 2.5,
+    "custoFixoDiagramacao": 30
+  },
+  "apresentacao": {
+    "fotolivro": {
+      "titulo": "Memórias que duram para sempre",
+      "texto": "Capa dura, papel fotográfico de alta gramatura e abertura 180°. Uma joia para a família.",
+      "img": "https://via.placeholder.com/600x400?text=Fotolivro+Premium"
+    },
+    "revelacao": {
+      "titulo": "Sinta a fotografia em suas mãos",
+      "texto": "Papel Fujifilm profissional. Cores vivas por mais de 100 anos.",
+      "img": "https://via.placeholder.com/600x400?text=Revelacao+Fujifilm"
+    },
+    "digital": {
+      "titulo": "Arquivo Digital (Download)",
+      "texto": "Receba o link para download. Atenção: Recomendamos a impressão para garantir a durabilidade.",
+      "img": "https://via.placeholder.com/600x400?text=Arquivos+Digitais"
+    }
+  },
+  "produtosAvulsos": [
+    {
+      "nome": "Foto 10x15",
+      "preco": 10,
+      "icone": "fas fa-image"
+    },
+    {
+      "nome": "Foto 15x20",
+      "preco": 20,
+      "icone": "fas fa-image"
+    },
+    {
+      "nome": "Foto 20x30",
+      "preco": 30,
+      "icone": "fas fa-image"
+    },
+    {
+      "nome": "Foto 30x40",
+      "preco": 40,
+      "icone": "fas fa-image"
+    },
+    {
+      "nome": "Foto 40x60",
+      "preco": 60,
+      "icone": "fas fa-image"
+    },
+    {
+      "nome": "Porta retrato 10x15",
+      "preco": 20,
+      "icone": "fas fa-portrait"
+    },
+    {
+      "nome": "Porta retrato 15x20",
+      "preco": 35,
+      "icone": "fas fa-portrait"
+    },
+    {
+      "nome": "Porta retrato 20x30",
+      "preco": 45,
+      "icone": "fas fa-portrait"
+    },
+    {
+      "nome": "Porta retrato 30x40",
+      "preco": 120,
+      "icone": "fas fa-portrait"
+    },
+    {
+      "nome": "Porta retrato 40x60",
+      "preco": 290,
+      "icone": "fas fa-portrait"
+    },
+    {
+      "nome": "Arquivo Digital",
+      "preco": 8,
+      "icone": "fas fa-cloud-download-alt"
+    }
+  ],
+  "tabelaFotolivros": [
+    {
+      "size": "30x40",
+      "pages": 20,
+      "price": 592,
+      "priceBox": 754
+    },
+    {
+      "size": "30x40",
+      "pages": 30,
+      "price": 750,
+      "priceBox": 912
+    },
+    {
+      "size": "30x40",
+      "pages": 40,
+      "price": 879,
+      "priceBox": 1070
+    },
+    {
+      "size": "30x40",
+      "pages": 50,
+      "price": 1037,
+      "priceBox": 1228
+    },
+    {
+      "size": "30x40",
+      "pages": 60,
+      "price": 1195,
+      "priceBox": 1386
+    },
+    {
+      "size": "30x40",
+      "pages": 80,
+      "price": 1511,
+      "priceBox": 1702
+    },
+    {
+      "size": "30x40",
+      "pages": 100,
+      "price": 1827,
+      "priceBox": 2018
+    },
+    {
+      "size": "20x30",
+      "pages": 20,
+      "price": 317,
+      "priceBox": 443
+    },
+    {
+      "size": "20x30",
+      "pages": 30,
+      "price": 406,
+      "priceBox": 532
+    },
+    {
+      "size": "20x30",
+      "pages": 50,
+      "price": 584,
+      "priceBox": 710
+    },
+    {
+      "size": "20x30",
+      "pages": 60,
+      "price": 673,
+      "priceBox": 799
+    },
+    {
+      "size": "20x30",
+      "pages": 80,
+      "price": 851,
+      "priceBox": 977
+    },
+    {
+      "size": "20x30",
+      "pages": 100,
+      "price": 1029,
+      "priceBox": 1155
+    },
+    {
+      "size": "15x20",
+      "pages": 20,
+      "price": 214,
+      "priceBox": 356
+    },
+    {
+      "size": "15x20",
+      "pages": 30,
+      "price": 269,
+      "priceBox": 382
+    },
+    {
+      "size": "15x20",
+      "pages": 40,
+      "price": 324,
+      "priceBox": 437
+    },
+    {
+      "size": "15x20",
+      "pages": 50,
+      "price": 379,
+      "priceBox": 492
+    },
+    {
+      "size": "15x20",
+      "pages": 60,
+      "price": 434,
+      "priceBox": 547
+    },
+    {
+      "size": "15x20",
+      "pages": 70,
+      "price": 489,
+      "priceBox": 602
+    },
+    {
+      "size": "15x20",
+      "pages": 80,
+      "price": 544,
+      "priceBox": 657
+    },
+    {
+      "size": "15x20",
+      "pages": 100,
+      "price": 100,
+      "priceBox": 767
+    }
+  ],
+  "regrasDiagramacao": {
+    "15x20": 3,
+    "20x30": 4,
+    "30x40": 5
+  },
+  "cliente": {
+    "nome": "idalina 5",
+    "entrada": 50,
+    "incluirAlbum": false,
+    "contrato": {
+      "tamanho": "15x20",
+      "qtdFotos": 20,
+      "valorTotal": 0
+    },
+    "creditos": [
+      {
+        "item": "Foto 20x30",
+        "qtd": 3
+      }
+    ]
+  },
+  "fotos": [
+    "https://i.postimg.cc/3wKv1b2R/foto-0815.jpg",
+    "https://i.postimg.cc/jjs7cky2/foto-0817.jpg",
+    "https://i.postimg.cc/5txCgk86/foto-0819.jpg",
+    "https://i.postimg.cc/pd2FC1Km/foto-0826.jpg",
+    "https://i.postimg.cc/667YCyWx/foto-0829.jpg",
+    "https://i.postimg.cc/NGypR5sY/foto-0830.jpg",
+    "https://i.postimg.cc/mZ0VjBks/foto-0831.jpg",
+    "https://i.postimg.cc/ryvgjMmv/foto-0838.jpg",
+    "https://i.postimg.cc/bYKLgprd/foto-0840.jpg",
+    "https://i.postimg.cc/9FZbNKwy/foto-0843.jpg",
+    "https://i.postimg.cc/65nc1g4d/foto-0844.jpg",
+    "https://i.postimg.cc/Dwh6V61x/foto-1051.jpg",
+    "https://i.postimg.cc/fRsC4CxQ/foto-1053.jpg",
+    "https://i.postimg.cc/kgyc7Scx/foto-1125.jpg",
+    "https://i.postimg.cc/nh1knmkB/foto-1308.jpg",
+    "https://i.postimg.cc/bvNRrvCg/foto-1435.jpg",
+    "https://i.postimg.cc/jjdh2j3V/foto-1478.jpg",
+    "https://i.postimg.cc/Jh65kWSn/foto-1862.jpg",
+    "https://i.postimg.cc/FKWVLQw9/foto-1864.jpg",
+    "https://i.postimg.cc/tTstdMHJ/foto-1869.jpg",
+    "https://i.postimg.cc/0QzdGBqd/foto-1874.jpg",
+    "https://i.postimg.cc/k4LNTvnw/foto-1875.jpg",
+    "https://i.postimg.cc/2SdW4fLD/foto-1876.jpg"
+  ]
+};</script><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Galeria Studio NBV</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    :root { --primary: #0066cc; --primary-dark: #004c99; --bg: #f4f6f8; --card: #fff; --text: #1f2937; --success: #10b981; --warning: #f59e0b; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 50px; }
+    .hidden { display: none !important; }
+    .fade-in { animation: fadeIn 0.4s ease-out; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: #e2e8f0; color: #333; }
+    .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+    .btn-success { background: var(--success); color: white; }
+    .header { background: #111; color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+    .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .card { background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); text-align: center; border: 1px solid #e5e7eb; transition: transform 0.2s; position:relative; }
+    .card img { max-width: 100%; border-radius: 8px; margin-bottom: 10px; height: 150px; object-fit: cover; }
+    .photo-viewer { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; margin-bottom: 20px; }
+    .img-wrapper { position: relative; display: inline-block; width: 100%; min-height: 200px; background: #eee; border-radius: 8px; overflow: hidden; }
+    .img-wrapper img { width: 100%; height: auto; display: block; pointer-events: none; }
+    .prod-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
+    .stepper { display: flex; align-items: center; gap: 10px; }
+    .stepper button { width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ccc; background: white; font-weight: bold; cursor: pointer; }
+    .status-dock { background: #1e293b; color: white; padding: 15px; border-radius: 8px; margin-top: 15px; font-size: 0.9rem; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .status-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+    .status-row.highlight { color: #4ade80; font-weight: bold; border-top: 1px solid #334155; padding-top: 5px; margin-top: 5px; }
+    .badge-free { background: var(--success); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-left: 5px; }
+    .credit-tag { background: #e0f2fe; color: #0284c7; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; display: inline-block; margin-bottom: 10px; font-weight: 600; border: 1px solid #bae6fd; }
+    .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .modal-content { background: white; padding: 25px; border-radius: 12px; max-width: 500px; width: 100%; text-align: center; position: relative; max-height: 90vh; overflow-y: auto; }
+    .modal-full { width: 95%; height: 95%; max-width: 1200px; background: black; display:flex; flex-direction:column; }
+    .close-modal { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color:#666 }
+    .close-modal-white { position: absolute; top: 10px; right: 15px; font-size: 30px; cursor: pointer; color:#fff; z-index:1001 }
+    .checkout-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 0.9rem; }
+    .checkout-table th { text-align: left; padding: 8px; border-bottom: 2px solid #eee; color: #666; }
+    .checkout-table td { padding: 8px; border-bottom: 1px solid #eee; }
+    .checkout-total { font-size: 1.2rem; font-weight: 800; color: var(--primary); text-align: right; padding-top: 10px; }
+    .row-discount { color: var(--success); } .row-entry { color: #dc2626; }
+    .intro-opt { background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; cursor: pointer; border: 2px solid transparent; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .intro-opt:hover { border-color: var(--primary); transform: translateY(-2px); }
+    select.form-input, input.form-input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 10px; background: #fff; font-size: 1rem; }
+    label.form-label { display: block; text-align: left; font-weight: 600; margin-bottom: 5px; color: #333; margin-top: 15px; }
+    .alert-box { background: #fff3cd; color: #856404; padding: 10px; border-radius: 6px; font-size: 0.9rem; margin-bottom: 10px; text-align: left; border: 1px solid #ffeeba; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 5px; }
+    .gallery-item { aspect-ratio: 1; position: relative; cursor: pointer; }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+    .lightbox-img { max-width:100%; max-height:100%; object-fit:contain; margin:auto; }
+</style>
+</head>
+<body>
+
+<div id="app"><div style="text-align:center; padding:50px"><i class="fas fa-spinner fa-spin fa-2x"></i></div></div>
+
+<script>
+const App = {
+    data: {},
+    state: { view: 'init', mode: '', photoIdx: 0, cart: {} },
+
+    init() {
+        if(!window.NBV_CONFIG) return document.getElementById('app').innerHTML = "Erro Config";
+        this.data = window.NBV_CONFIG;
+        if(this.data.fluxo.pedirEdicao) this.state.view = 'editing_choice';
+        else this.state.view = 'home';
+        this.render();
+    },
+
+    render() {
+        const app = document.getElementById('app');
+        if (this.state.view === 'editing_choice') app.innerHTML = this.viewEditingChoice();
+        else if (this.state.view === 'home') app.innerHTML = this.viewHome();
+        else if (this.state.view === 'selection') app.innerHTML = this.viewSelection();
+        else if (this.state.view === 'persuasion') app.innerHTML = this.viewPersuasion();
+        else if (this.state.view === 'checkout') app.innerHTML = this.viewCheckout();
+    },
+
+    // --- 1. INTRO (Edição) ---
+    viewEditingChoice() {
+        return `<div class="header">Studio<span>NBV</span></div><div class="container fade-in"><h2 style="text-align:center">Escolha a Edição</h2><p style="text-align:center;color:#666">Selecione qual opção você deseja:</p><div class="intro-opt" onclick="App.chooseEditing(true)"><h3>✨ Opção 1: Com Edição</h3><p>Tratamento artístico completo. <strong>Prazo: 30 dias</strong></p><div style="color:var(--primary);font-weight:bold;margin-top:5px">Quero com Edição ➔</div></div><div class="intro-opt" onclick="App.chooseEditing(false)"><h3>⚡ Opção 2: Produção Rápida</h3><p>Fotos originais. <strong>Prazo: 10 dias</strong></p><div style="color:var(--success);font-weight:bold;margin-top:5px">Sem Edição ➔</div></div></div>`;
+    },
+    chooseEditing(want) {
+        if(want) window.location.href = `https://wa.me/${this.data.financeiro.whatsapp}?text=Ola, gostaria de solicitar a Opcao 1 (Com Edicao).`;
+        else { this.state.view = 'home'; this.render(); window.scrollTo(0,0); }
+    },
+
+    // --- 2. HOME ---
+    viewHome() {
+        const total=this.data.fotos.length; const min=this.data.fluxo.minimoFotosLivro||20;
+        const info=this.data.apresentacao; const bookCredit=this.data.cliente.incluirAlbum?'Incluso no Pacote':'';
+        let bookHtml=''; 
+        if(total>=min) {
+            const op=this.calcBookOptions(total)[0];
+            bookHtml=`<div class="card" style="border:2px solid var(--primary)"><img src="${info.fotolivro.img}"><h2>📚 Fotolivro</h2><p>${info.fotolivro.texto}</p>${bookCredit?`<div class="credit-tag">${bookCredit}</div>`:''}<div style="margin:10px 0;font-size:0.9rem">A partir de <b>${this.formatMoney(op.total)}</b></div><button class="btn btn-primary" onclick="App.startSelection('fotolivro')">Montar Fotolivro</button></div>`;
+        }
+        return `<div class="header">Studio<span>NBV</span></div><div class="container fade-in"><h2 style="text-align:center;margin-bottom:10px">Olá, ${this.data.cliente.nome}!</h2><p style="text-align:center;color:#666;margin-bottom:30px">Selecione qual opção você deseja:</p><div class="menu-grid"><div class="card"><h2>📸 Espiar Fotos</h2><p>Veja todas as ${total} fotos.</p><button class="btn btn-secondary" onclick="App.openGalleryModal()">Ver Galeria</button></div>${bookHtml}<div class="card"><img src="${info.revelacao.img}"><h2>🖼️ Revelação</h2><p>${info.revelacao.texto}</p><button class="btn btn-primary" onclick="App.startSelection('revelacao')">Selecionar Fotos</button></div><div class="card"><img src="${info.digital.img}"><h2>💾 Arquivo Digital</h2><p>${info.digital.texto}</p><button class="btn btn-outline" onclick="App.goToPersuasion()">Comprar Arquivos</button></div></div></div>${this.renderGalleryModal()}${this.renderLightbox()}`;
+    },
+
+    // --- 3. SELEÇÃO ---
+    viewSelection() {
+        const idx=this.state.photoIdx; const total=this.data.fotos.length; const status=this.calcStatusSelection();
+        return `<div class="header"><button onclick="App.goBack()" style="float:left;background:none;border:none;color:white"><i class="fas fa-arrow-left"></i></button>Foto ${idx+1}/${total}</div><div class="container fade-in"><div class="photo-viewer"><div class="img-wrapper"><img src="${this.data.fotos[idx]}"></div><div style="text-align:left;margin-top:15px"><h3 style="font-size:1rem;margin-bottom:10px">Adicionar ao pedido:</h3>${this.renderProductList(idx)}</div><div class="nav-buttons" style="display:flex;gap:10px;margin-top:20px"><button class="btn btn-secondary" onclick="App.nav(-1)" ${idx===0?'disabled':''}>Anterior</button>${idx<total-1?`<button class="btn btn-primary" onclick="App.nav(1)">Próxima</button>`:`<button class="btn btn-success" onclick="App.finishSelection()">Finalizar</button>`}</div><div class="status-dock"><div class="status-row"><span>🛒 Itens:</span><span>${status.qtdItens}</span></div><div class="status-row"><span>🎁 Créditos:</span><span>${status.creditosUsados}</span></div><div class="status-row"><span>💳 Entrada Paga:</span><span>${this.formatMoney(this.data.cliente.entrada)}</span></div><div class="status-row highlight"><span>💰 Total Parcial:</span><span>${this.formatMoney(status.total)}</span></div></div></div></div>`;
+    },
+
+    renderProductList(idx) {
+        const items=this.state.cart[idx]||{}; const hasPrint=Object.keys(items).some(k=>k.includes('Foto')&&items[k]>0); let html='';
+        this.data.produtosAvulsos.filter(p=>p.nome.includes('Foto')).forEach(p=>{
+            html+=this.renderStepper(p, items[p.nome]||0, idx);
+            if(items[p.nome]>0){ const size=p.nome.replace('Foto ',''); const fr=this.data.produtosAvulsos.find(f=>f.nome.includes('Porta')&&f.nome.includes(size)); if(fr) html+=`<div style="margin-left:20px;border-left:2px solid #eee;padding-left:10px">${this.renderStepper(fr, items[fr.nome]||0, idx, true)}</div>`; }
+        });
+        const dig=this.data.produtosAvulsos.find(p=>p.nome.includes('Arquivo'));
+        if(dig) html+=hasPrint?`<div class="prod-item" style="background:#dcfce7;border-radius:6px;margin-top:5px"><div><b>Arquivo Digital</b> <span class="badge-free">BRINDE!</span></div><div style="color:var(--success)"><i class="fas fa-check"></i> Incluso</div></div>`:this.renderStepper(dig,items[dig.nome]||0,idx);
+        return html;
+    },
+    renderStepper(p,q,idx,isF=false) { return `<div class="prod-item"><div><div style="font-weight:600;font-size:0.9rem">${isF?'↪ ':''}${p.nome}</div><div style="font-size:0.8rem;color:#666">${this.formatMoney(p.preco)}</div></div><div class="stepper"><button onclick="App.updateCart(${idx},'${p.nome}',-1)">-</button><span>${q}</span><button onclick="App.updateCart(${idx},'${p.nome}',1)">+</button></div></div>`; },
+
+    // --- 4. CHECKOUT ---
+    viewCheckout() {
+        const res=this.calcFinalCheckout(); let rows=''; res.lines.forEach(l=>{rows+=`<tr><td>${l.qtd}x ${l.nome}</td><td>${this.formatMoney(l.unit)}</td><td>${this.formatMoney(l.total)}</td></tr>`});
+        if(res.discount>0) rows+=`<tr class="row-discount"><td colspan="2">Créditos/Brindes</td><td>- ${this.formatMoney(res.discount)}</td></tr>`;
+        if(res.entry>0) rows+=`<tr class="row-entry"><td colspan="2">Entrada Paga</td><td>- ${this.formatMoney(res.entry)}</td></tr>`;
+        
+        // Regras Entrega
+        const cidades=this.data.logistica.cidadesGratis;
+        const optsDel=`<option value="">-- Selecione --</option>`+
+            `<option value="Retirada">Retirar na Sede (Sítio Boa Ventura)</option>`+
+            cidades.map(c=>`<option value="${c}">Entrega em ${c} (Grátis)</option>`).join('')+
+            `<option value="Transportadora">Transportadora (+ ${this.formatMoney(this.data.logistica.taxaEnvio)})</option>`;
+        
+        // Regra Pagamento Retirada (Se tem item pesado, não pode)
+        const hasHeavy = res.lines.some(l=>l.nome.includes('Fotolivro')||l.nome.includes('40x60')||l.nome.includes('30x40'));
+
+        return `<div class="header">Resumo</div><div class="container fade-in"><div class="card"><h2 style="color:var(--success)">Pedido Pronto!</h2><table class="checkout-table"><thead><tr><th>Item</th><th>Unit.</th><th>Total</th></tr></thead><tbody>${rows}</tbody></table><div class="checkout-total">Total a Pagar: ${this.formatMoney(res.finalTotal)}</div><hr style="margin:20px 0;border-top:1px dashed #eee"><label class="form-label">📍 Entrega</label><select id="selDelivery" class="form-input" onchange="App.checkDeliveryUI(this.value, ${hasHeavy})">${optsDel}</select><div id="delivery-msg" class="alert-box hidden"></div><input type="text" id="delivery-addr" class="form-input hidden" placeholder="Local de entrega (comércio, etc)"><label class="form-label">💳 Pagamento</label><select id="selPayment" class="form-input" onchange="App.checkPaymentUI(this.value, ${hasHeavy})"><option value="">-- Selecione --</option><option value="Pix">Pix (5% Desconto)</option><option value="Cartão">Cartão de Crédito</option><option value="Boleto">Boleto</option>${!hasHeavy?`<option value="Retirada" id="optPayRetirada" class="hidden">Pagar na Retirada</option>`:''}</select><div id="boleto-fields" class="hidden" style="background:#f0f9ff;padding:15px;border-radius:8px;margin-top:10px"><label>Nome Completo</label><input type="text" id="bol_nome" class="form-input"><label>CPF</label><input type="text" id="bol_cpf" class="form-input"><label>Data Vencimento</label><input type="date" id="bol_data" class="form-input"><label>Parcelas</label><select id="bol_parc" class="form-input"><option value="1">1x</option><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option><option value="5">5x</option><option value="6">6x</option></select></div><button class="btn btn-whatsapp" style="background:#25D366;color:white;margin-top:15px" onclick="App.sendWhatsappFinal()"><i class="fab fa-whatsapp"></i> Finalizar Pedido</button></div></div>`;
+    },
+
+    checkDeliveryUI(val, hasHeavy) {
+        const msg=document.getElementById('delivery-msg'); const addr=document.getElementById('delivery-addr'); const payRet=document.getElementById('optPayRetirada');
+        msg.classList.add('hidden'); addr.classList.add('hidden'); if(payRet) payRet.classList.add('hidden');
+        
+        if(val==='Retirada') {
+            msg.classList.remove('hidden');
+            if(hasHeavy) msg.innerHTML="⚠️ <b>Atenção:</b> Pedido contém itens grandes/pesados (Fotolivro/Ampliação). Necessário sinal de 50% ou pagamento antecipado para produzir.";
+            else { msg.innerHTML="✅ Produção imediata! Você pode pagar na retirada."; if(payRet) payRet.classList.remove('hidden'); }
+        } else if(this.data.logistica.cidadesGratis.includes(val)) {
+            msg.classList.remove('hidden'); msg.innerText="A entrega é realizada no perímetro urbano. Se você mora no interior, por gentileza, indique um comércio ou a casa de um conhecido na cidade.";
+            addr.classList.remove('hidden');
+        } else if(val==='Transportadora') {
+            msg.classList.remove('hidden'); msg.innerText="Taxa fixa de envio aplicada.";
+        }
+    },
+
+    checkPaymentUI(val, hasHeavy) {
+        const bol=document.getElementById('boleto-fields');
+        if(val==='Boleto') { bol.classList.remove('hidden'); alert("A entrega do produto é realizada somente após a quitação da última parcela."); }
+        else bol.classList.add('hidden');
+    },
+
+    // --- LOGIC ---
+    startSelection(m) { this.state.mode=m; this.state.photoIdx=0; this.state.view='selection'; this.render(); window.scrollTo(0,0); },
+    goToPersuasion() { this.state.view='persuasion'; this.render(); },
+    finishDigitalFull() { this.data.fotos.forEach((_,i)=>this.updateCart(i,'Arquivo Digital',1)); this.finishSelection(); },
+    updateCart(idx,prod,d) { 
+        const scroll=window.scrollY; // Trava Scroll
+        if(!this.state.cart[idx])this.state.cart[idx]={}; const v=Math.max(0,(this.state.cart[idx][prod]||0)+d); 
+        if(v===0)delete this.state.cart[idx][prod]; else this.state.cart[idx][prod]=v; 
+        this.render(); window.scrollTo(0,scroll); // Restaura Scroll
+    },
+    nav(d) { this.state.photoIdx+=d; this.render(); },
+    finishSelection() { this.state.view='checkout'; this.render(); window.scrollTo(0,0); },
+    goBack() { this.state.view='home'; this.render(); window.scrollTo(0,0); },
+    
+    // Gallery & Lightbox
+    openGalleryModal() { document.getElementById('modal-gallery').classList.remove('hidden'); },
+    openLightbox(url) { document.getElementById('lightbox-img').src=url; document.getElementById('lightbox').classList.remove('hidden'); },
+    renderGalleryModal() { return `<div id="modal-gallery" class="modal-overlay hidden" style="z-index:900"><div class="modal-content modal-full"><div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:10px"><h3>Galeria</h3><span style="font-size:24px;cursor:pointer" onclick="document.getElementById('modal-gallery').classList.add('hidden')">&times;</span></div><div class="gallery-grid" style="overflow-y:auto;flex:1">${this.data.fotos.map(u=>`<div class="gallery-item" onclick="App.openLightbox('${u}')"><img src="${u}"></div>`).join('')}</div><button class="btn btn-primary" style="margin-top:10px" onclick="document.getElementById('modal-gallery').classList.add('hidden')">Fechar Galeria</button></div></div>`; },
+    renderLightbox() { return `<div id="lightbox" class="modal-overlay hidden" style="z-index:1000;background:black"><span class="close-modal-white" onclick="document.getElementById('lightbox').classList.add('hidden')">&times;</span><img id="lightbox-img" class="lightbox-img"></div>`; },
+
+    calcStatusSelection() {
+        let qtd=0,tot=0,credUsed=0; const credList=this.data.cliente.creditos||[]; const totCred=credList.reduce((a,c)=>c.item.includes('Foto')?a+c.qtd:a,0);
+        Object.values(this.state.cart).forEach(items=>{
+            const hasPrint=Object.keys(items).some(k=>k.includes('Foto')&&items[k]>0);
+            Object.keys(items).forEach(prod=>{
+                let q=items[prod], p=this.data.produtosAvulsos.find(x=>x.nome===prod)?.preco||0; qtd+=q;
+                if(prod.includes('Foto')){if(credUsed<totCred){const free=Math.min(q,totCred-credUsed); credUsed+=free; q-=free;}}
+                if(prod.includes('Arquivo')&&hasPrint) p=0; tot+=q*p;
+            });
+        });
+        const ent=this.data.cliente.entrada||0; if(!this.data.cliente.incluirAlbum) tot=Math.max(0,tot-ent);
+        return {qtdItens:qtd, total:tot, creditosUsados:`${credUsed}/${totCred}`};
+    },
+    
+    calcFinalCheckout() {
+        const summary={}; let gross=0, disc=0;
+        Object.keys(this.state.cart).forEach(idx=>{
+            const items=this.state.cart[idx]; const hasPrint=Object.keys(items).some(k=>k.includes('Foto')&&items[k]>0);
+            Object.keys(items).forEach(prod=>{
+                const qtd=items[prod], price=this.data.produtosAvulsos.find(x=>x.nome===prod)?.preco||0;
+                if(!summary[prod])summary[prod]={qtd:0,total:0,unit:price}; summary[prod].qtd+=qtd; summary[prod].total+=qtd*price; gross+=qtd*price;
+                if(prod.includes('Arquivo')&&hasPrint) disc+=qtd*price;
+            });
+        });
+        (this.data.cliente.creditos||[]).forEach(c=>{ if(summary[c.item]) disc+=Math.min(summary[c.item].qtd,c.qtd)*summary[c.item].unit; });
+        const ent=this.data.cliente.entrada||0; const net=Math.max(0,gross-disc-ent);
+        const lines=Object.keys(summary).map(k=>({nome:k,qtd:summary[k].qtd,unit:summary[k].unit,total:summary[k].total}));
+        return {lines,discount:disc,entry:ent,finalTotal:net};
+    },
+
+    sendWhatsappFinal() {
+        const del=document.getElementById('selDelivery').value; const pay=document.getElementById('selPayment').value; const addr=document.getElementById('delivery-addr')?.value||'';
+        if(!del||!pay) return alert("Selecione Entrega e Pagamento");
+        if(pay==='Boleto' && !document.getElementById('bol_nome').value) return alert("Preencha os dados do Boleto");
+
+        const groups={}; Object.keys(this.state.cart).forEach(idx=>{
+            const f=this.data.fotos[idx].substring(this.data.fotos[idx].lastIndexOf('/')+1);
+            const items=this.state.cart[idx]; Object.keys(items).forEach(prod=>{ if(!groups[prod])groups[prod]=[]; groups[prod].push(f); });
+        });
+
+        let msg=`*PEDIDO ${this.data.cliente.nome}*\n`;
+        Object.keys(groups).forEach(p=>{ msg+=`\n📦 *${p} (${groups[p].length})*\nFiles: ${groups[p].join(', ')}`; });
+        
+        const fin=this.calcFinalCheckout();
+        msg+=`\n\n💰 *FINANCEIRO*\nItens: ${this.formatMoney(fin.finalTotal+fin.entry+fin.discount)}`;
+        if(fin.discount>0) msg+=`\nDesc/Brindes: -${this.formatMoney(fin.discount)}`;
+        if(fin.entry>0) msg+=`\nEntrada: -${this.formatMoney(fin.entry)}`;
+        msg+=`\n*TOTAL FINAL: ${this.formatMoney(fin.finalTotal)}*`;
+        
+        msg+=`\n\n📍 *ENTREGA:* ${del} ${addr?'('+addr+')':''}`;
+        msg+=`\n💳 *PAGAMENTO:* ${pay}`;
+        if(pay==='Boleto') msg+=`\nDados Boleto: ${document.getElementById('bol_nome').value}, CPF ${document.getElementById('bol_cpf').value}, Venc ${document.getElementById('bol_data').value}, ${document.getElementById('bol_parc').value}x. (Entrega após quitação)`;
+
+        window.open(`https://wa.me/${this.data.financeiro.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+    },
+    
+    viewPersuasion() { return `<div class="container fade-in" style="margin-top:40px"><div class="persuasion-box" style="background:#fffbeb;border:2px solid #f59e0b;padding:25px;border-radius:12px;text-align:center"><h2 style="color:#b45309">⚠️ Tem certeza?</h2><p style="font-size:1.1rem;line-height:1.6;margin:20px 0">Arquivo Digital custa <b>R$ 8,00</b>.<br>Revelação 10x15 custa <b>R$ 10,00</b> e você <span style="background:#dcfce7;padding:2px 5px;border-radius:4px;font-weight:bold">GANHA</span> o arquivo de brinde.</p><button class="btn btn-primary" style="margin-bottom:15px;animation:pulse 2s infinite" onclick="App.startSelection('revelacao')">✨ Quero Revelar + Arquivo Grátis</button><button class="btn btn-secondary" onclick="App.finishDigitalFull()">Continuar com Arquivos</button></div><style>@keyframes pulse{0%{transform:scale(1);}50%{transform:scale(1.03);}100%{transform:scale(1);}}</style></div>`; },
+    calcBookOptions(qtd) { const m=this.data.financeiro.markup; const f=this.data.financeiro.custoFixoDiagramacao; const j=this.data.financeiro.tabelaJuros[11]||21; const opts=[]; ['15x20','20x30','30x40'].forEach(sz=>{ const rule=this.data.regrasDiagramacao[sz]||4; const pgs=Math.ceil(qtd/rule); const match=this.data.tabelaFotolivros.find(t=>t.size===sz&&t.pages>=pgs); if(match) opts.push({nome:`Fotolivro ${sz} (${match.pages} págs)`,total:(match.priceBox+f)*m,parcela:((match.priceBox+f)*m*(1+j/100))/12}); }); return opts; },
+    formatMoney(v) { return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}); }
+};
+window.onload = () => App.init();
+</script>
+</body>
+</html>
