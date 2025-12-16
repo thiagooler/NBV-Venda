@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>NBV Admin - V13</title>
+    <title>NBV Admin - Master V14</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="database.js"></script>
@@ -19,18 +19,28 @@
         @keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
         .form-group { margin-bottom: 15px; }
         label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.85rem; color:#555; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 0.9rem; }
+        
+        /* TABLES */
+        .list-item, .table-row { background: #fff; padding: 10px; border: 1px solid #eee; border-radius: 6px; margin-bottom: 5px; display:flex; align-items:center; gap:10px; }
+        
+        /* BUTTONS */
         .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; transition:0.2s }
         .btn:hover { opacity: 0.9; }
         .btn-primary { background: var(--primary); }
         .btn-success { background: #10b981; }
         .btn-dark { background: #1f2937; }
+        .btn-remove { background: #fee2e2; color: #dc2626; border: none; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; font-weight:bold; }
+        .btn-add { background: #ecfdf5; color: #10b981; border: 1px dashed #10b981; }
+
         .status-bar { padding:15px; border-radius:8px; margin-bottom:20px; font-weight:bold; display:none; }
         .status-success { background:#dcfce7; color:#166534; }
         .status-error { background:#fee2e2; color:#991b1b; }
         .status-loading { background:#e0f2fe; color:#075985; }
+        
         .gh-config { background: #f1f5f9; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; font-size: 0.85rem; }
-        .gh-config input { padding: 6px; margin-bottom: 5px; }
+        .gh-config input { padding: 6px; margin-bottom: 5px; border:1px solid #cbd5e1 }
+        .row { display: flex; gap: 15px; } .col { flex: 1; }
     </style>
 </head>
 <body>
@@ -49,12 +59,15 @@
 
         <nav>
             <button class="nav-btn active" onclick="showTab('tab-cliente')"><i class="fas fa-user-plus"></i> Novo Cliente</button>
-            <button class="nav-btn" onclick="showTab('tab-textos')"><i class="fas fa-paragraph"></i> Textos & Imagens</button>
+            <button class="nav-btn" onclick="showTab('tab-fotolivros')"><i class="fas fa-book"></i> Tabela Fotolivros</button>
+            <button class="nav-btn" onclick="showTab('tab-produtos')"><i class="fas fa-images"></i> Produtos Avulsos</button>
+            <button class="nav-btn" onclick="showTab('tab-textos')"><i class="fas fa-paragraph"></i> Apresentação</button>
             <button class="nav-btn" onclick="showTab('tab-config')"><i class="fas fa-cogs"></i> Configs Gerais</button>
         </nav>
 
         <div style="margin-top:auto">
             <button class="btn btn-primary" onclick="salvarDatabaseGlobal()"><i class="fas fa-cloud-upload-alt"></i> SALVAR DB GLOBAL</button>
+            <small style="display:block; text-align:center; color:#666; font-size:0.7rem; margin-top:5px">Salva produtos/preços no GitHub</small>
         </div>
     </div>
 
@@ -72,35 +85,63 @@
             </div>
         </div>
 
+        <div id="tab-fotolivros" class="section">
+            <h2>Tabela Fotolivros</h2>
+            <div style="background:white; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #eee">
+                <div class="row">
+                    <div class="col"><label>Markup</label><input type="number" id="confMarkup" step="0.1"></div>
+                    <div class="col"><label>Custo Fixo</label><input type="number" id="confCustoFixo"></div>
+                    <div class="col"><label>Mínimo Fotos</label><input type="number" id="confMinFotos"></div>
+                </div>
+            </div>
+            <div id="fotolivro-table"></div>
+            <button class="btn btn-add" onclick="addBookRow()">+ Nova Linha</button>
+            
+            <h4 style="margin-top:20px">Regras (Fotos/Pág)</h4>
+            <div id="regras-container" style="display:flex; gap:10px; flex-wrap:wrap"></div>
+        </div>
+
+        <div id="tab-produtos" class="section">
+            <h2>Produtos Avulsos</h2>
+            <div id="produtos-list"></div>
+            <button class="btn btn-add" onclick="addProdRow()">+ Novo Produto</button>
+        </div>
+
         <div id="tab-textos" class="section">
             <h2>Apresentação (Modais e Cards)</h2>
             <div style="background:white; padding:20px; border-radius:8px; border:1px solid #eee">
                 <h3 style="color:var(--primary)">📚 Fotolivro</h3>
                 <input type="text" id="txtBookTitle" placeholder="Título">
                 <textarea id="txtBookDesc" rows="2" placeholder="Descrição"></textarea>
-                <label>URL da Imagem Ilustrativa</label>
-                <input type="text" id="imgBook" placeholder="https://...">
+                <label>URL da Imagem</label><input type="text" id="imgBook">
 
                 <h3 style="color:var(--primary); margin-top:20px">🖼️ Revelação</h3>
                 <input type="text" id="txtPrintTitle" placeholder="Título">
                 <textarea id="txtPrintDesc" rows="2" placeholder="Descrição"></textarea>
-                <label>URL da Imagem Ilustrativa</label>
-                <input type="text" id="imgPrint" placeholder="https://...">
+                <label>URL da Imagem</label><input type="text" id="imgPrint">
 
                 <h3 style="color:var(--primary); margin-top:20px">💾 Arquivo Digital</h3>
                 <input type="text" id="txtDigTitle" placeholder="Título">
                 <textarea id="txtDigDesc" rows="2" placeholder="Descrição"></textarea>
-                <label>URL da Imagem Ilustrativa</label>
-                <input type="text" id="imgDig" placeholder="https://...">
+                <label>URL da Imagem</label><input type="text" id="imgDig">
             </div>
         </div>
 
         <div id="tab-config" class="section">
             <h2>Configurações Gerais</h2>
             <div style="background:white; padding:20px; border-radius:8px; border:1px solid #eee">
-                <label>Marca D'água Texto</label><input type="text" id="confWmText">
-                <label>Marca D'água Opacidade</label><input type="number" id="confWmOp" step="0.1">
-                <label>WhatsApp</label><input type="text" id="confWhats">
+                <div class="row">
+                    <div class="col"><label>Marca D'água Texto</label><input type="text" id="confWmText"></div>
+                    <div class="col"><label>Opacidade</label><input type="number" id="confWmOp" step="0.1"></div>
+                </div>
+                <div class="row">
+                    <div class="col"><label>WhatsApp</label><input type="text" id="confWhats"></div>
+                    <div class="col"><label>Desconto Pix (%)</label><input type="number" id="confPix"></div>
+                </div>
+                <label>Frete Fixo (Transportadora)</label><input type="number" id="confFreteValor">
+                <label>Cidades Grátis (Separe por vírgula)</label><input type="text" id="confFreteCidades">
+                <label>Endereço Sede</label><input type="text" id="confSede">
+                <label>Tabela Juros (Separe por vírgula)</label><input type="text" id="confJuros">
             </div>
         </div>
     </div>
@@ -108,7 +149,8 @@
 <script>
     window.onload = function() {
         carregarCredenciaisLocal();
-        if(window.NBV_DB) carregarDados(window.NBV_DB);
+        if(window.NBV_DB) carregarDadosNaTela(window.NBV_DB);
+        else showStatus("Erro: database.js não carregado.", "error");
     };
 
     function showTab(id) {
@@ -123,60 +165,152 @@
         el.className = 'status-bar status-' + type;
         el.innerHTML = msg;
         el.style.display = 'block';
+        setTimeout(() => el.style.display = 'none', 8000);
     }
 
-    function carregarDados(db) {
-        // Textos
+    // --- CARREGAMENTO DE DADOS (DB -> TELA) ---
+    function carregarDadosNaTela(db) {
+        // Financeiro & Configs
+        document.getElementById('confMarkup').value = db.financeiro.markup;
+        document.getElementById('confCustoFixo').value = db.financeiro.custoFixoDiagramacao;
+        document.getElementById('confMinFotos').value = db.fluxo.minimoFotosLivro;
+        document.getElementById('confWhats').value = db.financeiro.whatsapp;
+        document.getElementById('confPix').value = db.financeiro.descontoPix;
+        document.getElementById('confJuros').value = db.financeiro.tabelaJuros.join(', ');
+        
+        document.getElementById('confFreteValor').value = db.logistica.taxaEnvio;
+        document.getElementById('confFreteCidades').value = db.logistica.cidadesGratis.join(', ');
+        document.getElementById('confSede').value = db.logistica.enderecoSede;
+
+        document.getElementById('confWmText').value = db.assets.watermarkText;
+        document.getElementById('confWmOp').value = db.assets.opacity;
+
+        // Textos Apresentação
         const apr = db.apresentacao || {};
         if(apr.fotolivro) { 
             document.getElementById('txtBookTitle').value = apr.fotolivro.titulo; 
             document.getElementById('txtBookDesc').value = apr.fotolivro.texto; 
-            document.getElementById('imgBook').value = apr.fotolivro.img || ""; 
+            document.getElementById('imgBook').value = apr.fotolivro.img; 
         }
         if(apr.revelacao) { 
             document.getElementById('txtPrintTitle').value = apr.revelacao.titulo; 
             document.getElementById('txtPrintDesc').value = apr.revelacao.texto; 
-            document.getElementById('imgPrint').value = apr.revelacao.img || ""; 
+            document.getElementById('imgPrint').value = apr.revelacao.img; 
         }
         if(apr.digital) { 
             document.getElementById('txtDigTitle').value = apr.digital.titulo; 
             document.getElementById('txtDigDesc').value = apr.digital.texto; 
-            document.getElementById('imgDig').value = apr.digital.img || ""; 
+            document.getElementById('imgDig').value = apr.digital.img; 
         }
-        
-        // Configs
-        document.getElementById('confWmText').value = db.assets.watermarkText;
-        document.getElementById('confWmOp').value = db.assets.opacity;
-        document.getElementById('confWhats').value = db.financeiro.whatsapp;
+
+        // Tabelas (AQUI ESTAVA O ERRO ANTERIOR, AGORA ESTÁ PRESENTE)
+        renderBooks(db.tabelaFotolivros);
+        renderProds(db.produtosAvulsos);
+        renderRegras(db.regrasDiagramacao);
     }
 
-    function montarObjeto() {
-        const db = window.NBV_DB; 
-        db.assets.watermarkText = document.getElementById('confWmText').value;
-        db.assets.opacity = parseFloat(document.getElementById('confWmOp').value);
-        db.financeiro.whatsapp = document.getElementById('confWhats').value;
+    function renderBooks(list) {
+        const el = document.getElementById('fotolivro-table');
+        el.innerHTML = '';
+        list.forEach(item => addBookRow(item));
+    }
+    function addBookRow(item = {}) {
+        const html = `
+        <div class="table-row book-row">
+            <select class="bk-size" style="width:100px"><option ${item.size=='15x20'?'selected':''}>15x20</option><option ${item.size=='20x30'?'selected':''}>20x30</option><option ${item.size=='30x40'?'selected':''}>30x40</option></select>
+            <input type="number" class="bk-pages" value="${item.pages||''}" placeholder="Págs" style="width:80px">
+            <input type="number" class="bk-price" value="${item.price||''}" placeholder="Base">
+            <input type="number" class="bk-box" value="${item.priceBox||''}" placeholder="C/ Caixa">
+            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+        </div>`;
+        document.getElementById('fotolivro-table').insertAdjacentHTML('beforeend', html);
+    }
 
-        db.apresentacao = {
-            fotolivro: { 
-                titulo: document.getElementById('txtBookTitle').value, 
-                texto: document.getElementById('txtBookDesc').value, 
-                img: document.getElementById('imgBook').value 
+    function renderProds(list) {
+        const el = document.getElementById('produtos-list');
+        el.innerHTML = '';
+        list.forEach(item => addProdRow(item));
+    }
+    function addProdRow(item = {}) {
+        const html = `
+        <div class="list-item prod-row">
+            <input type="text" class="pd-name" value="${item.nome||''}" placeholder="Nome" style="flex:2">
+            <input type="number" class="pd-price" value="${item.preco||''}" placeholder="Preço" style="flex:1">
+            <input type="text" class="pd-icon" value="${item.icone||'fas fa-image'}" placeholder="Icone" style="flex:1">
+            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+        </div>`;
+        document.getElementById('produtos-list').insertAdjacentHTML('beforeend', html);
+    }
+
+    function renderRegras(regras) {
+        const el = document.getElementById('regras-container');
+        el.innerHTML = '';
+        for(let key in regras) {
+            el.innerHTML += `<div><label>${key}</label><input type="number" class="regra-item" data-key="${key}" value="${regras[key]}" style="width:60px"></div>`;
+        }
+    }
+
+    // --- MONTAGEM DO OBJETO ---
+    function montarObjetoDB() {
+        const livros = [];
+        document.querySelectorAll('.book-row').forEach(r => {
+            livros.push({
+                size: r.querySelector('.bk-size').value,
+                pages: parseInt(r.querySelector('.bk-pages').value),
+                price: parseFloat(r.querySelector('.bk-price').value),
+                priceBox: parseFloat(r.querySelector('.bk-box').value)
+            });
+        });
+
+        const produtos = [];
+        document.querySelectorAll('.prod-row').forEach(r => {
+            produtos.push({
+                nome: r.querySelector('.pd-name').value,
+                preco: parseFloat(r.querySelector('.pd-price').value),
+                icone: r.querySelector('.pd-icon').value
+            });
+        });
+
+        const regras = {};
+        document.querySelectorAll('.regra-item').forEach(r => {
+            regras[r.dataset.key] = parseInt(r.value);
+        });
+
+        return {
+            assets: {
+                watermarkText: document.getElementById('confWmText').value,
+                opacity: parseFloat(document.getElementById('confWmOp').value)
             },
-            revelacao: { 
-                titulo: document.getElementById('txtPrintTitle').value, 
-                texto: document.getElementById('txtPrintDesc').value, 
-                img: document.getElementById('imgPrint').value 
+            fluxo: {
+                pedirEdicao: true,
+                pedirAprovacao: true,
+                minimoFotosLivro: parseInt(document.getElementById('confMinFotos').value)
             },
-            digital: { 
-                titulo: document.getElementById('txtDigTitle').value, 
-                texto: document.getElementById('txtDigDesc').value, 
-                img: document.getElementById('imgDig').value 
-            }
+            logistica: {
+                taxaEnvio: parseFloat(document.getElementById('confFreteValor').value),
+                cidadesGratis: document.getElementById('confFreteCidades').value.split(',').map(s=>s.trim()),
+                enderecoSede: document.getElementById('confSede').value
+            },
+            financeiro: {
+                descontoPix: parseFloat(document.getElementById('confPix').value),
+                parcelasSemJuros: 4,
+                tabelaJuros: document.getElementById('confJuros').value.split(',').map(Number),
+                whatsapp: document.getElementById('confWhats').value,
+                markup: parseFloat(document.getElementById('confMarkup').value),
+                custoFixoDiagramacao: parseFloat(document.getElementById('confCustoFixo').value)
+            },
+            apresentacao: {
+                fotolivro: { titulo: document.getElementById('txtBookTitle').value, texto: document.getElementById('txtBookDesc').value, img: document.getElementById('imgBook').value },
+                revelacao: { titulo: document.getElementById('txtPrintTitle').value, texto: document.getElementById('txtPrintDesc').value, img: document.getElementById('imgPrint').value },
+                digital: { titulo: document.getElementById('txtDigTitle').value, texto: document.getElementById('txtDigDesc').value, img: document.getElementById('imgDig').value }
+            },
+            produtosAvulsos: produtos,
+            tabelaFotolivros: livros,
+            regrasDiagramacao: regras
         };
-        return db;
     }
 
-    // GITHUB
+    // --- GITHUB ---
     function getGh() {
         return {
             token: document.getElementById('ghToken').value,
@@ -217,7 +351,7 @@
         if(!creds.token) return alert("Configure GitHub");
         showStatus("Salvando...", "loading");
         try {
-            const db = montarObjeto();
+            const db = montarObjetoDB();
             await upload(creds, 'database.js', `window.NBV_DB = ${JSON.stringify(db, null, 4)};`, "Update DB");
             window.NBV_DB = db;
             showStatus("Salvo com sucesso!", "success");
@@ -231,14 +365,8 @@
         showStatus("Gerando...", "loading");
         
         try {
-            const db = montarObjeto();
-            // Fluxo Venda (Edição = True)
-            const config = { 
-                ...db, 
-                cliente: { nome: nome }, 
-                fotos: document.getElementById('cliFotos').value.split('\n').filter(s=>s.length>5),
-                fluxo: { ...db.fluxo, pedirEdicao: true } 
-            };
+            const db = montarObjetoDB();
+            const config = { ...db, cliente: { nome: nome }, fotos: document.getElementById('cliFotos').value.split('\n').filter(s=>s.length>5) };
             
             const req = await fetch('modelo.html');
             let html = await req.text();
