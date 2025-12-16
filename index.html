@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>NBV Admin - Master V14</title>
+    <title>NBV Admin - Master V15 (Completo)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="database.js"></script>
@@ -76,12 +76,62 @@
 
         <div id="tab-cliente" class="section active">
             <h2>Gerar Link do Cliente</h2>
-            <div style="background:white; padding:20px; border-radius:8px; border:1px solid #eee">
-                <label>Nome do Cliente (Pasta)</label>
-                <input type="text" id="cliNome" placeholder="Ex: Casamento_Ana">
-                <label>Links das Fotos</label>
-                <textarea id="cliFotos" rows="6"></textarea>
-                <button class="btn btn-success" onclick="publicarCliente()">GERAR E PUBLICAR SITE</button>
+            <div style="background:white; padding:20px; border-radius:8px; border:1px solid #eee; box-shadow: 0 1px 3px rgba(0,0,0,0.05)">
+                
+                <div class="row">
+                    <div class="col">
+                        <label>Nome do Cliente (Nome da Pasta)</label>
+                        <input type="text" id="cliNome" placeholder="Ex: Casamento_Ana">
+                    </div>
+                    <div class="col">
+                        <label>Objetivo do Link</label>
+                        <select id="fluxoModo">
+                            <option value="venda">💰 Venda Completa (Edição + Produtos)</option>
+                            <option value="aprovacao">✅ Apenas Aprovação (Sem Venda)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top:15px">
+                    <label>Links das Fotos (Uma URL por linha)</label>
+                    <textarea id="cliFotos" rows="6" placeholder="https://dominio.com/foto1.jpg&#10;https://dominio.com/foto2.jpg"></textarea>
+                </div>
+
+                <div style="background:#f8fafc; padding:20px; border-radius:8px; margin-top:20px; border:1px solid #e2e8f0">
+                    <h4 style="margin:0 0 15px; color:#0f172a; border-bottom:1px solid #cbd5e1; padding-bottom:5px">Financeiro Específico deste Cliente</h4>
+                    
+                    <div class="row">
+                        <div class="col">
+                            <label>Entrada Já Paga (R$)</label>
+                            <input type="number" id="cliEntrada" value="0.00">
+                        </div>
+                        <div class="col">
+                            <label>Possui Contrato de Álbum?</label>
+                            <select id="cliTemAlbum" onchange="toggleContrato()">
+                                <option value="nao">Não (Venda Avulsa)</option>
+                                <option value="sim">Sim (Já incluso no pacote)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div id="area-contrato" style="display:none; margin-top:15px; background:#eff6ff; padding:15px; border-radius:6px; border:1px solid #bfdbfe">
+                        <div class="row">
+                            <div class="col"><label>Tamanho Contratado</label><select id="ctrTam"><option value="15x20">15x20</option><option value="20x30">20x30</option><option value="30x40">30x40</option></select></div>
+                            <div class="col"><label>Qtd. Fotos</label><input type="number" id="ctrQtd" value="20"></div>
+                            <div class="col"><label>Valor Total do Pacote (R$)</label><input type="number" id="ctrValor" value="0.00"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top:15px">
+                        <label>Brindes / Créditos Específicos</label>
+                        <div id="creditos-list"></div>
+                        <button class="btn btn-add" style="margin-top:5px; padding:8px; font-size:0.8rem" onclick="addCreditoRow()">+ Adicionar Brinde</button>
+                    </div>
+                </div>
+
+                <button class="btn btn-success" style="margin-top:25px; font-size:1.1rem; height:50px" onclick="publicarCliente()">
+                    <i class="fas fa-rocket"></i> GERAR E PUBLICAR SITE
+                </button>
             </div>
         </div>
 
@@ -160,6 +210,11 @@
         event.currentTarget.classList.add('active');
     }
 
+    function toggleContrato() {
+        const val = document.getElementById('cliTemAlbum').value;
+        document.getElementById('area-contrato').style.display = (val === 'sim') ? 'block' : 'none';
+    }
+
     function showStatus(msg, type='loading') {
         const el = document.getElementById('status-display');
         el.className = 'status-bar status-' + type;
@@ -203,7 +258,7 @@
             document.getElementById('imgDig').value = apr.digital.img; 
         }
 
-        // Tabelas (AQUI ESTAVA O ERRO ANTERIOR, AGORA ESTÁ PRESENTE)
+        // Tabelas
         renderBooks(db.tabelaFotolivros);
         renderProds(db.produtosAvulsos);
         renderRegras(db.regrasDiagramacao);
@@ -248,6 +303,18 @@
         for(let key in regras) {
             el.innerHTML += `<div><label>${key}</label><input type="number" class="regra-item" data-key="${key}" value="${regras[key]}" style="width:60px"></div>`;
         }
+    }
+
+    function addCreditoRow() {
+        let opts = '<option value="">-- Selecione --</option>';
+        document.querySelectorAll('.prod-row .pd-name').forEach(i => { if(i.value) opts += `<option value="${i.value}">${i.value}</option>`; });
+        const html = `
+        <div class="list-item cred-row">
+            <select class="cr-item" style="flex:2">${opts}</select>
+            <input type="number" class="cr-qtd" value="1" style="width:80px" placeholder="Qtd">
+            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+        </div>`;
+        document.getElementById('creditos-list').insertAdjacentHTML('beforeend', html);
     }
 
     // --- MONTAGEM DO OBJETO ---
@@ -366,7 +433,31 @@
         
         try {
             const db = montarObjetoDB();
-            const config = { ...db, cliente: { nome: nome }, fotos: document.getElementById('cliFotos').value.split('\n').filter(s=>s.length>5) };
+            
+            // Monta Créditos do Cliente
+            const creditos = [];
+            document.querySelectorAll('.cred-row').forEach(r => {
+                const item = r.querySelector('.cr-item').value;
+                const qtd = parseInt(r.querySelector('.cr-qtd').value);
+                if(item) creditos.push({ item, qtd });
+            });
+
+            const config = { 
+                ...db, 
+                cliente: { 
+                    nome: nome,
+                    entrada: parseFloat(document.getElementById('cliEntrada').value)||0,
+                    incluirAlbum: document.getElementById('cliTemAlbum').value === 'sim',
+                    contrato: {
+                        tamanho: document.getElementById('ctrTam').value,
+                        qtdFotos: parseInt(document.getElementById('ctrQtd').value)||20,
+                        valorTotal: parseFloat(document.getElementById('ctrValor').value)||0
+                    },
+                    creditos: creditos
+                }, 
+                fotos: document.getElementById('cliFotos').value.split('\n').filter(s=>s.length>5),
+                fluxo: { ...db.fluxo, pedirEdicao: document.getElementById('fluxoModo').value === 'venda' } 
+            };
             
             const req = await fetch('modelo.html');
             let html = await req.text();
