@@ -1,17 +1,36 @@
 // --- NBV SYSTEM DATABASE (V12.0 - Full Master) ---
 
 window.NBV_DB = {
+    // [NOVO] Textos de Venda para os Modais da Nova Interface
+    apresentacao: {
+        fotolivro: {
+            titulo: "Memórias que duram para sempre",
+            texto: "Não deixe suas fotos perderem-se no celular. Nossos fotolivros possuem capa dura, papel fotográfico de alta gramatura e abertura panorâmica (180°). Uma joia para a família.",
+            img: "https://via.placeholder.com/600x400?text=Exemplo+Fotolivro"
+        },
+        revelacao: {
+            titulo: "Sinta a fotografia em suas mãos",
+            texto: "Revelação em papel Fujifilm profissional. Cores vivas que duram mais de 100 anos. Ideal para porta-retratos e álbuns coláveis.",
+            img: "https://via.placeholder.com/600x400?text=Exemplo+Revelacao"
+        },
+        digital: {
+            titulo: "Arquivo Digital (Alta Resolução)",
+            texto: "Receba as fotos via link de download. Atenção: Arquivos digitais podem se perder com o tempo ou serem deletados acidentalmente. Recomendamos fortemente a versão impressa.",
+            img: "https://via.placeholder.com/600x400?text=Exemplo+Digital"
+        }
+    },
+
     // Configurações Visuais (Marca D'água)
     assets: {
-        watermarkText: "NBV - PROIBIDO PRINT", 
-        opacity: 0.15
+        watermarkText: "NBV - PROIBIDO TIRAR PRINT", 
+        opacity: 0.2 // 20% de visibilidade
     },
 
     // Configurações de Fluxo
     fluxo: {
-        pedirEdicao: true,       // true = Fluxo Venda, false = Fluxo Aprovação
-        pedirAprovacao: true,    
-        minimoFotosLivro: 20
+        pedirEdicao: true,       // Pergunta se quer edição artística
+        pedirAprovacao: true,    // Passa pela galeria de seleção
+        minimoFotosLivro: 20     // Mínimo para liberar opção de fotolivro
     },
 
     // Logística e Frete
@@ -29,14 +48,14 @@ window.NBV_DB = {
     // Financeiro Geral
     financeiro: {
         descontoPix: 5,
-        parcelasSemJuros: 4, // Exibição no site
+        parcelasSemJuros: 4,
         tabelaJuros: [0, 4.59, 5.99, 7.49, 8.99, 10.49, 11.99, 13.49, 14.99, 16.49, 17.99, 21.00],
         whatsapp: "5542998370150",
         markup: 2.5, 
         custoFixoDiagramacao: 30.00
     },
 
-    // Produtos Avulsos
+    // Produtos Avulsos (Lista Completa Restaurada)
     produtosAvulsos: [
         { nome: "Foto 10x15", preco: 10.00, icone: "fas fa-image" },
         { nome: "Foto 15x20", preco: 20.00, icone: "fas fa-image" },
@@ -51,8 +70,7 @@ window.NBV_DB = {
         { nome: "Arquivo Digital", preco: 8.00, icone: "fas fa-cloud-download-alt" }
     ],
 
-    // Tabela de Custo de Fotolivros (Lab)
-    // O sistema aplicará Markup + CustoFixo sobre estes valores
+    // Tabela de Custo de Fotolivros (Lista Completa Restaurada)
     tabelaFotolivros: [
         // 30x40
         { size: '30x40', pages: 20, price: 592, priceBox: 754 },
@@ -60,17 +78,23 @@ window.NBV_DB = {
         { size: '30x40', pages: 40, price: 879, priceBox: 1070 },
         { size: '30x40', pages: 50, price: 1037, priceBox: 1228 },
         { size: '30x40', pages: 60, price: 1195, priceBox: 1386 },
+        { size: '30x40', pages: 80, price: 1511, priceBox: 1702 },
+        { size: '30x40', pages: 100, price: 1827, priceBox: 2018 },
         // 20x30
         { size: '20x30', pages: 20, price: 317, priceBox: 443 },
         { size: '20x30', pages: 30, price: 406, priceBox: 532 },
         { size: '20x30', pages: 50, price: 584, priceBox: 710 },
         { size: '20x30', pages: 60, price: 673, priceBox: 799 },
         { size: '20x30', pages: 80, price: 851, priceBox: 977 },
+        { size: '20x30', pages: 100, price: 1029, priceBox: 1155 },
         // 15x20
         { size: '15x20', pages: 20, price: 214, priceBox: 356 },
         { size: '15x20', pages: 30, price: 269, priceBox: 382 },
         { size: '15x20', pages: 40, price: 324, priceBox: 437 },
         { size: '15x20', pages: 50, price: 379, priceBox: 492 },
+        { size: '15x20', pages: 60, price: 434, priceBox: 547 },
+        { size: '15x20', pages: 70, price: 489, priceBox: 602 },
+        { size: '15x20', pages: 80, price: 544, priceBox: 657 },
         { size: '15x20', pages: 100, price: 654, priceBox: 767 }
     ],
 
