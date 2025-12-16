@@ -1,7 +1,6 @@
-// --- NBV SYSTEM DATABASE (V13.0 - Full Features) ---
+// --- NBV SYSTEM DATABASE (V18.0 - Business Logic Updated) ---
 
 window.NBV_DB = {
-    // Textos e Imagens da Apresentação (Editáveis no Admin)
     apresentacao: {
         fotolivro: {
             titulo: "Memórias que duram para sempre",
@@ -19,26 +18,26 @@ window.NBV_DB = {
             img: "https://via.placeholder.com/600x400?text=Arquivos+Digitais"
         }
     },
-
-    assets: { watermarkText: "NBV - PROVA", opacity: 0.15 },
-
-    fluxo: {
-        pedirEdicao: true,       
-        pedirAprovacao: true,    
-        minimoFotosLivro: 20
+    
+    // Configurações de Fluxo
+    fluxo: { 
+        pedirEdicao: true, 
+        pedirAprovacao: true, 
+        minimoFotosLivro: 20 
     },
 
+    // Logística
     logistica: {
         taxaEnvio: 30.00,
         cidadesGratis: ["Boa Ventura de São Roque", "Turvo", "Pitanga", "Santa Maria do Oeste"],
         enderecoSede: "Rod. PR 466 km 210, Bairro Coamo (Anexo Mercado JL)"
     },
 
+    // Financeiro
     financeiro: {
         descontoPix: 5,
-        parcelasSemJuros: 4, 
-        // Taxas de juros da maquininha para cada parcela (index 0 a 12)
-        // Ex: index 12 = 21.00% de juros total
+        parcelasSemJuros: 4, // Cartão
+        parcelasBoleto: 6,   // Boleto (Sem Juros)
         tabelaJuros: [0, 4.59, 5.99, 7.49, 8.99, 10.49, 11.99, 13.49, 14.99, 16.49, 17.99, 21.00],
         whatsapp: "5542998370150",
         markup: 2.5, 
@@ -80,8 +79,7 @@ window.NBV_DB = {
         { size: '15x20', pages: 60, price: 434, priceBox: 547 },
         { size: '15x20', pages: 70, price: 489, priceBox: 602 },
         { size: '15x20', pages: 80, price: 544, priceBox: 657 },
-        { size: '15x20', pages: 100, price: 654, priceBox: 767 }
+        { size: '15x20', pages: 100, price: 100, priceBox: 767 }
     ],
-
     regrasDiagramacao: { '15x20': 3, '20x30': 4, '30x40': 5 }
 };
