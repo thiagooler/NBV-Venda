@@ -1,0 +1,48 @@
+{
+  "masterBalance": 0,
+  "boxes": [
+    {
+      "id": "fixos",
+      "label": "Gastos Fixos",
+      "color": "#ff9900",
+      "priority": 0,
+      "mode": "monthly",
+      "subItems": [],
+      "target": 0,
+      "current": 0
+    },
+    {
+      "id": "gerais",
+      "label": "Gastos Gerais",
+      "color": "#ffffff",
+      "priority": 3,
+      "mode": "monthly",
+      "subItems": [],
+      "target": 0,
+      "current": 0
+    },
+    {
+      "id": "cartao",
+      "label": "Cartão de Crédito",
+      "color": "#9d00ff",
+      "priority": 0,
+      "mode": "credit",
+      "subItems": [],
+      "target": 0,
+      "current": 0,
+      "dueDay": 10
+    },
+    {
+      "id": "emergencia",
+      "label": "Emergência",
+      "color": "#ff0000",
+      "priority": 1,
+      "mode": "target",
+      "subItems": [],
+      "target": 0,
+      "current": 0
+    }
+  ],
+  "bills": [],
+  "transactions": []
+}
